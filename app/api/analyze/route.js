@@ -116,9 +116,23 @@ export async function POST(request) {
 // Fetch PageSpeed data from Google API
 async function getPageSpeedData(url, strategy) {
   try {
-    const apiUrl = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&strategy=${strategy}&category=performance&category=accessibility&category=seo`;
-    const response = await fetch(apiUrl);
-    if (!response.ok) throw new Error('PageSpeed API error');
+    // Use API key if available for higher rate limits
+    const apiKey = process.env.GOOGLE_PAGESPEED_API_KEY || '';
+    const keyParam = apiKey ? `&key=${apiKey}` : '';
+    const apiUrl = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&strategy=${strategy}&category=performance&category=accessibility&category=seo${keyParam}`;
+
+    const response = await fetch(apiUrl, {
+      headers: {
+        'Accept': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`PageSpeed ${strategy} API error:`, response.status, errorText);
+      return null;
+    }
+
     return await response.json();
   } catch (error) {
     console.error(`PageSpeed ${strategy} error:`, error);
@@ -856,7 +870,14 @@ function analyzeAccessibility(data, pageSpeedData) {
 // Extract performance metrics
 function extractPerformanceMetrics(pageSpeedData) {
   if (!pageSpeedData?.lighthouseResult?.audits) {
-    return {};
+    return {
+      firstContentfulPaint: 'N/A',
+      largestContentfulPaint: 'N/A',
+      totalBlockingTime: 'N/A',
+      cumulativeLayoutShift: 'N/A',
+      speedIndex: 'N/A',
+      timeToInteractive: 'N/A',
+    };
   }
 
   const audits = pageSpeedData.lighthouseResult.audits;
