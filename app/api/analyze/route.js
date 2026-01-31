@@ -1583,25 +1583,25 @@ function generateReportHTML(data) {
             <div class="ai-card">
                 <div class="ai-card-header">
                     <div class="ai-card-title">💬 AI Chatbot</div>
-                    <span class="ai-status ${aiReadiness.features.chatbot?.detected ? 'good' : 'missing'}">${aiReadiness.features.chatbot?.detected ? 'Detected' : 'Not Found'}</span>
+                    <span class="ai-status ${aiReadiness.features.chatbot?.detected ? 'good' : 'missing'}">${aiReadiness.features.chatbot?.detected ? (aiReadiness.features.chatbot.providers?.join(', ') || 'Detected') : 'Not Found'}</span>
                 </div>
-                <p class="ai-card-desc">${aiReadiness.features.chatbot?.detected ? 'AI chatbot detected for 24/7 lead qualification.' : 'No AI chatbot detected. Visitors leaving after hours cannot get immediate answers.'}</p>
+                <p class="ai-card-desc">${aiReadiness.features.chatbot?.detected ? `<strong>${aiReadiness.features.chatbot.providers?.join(', ') || 'AI chatbot'}</strong> detected for 24/7 lead qualification.` : 'No AI chatbot detected. Visitors leaving after hours cannot get immediate answers.'}</p>
                 <div class="ai-card-impact"><strong>Impact:</strong> ${aiReadiness.features.chatbot?.detected ? 'Capturing leads around the clock.' : '78% of customers hire the first business to respond.'}</div>
             </div>
             <div class="ai-card">
                 <div class="ai-card-header">
                     <div class="ai-card-title">📞 AI Voice Agent</div>
-                    <span class="ai-status ${aiReadiness.features.voiceAgent?.detected ? 'good' : 'missing'}">${aiReadiness.features.voiceAgent?.detected ? 'Detected' : 'Not Found'}</span>
+                    <span class="ai-status ${aiReadiness.features.voiceAgent?.detected ? 'good' : 'missing'}">${aiReadiness.features.voiceAgent?.detected ? (aiReadiness.features.voiceAgent.providers?.join(', ') || 'Detected') : 'Not Found'}</span>
                 </div>
-                <p class="ai-card-desc">${aiReadiness.features.voiceAgent?.detected ? 'AI voice agent handles calls when unavailable.' : 'After-hours calls go to voicemail. Callers are moving to competitors.'}</p>
+                <p class="ai-card-desc">${aiReadiness.features.voiceAgent?.detected ? `<strong>${aiReadiness.features.voiceAgent.providers?.join(', ') || 'AI voice agent'}</strong> handles calls when you're unavailable.` : 'After-hours calls go to voicemail. Callers are moving to competitors.'}</p>
                 <div class="ai-card-impact"><strong>Impact:</strong> ${aiReadiness.features.voiceAgent?.detected ? 'Never missing a call.' : 'Weekend and evening leads calling competitors.'}</div>
             </div>
             <div class="ai-card">
                 <div class="ai-card-header">
                     <div class="ai-card-title">🧮 Quote/Calculator Tool</div>
-                    <span class="ai-status ${aiReadiness.features.calculator?.detected ? 'good' : 'missing'}">${aiReadiness.features.calculator?.detected ? 'Detected' : 'Not Found'}</span>
+                    <span class="ai-status ${aiReadiness.features.calculator?.detected ? 'good' : 'missing'}">${aiReadiness.features.calculator?.detected ? (aiReadiness.features.calculator.types?.join(', ') || 'Detected') : 'Not Found'}</span>
                 </div>
-                <p class="ai-card-desc">${aiReadiness.features.calculator?.detected ? 'Interactive tool provides instant estimates.' : 'Using traditional contact form. Visitors want instant pricing answers.'}</p>
+                <p class="ai-card-desc">${aiReadiness.features.calculator?.detected ? `<strong>${aiReadiness.features.calculator.types?.join(', ') || 'Interactive tool'}</strong> provides instant estimates to visitors.` : 'Using traditional contact form. Visitors want instant pricing answers.'}</p>
                 <div class="ai-card-impact"><strong>Impact:</strong> ${aiReadiness.features.calculator?.detected ? 'Converting visitors with instant value.' : 'AI calculators convert 3x better than forms.'}</div>
             </div>
             <div class="ai-card">
