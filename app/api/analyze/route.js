@@ -188,60 +188,200 @@ async function scrapeWebsiteData(url) {
   }
 }
 
-// Check for chatbot presence
+// Check for chatbot presence - ACCURATE detection via scripts/widgets only
 function checkForChatbot(html) {
-  const chatbotIndicators = [
-    'intercom', 'drift', 'hubspot-messages', 'zendesk', 'livechat',
-    'tidio', 'crisp', 'freshchat', 'tawk', 'olark', 'chatbot',
-    'chat-widget', 'messenger-widget', 'chatlio', 'comm100',
-    'liveperson', 'snapengage', 'userlike', 'chatra', 'jivochat',
-    'smartsupp', 'pure-chat', 'zoho-salesiq', 'helpcrunch',
-    'customerly', 'gorgias', 'acquire', 'kayako', 'chat-bubble',
-    'ai-chat', 'voiceflow', 'botpress', 'dialogflow', 'rasa',
-  ];
+  const detected = [];
 
-  const htmlLower = html.toLowerCase();
-  const found = chatbotIndicators.filter(indicator => htmlLower.includes(indicator));
+  // Intercom - look for actual widget script
+  if (/intercom\.com\/widget|window\.Intercom|intercomSettings/i.test(html)) {
+    detected.push('Intercom');
+  }
+
+  // Drift - look for actual widget
+  if (/drift\.com|js\.driftt\.com|window\.drift|drift\s*=\s*window\.drift/i.test(html)) {
+    detected.push('Drift');
+  }
+
+  // HubSpot Chat - look for actual widget
+  if (/js\.hs-scripts\.com|hs-script-loader|hubspot.*conversations|HubSpotConversations/i.test(html)) {
+    detected.push('HubSpot Chat');
+  }
+
+  // Zendesk Chat - look for actual widget
+  if (/static\.zdassets\.com|zopim|zendesk.*chat|zE\s*\(|zESettings/i.test(html)) {
+    detected.push('Zendesk Chat');
+  }
+
+  // LiveChat - look for actual widget
+  if (/cdn\.livechatinc\.com|__lc\s*=|livechatinc\.com\/tracking/i.test(html)) {
+    detected.push('LiveChat');
+  }
+
+  // Tidio - look for actual widget
+  if (/code\.tidio\.co|tidioChatCode|tidio_chat/i.test(html)) {
+    detected.push('Tidio');
+  }
+
+  // Crisp - look for actual widget
+  if (/client\.crisp\.chat|window\.\$crisp|CRISP_WEBSITE_ID/i.test(html)) {
+    detected.push('Crisp');
+  }
+
+  // Freshchat/Freshdesk - look for actual widget
+  if (/wchat\.freshchat\.com|freshchat\.min\.js|fcWidget/i.test(html)) {
+    detected.push('Freshchat');
+  }
+
+  // Tawk.to - look for actual widget
+  if (/embed\.tawk\.to|Tawk_API|tawk\.to/i.test(html)) {
+    detected.push('Tawk.to');
+  }
+
+  // Olark - look for actual widget
+  if (/static\.olark\.com|olark\.identify|olark\s*\(/i.test(html)) {
+    detected.push('Olark');
+  }
+
+  // Chatra - look for actual widget
+  if (/call\.chatra\.io|ChatraID|window\.ChatraSetup/i.test(html)) {
+    detected.push('Chatra');
+  }
+
+  // JivoChat - look for actual widget
+  if (/code\.jivosite\.com|jivo_api|jivosite/i.test(html)) {
+    detected.push('JivoChat');
+  }
+
+  // Smartsupp - look for actual widget
+  if (/smartsupp\.com\/loader|smartsupp\s*\(|_smartsupp/i.test(html)) {
+    detected.push('Smartsupp');
+  }
+
+  // Zoho SalesIQ - look for actual widget
+  if (/salesiq\.zoho\.com|zoho.*salesiq|\$zoho.*salesiq/i.test(html)) {
+    detected.push('Zoho SalesIQ');
+  }
+
+  // Facebook Messenger - look for actual widget
+  if (/connect\.facebook\.net.*customerchat|fb-customerchat|MessengerExtensions/i.test(html)) {
+    detected.push('Facebook Messenger');
+  }
+
+  // Chatbot.com - look for actual widget
+  if (/cdn\.chatbot\.com|chatbot\.com\/widget/i.test(html)) {
+    detected.push('Chatbot.com');
+  }
+
+  // Voiceflow - look for actual widget
+  if (/cdn\.voiceflow\.com|voiceflow.*widget/i.test(html)) {
+    detected.push('Voiceflow');
+  }
+
+  // Botpress - look for actual widget
+  if (/cdn\.botpress\.cloud|botpress.*webchat/i.test(html)) {
+    detected.push('Botpress');
+  }
+
+  // Landbot - look for actual widget
+  if (/cdn\.landbot\.io|landbot.*widget/i.test(html)) {
+    detected.push('Landbot');
+  }
 
   return {
-    detected: found.length > 0,
-    providers: found,
+    detected: detected.length > 0,
+    providers: detected,
+    confidence: detected.length > 0 ? 'high' : 'none',
   };
 }
 
-// Check for voice agent presence
+// Check for voice agent presence - ACCURATE detection via scripts/widgets only
 function checkForVoiceAgent(html) {
-  const voiceIndicators = [
-    'aircall', 'dialpad', 'ringcentral', 'vonage', 'twilio',
-    'voice-agent', 'ai-phone', 'callrail', 'phone-bot',
-    'voicebot', 'ivr-ai', 'speech-to-text', 'voice-assistant',
-    'bland.ai', 'vapi', 'retell', 'synthflow', 'vocode',
-  ];
+  const detected = [];
 
-  const htmlLower = html.toLowerCase();
-  const found = voiceIndicators.filter(indicator => htmlLower.includes(indicator));
+  // Vapi.ai - AI voice agent
+  if (/vapi\.ai|cdn\.vapi\.ai|vapiSDK|vapi-widget/i.test(html)) {
+    detected.push('Vapi.ai');
+  }
+
+  // Bland.ai - AI phone agent
+  if (/bland\.ai|api\.bland\.ai|bland-widget/i.test(html)) {
+    detected.push('Bland.ai');
+  }
+
+  // Retell AI - voice agent
+  if (/retell\.ai|retellai|retell-widget/i.test(html)) {
+    detected.push('Retell AI');
+  }
+
+  // Synthflow - AI voice
+  if (/synthflow\.ai|synthflow-widget/i.test(html)) {
+    detected.push('Synthflow');
+  }
+
+  // Vocode - voice AI
+  if (/vocode\.dev|vocode-widget/i.test(html)) {
+    detected.push('Vocode');
+  }
+
+  // PlayHT - voice AI
+  if (/play\.ht|playht.*widget/i.test(html)) {
+    detected.push('PlayHT');
+  }
+
+  // ElevenLabs widget
+  if (/elevenlabs\.io|elevenlabs-widget|elevenlabs-convai/i.test(html)) {
+    detected.push('ElevenLabs');
+  }
+
+  // Air AI
+  if (/air\.ai|airai-widget/i.test(html)) {
+    detected.push('Air AI');
+  }
+
+  // Note: Traditional phone systems like Aircall, RingCentral, Dialpad are NOT AI voice agents
+  // They are VoIP/call tracking - different from AI that answers calls
 
   return {
-    detected: found.length > 0,
-    providers: found,
+    detected: detected.length > 0,
+    providers: detected,
+    confidence: detected.length > 0 ? 'high' : 'none',
   };
 }
 
-// Check for calculator/quote tools
+// Check for calculator/quote tools - look for actual interactive elements
 function checkForCalculator(html) {
-  const calcIndicators = [
-    'calculator', 'quote-form', 'estimate', 'price-calculator',
-    'cost-calculator', 'roi-calculator', 'instant-quote',
-    'get-quote', 'free-estimate', 'pricing-tool', 'assessment',
-    'configurator', 'builder-tool', 'interactive-form',
-  ];
-
+  const detected = [];
   const htmlLower = html.toLowerCase();
-  const found = calcIndicators.filter(indicator => htmlLower.includes(indicator));
+
+  // Look for actual calculator widgets/tools (not just mentions)
+  // Check for calculator-specific form patterns with input fields and calculate buttons
+  const hasCalcForm = /<form[^>]*(?:calculator|quote|estimate|pricing)[^>]*>[\s\S]*?<input[\s\S]*?<\/form>/i.test(html);
+  const hasCalcWidget = /class=["'][^"']*(?:calculator-widget|quote-calculator|price-calculator|cost-calculator|roi-calculator)[^"']*["']/i.test(html);
+  const hasCalcScript = /(?:calculator|calcWidget|quoteCalculator|pricingCalculator)\.(?:js|min\.js)/i.test(html);
+
+  // Known calculator platforms
+  if (/calconic\.com|outgrow\.co|calculoid\.com|ucalc\.pro/i.test(html)) {
+    detected.push('Third-party Calculator Tool');
+  }
+
+  // Check for interactive pricing/quote elements
+  if (/id=["'][^"']*(?:calculator|quote-form|pricing-calculator|cost-estimate)[^"']*["']/i.test(html)) {
+    detected.push('Custom Calculator');
+  }
+
+  // Typeform/form tools often used for quotes
+  if (/typeform\.com|jotform\.com.*(?:quote|estimate|calculator)/i.test(html)) {
+    detected.push('Interactive Quote Form');
+  }
+
+  if (hasCalcForm || hasCalcWidget || hasCalcScript) {
+    if (detected.length === 0) detected.push('Calculator/Quote Tool');
+  }
 
   return {
-    detected: found.length > 0,
-    types: found,
+    detected: detected.length > 0,
+    types: detected,
+    confidence: detected.length > 0 ? 'medium' : 'none',
   };
 }
 
@@ -491,15 +631,16 @@ function analyzeAIReadiness(data) {
   };
 }
 
-// Analyze AEO/GEO (LLM optimization)
+// Analyze AEO/GEO (LLM optimization) - DETAILED breakdown for customer explanation
 function analyzeAEOGEO(data, industry, city, companyName) {
   if (data.error) {
-    return { score: 0, issues: [], recommendations: [] };
+    return { score: 0, issues: [], recommendations: [], detailedChecks: [] };
   }
 
   let score = 0;
   const issues = [];
   const recommendations = [];
+  const detailedChecks = []; // New: detailed breakdown for report
   const checks = {
     schemaMarkup: false,
     faqContent: false,
@@ -512,66 +653,272 @@ function analyzeAEOGEO(data, industry, city, companyName) {
   const aeo = data.aeoIndicators || {};
 
   // Schema Markup (20 points)
+  const schemaCheck = {
+    name: 'Schema Markup (Structured Data)',
+    status: 'missing',
+    score: 0,
+    maxScore: 20,
+    details: [],
+    whyItMatters: 'Schema markup helps AI assistants like ChatGPT and Google understand your business type, services, location, and reviews in a structured way.',
+    recommendation: '',
+  };
+
   if (data.schemaMarkup?.found) {
-    score += 10;
+    schemaCheck.score = 10;
+    schemaCheck.status = 'partial';
+    schemaCheck.details.push(`Found ${data.schemaMarkup.count} schema type(s)`);
     checks.schemaMarkup = true;
-    if (data.schemaMarkup.hasLocalBusiness) score += 5;
-    if (data.schemaMarkup.hasFAQSchema) score += 5;
+
+    if (data.schemaMarkup.hasLocalBusiness) {
+      schemaCheck.score += 5;
+      schemaCheck.details.push('✓ LocalBusiness schema found');
+    } else {
+      schemaCheck.details.push('✗ Missing LocalBusiness schema');
+      schemaCheck.recommendation = 'Add LocalBusiness schema with your address, phone, hours, and service area.';
+    }
+
+    if (data.schemaMarkup.hasFAQSchema) {
+      schemaCheck.score += 5;
+      schemaCheck.details.push('✓ FAQ schema found');
+      schemaCheck.status = 'good';
+    } else {
+      schemaCheck.details.push('✗ Missing FAQPage schema');
+      if (!schemaCheck.recommendation) {
+        schemaCheck.recommendation = 'Add FAQ schema to help AI extract your Q&A content.';
+      }
+    }
+
+    if (data.schemaMarkup.hasReviewSchema) {
+      schemaCheck.details.push('✓ Review/Rating schema found');
+    }
+    if (data.schemaMarkup.hasServiceSchema) {
+      schemaCheck.details.push('✓ Service schema found');
+    }
   } else {
+    schemaCheck.status = 'missing';
+    schemaCheck.details.push('No schema markup detected on the page');
+    schemaCheck.recommendation = `Add LocalBusiness, FAQPage, and Service schema markup. This is critical for AI assistants to recommend ${companyName} for "${industry} in ${city}" queries.`;
     issues.push('No structured data/schema markup - LLMs cannot easily parse your business info');
     recommendations.push('Add LocalBusiness and FAQPage schema markup');
   }
+  score += schemaCheck.score;
+  detailedChecks.push(schemaCheck);
 
   // FAQ Content (15 points)
+  const faqCheck = {
+    name: 'FAQ Content',
+    status: 'missing',
+    score: 0,
+    maxScore: 15,
+    details: [],
+    whyItMatters: 'FAQs are goldmines for AI. When someone asks ChatGPT a question about your industry, sites with clear Q&A content get cited and recommended.',
+    recommendation: '',
+  };
+
   if (data.hasFAQ || data.schemaMarkup?.hasFAQSchema) {
-    score += 15;
+    faqCheck.score = 15;
+    faqCheck.status = 'good';
+    faqCheck.details.push('✓ FAQ content detected on the page');
+    if (data.schemaMarkup?.hasFAQSchema) {
+      faqCheck.details.push('✓ FAQ schema markup present');
+    } else {
+      faqCheck.details.push('✗ FAQ content found but no FAQ schema markup');
+      faqCheck.recommendation = 'Add FAQPage schema to your existing FAQ content for better AI visibility.';
+      faqCheck.status = 'partial';
+      faqCheck.score = 10;
+    }
     checks.faqContent = true;
   } else {
+    faqCheck.status = 'missing';
+    faqCheck.details.push('No FAQ section detected');
+    faqCheck.recommendation = `Create an FAQ page answering common ${industry} questions like: "How much does [service] cost?", "How long does [service] take?", "Do you serve [${city}]?", "What is your process?"`;
     issues.push('No FAQ content - missing opportunity for LLMs to extract Q&A');
     recommendations.push(`Create FAQ section answering common ${industry} questions`);
   }
+  score += faqCheck.score;
+  detailedChecks.push(faqCheck);
 
   // Local Business Signals (15 points)
-  if (data.localBusinessInfo?.hasAddress && data.localBusinessInfo?.phone) {
-    score += 10;
-    checks.localSignals = true;
-    if (data.localBusinessInfo.hasHours) score += 5;
+  const localCheck = {
+    name: 'Local Business Signals',
+    status: 'missing',
+    score: 0,
+    maxScore: 15,
+    details: [],
+    whyItMatters: `When someone asks AI "Who is the best ${industry.toLowerCase()} in ${city}?", the AI looks for clear location signals to make local recommendations.`,
+    recommendation: '',
+  };
+
+  if (data.localBusinessInfo?.phone) {
+    localCheck.score += 5;
+    localCheck.details.push('✓ Phone number visible');
   } else {
+    localCheck.details.push('✗ Phone number not prominently displayed');
+  }
+
+  if (data.localBusinessInfo?.hasAddress) {
+    localCheck.score += 5;
+    localCheck.details.push('✓ Address information found');
+  } else {
+    localCheck.details.push('✗ No clear address/location information');
+  }
+
+  if (data.localBusinessInfo?.hasHours) {
+    localCheck.score += 5;
+    localCheck.details.push('✓ Business hours mentioned');
+  } else {
+    localCheck.details.push('✗ Business hours not displayed');
+  }
+
+  if (localCheck.score >= 10) {
+    localCheck.status = localCheck.score === 15 ? 'good' : 'partial';
+    checks.localSignals = true;
+  } else {
+    localCheck.status = 'missing';
     issues.push('Weak local signals - LLMs may not recommend you for local searches');
     recommendations.push(`Prominently display ${city} address, phone, and business hours`);
   }
 
-  // Clear, Extractable Answers (20 points)
-  if (aeo.hasDefinitiveStatements && aeo.hasServiceDescriptions) {
-    score += 15;
-    checks.clearAnswers = true;
-    if (aeo.hasProcessDescription) score += 5;
-  } else {
-    issues.push('Content lacks clear, direct statements LLMs can extract');
-    recommendations.push('Write clear "We are...", "We specialize in...", "Our process is..." statements');
+  if (localCheck.score < 15) {
+    localCheck.recommendation = `Add a clear footer or contact section with your full ${city} address, phone number (with click-to-call), and business hours. This helps AI recommend you for local queries.`;
   }
+  score += localCheck.score;
+  detailedChecks.push(localCheck);
+
+  // Clear, Extractable Answers (20 points)
+  const answersCheck = {
+    name: 'Clear, Extractable Content',
+    status: 'missing',
+    score: 0,
+    maxScore: 20,
+    details: [],
+    whyItMatters: 'AI assistants extract direct statements from websites. Content like "We are a [industry] company serving [city]" and "Our services include..." gets pulled directly into AI responses.',
+    recommendation: '',
+  };
+
+  if (aeo.hasDefinitiveStatements) {
+    answersCheck.score += 8;
+    answersCheck.details.push('✓ Clear "We are/We provide/We specialize" statements found');
+  } else {
+    answersCheck.details.push('✗ Missing clear definitive statements about your business');
+  }
+
+  if (aeo.hasServiceDescriptions) {
+    answersCheck.score += 7;
+    answersCheck.details.push('✓ Service descriptions found');
+    checks.clearAnswers = true;
+  } else {
+    answersCheck.details.push('✗ No clear service descriptions');
+  }
+
+  if (aeo.hasProcessDescription) {
+    answersCheck.score += 5;
+    answersCheck.details.push('✓ Process/methodology described');
+  } else {
+    answersCheck.details.push('✗ No process or "how we work" description');
+  }
+
+  answersCheck.status = answersCheck.score >= 15 ? 'good' : answersCheck.score >= 8 ? 'partial' : 'missing';
+
+  if (answersCheck.score < 20) {
+    answersCheck.recommendation = `Add clear statements like: "${companyName} is a ${industry.toLowerCase()} company serving ${city} and surrounding areas. We specialize in [services]. Our process includes: 1) [step], 2) [step], 3) [step]."`;
+    if (answersCheck.score < 8) {
+      issues.push('Content lacks clear, direct statements LLMs can extract');
+      recommendations.push('Write clear "We are...", "We specialize in...", "Our process is..." statements');
+    }
+  }
+  score += answersCheck.score;
+  detailedChecks.push(answersCheck);
 
   // Expertise/E-E-A-T Signals (15 points)
+  const expertiseCheck = {
+    name: 'Expertise & Trust Signals (E-E-A-T)',
+    status: 'missing',
+    score: 0,
+    maxScore: 15,
+    details: [],
+    whyItMatters: 'Google and AI systems prioritize content from experts. Showing credentials, experience, and real data builds trust with both AI and potential customers.',
+    recommendation: '',
+  };
+
   if (aeo.hasExpertiseIndicators) {
-    score += 10;
+    expertiseCheck.score += 10;
+    expertiseCheck.details.push('✓ Expertise indicators found (years, certifications, etc.)');
     checks.expertiseSignals = true;
-    if (aeo.hasStatistics) score += 5;
   } else {
-    issues.push('Missing expertise indicators that build LLM trust');
-    recommendations.push('Add credentials, years of experience, certifications, and client statistics');
+    expertiseCheck.details.push('✗ No expertise credentials visible');
   }
 
+  if (aeo.hasStatistics) {
+    expertiseCheck.score += 5;
+    expertiseCheck.details.push('✓ Statistics/numbers found (projects completed, years, etc.)');
+  } else {
+    expertiseCheck.details.push('✗ No statistics or concrete numbers');
+  }
+
+  if (aeo.hasAuthorAttribution) {
+    expertiseCheck.details.push('✓ Author/expert attribution found');
+  }
+
+  if (data.hasReviews?.detected) {
+    expertiseCheck.details.push('✓ Reviews/testimonials section found');
+  } else {
+    expertiseCheck.details.push('✗ No reviews or testimonials visible');
+  }
+
+  expertiseCheck.status = expertiseCheck.score >= 10 ? 'good' : expertiseCheck.score >= 5 ? 'partial' : 'missing';
+
+  if (expertiseCheck.score < 15) {
+    expertiseCheck.recommendation = `Add credibility signals: "Serving ${city} for X years", "X+ projects completed", "Licensed & Insured", "5-star rated on Google". Include customer testimonials with names and specific results.`;
+    if (expertiseCheck.score < 10) {
+      issues.push('Missing expertise indicators that build LLM trust');
+      recommendations.push('Add credentials, years of experience, certifications, and client statistics');
+    }
+  }
+  score += expertiseCheck.score;
+  detailedChecks.push(expertiseCheck);
+
   // Structured Content (15 points)
-  if (aeo.hasStructuredLists && aeo.hasQAFormat) {
-    score += 15;
-    checks.structuredContent = true;
-  } else if (aeo.hasStructuredLists || aeo.hasQAFormat) {
-    score += 8;
+  const structureCheck = {
+    name: 'Structured Content Format',
+    status: 'missing',
+    score: 0,
+    maxScore: 15,
+    details: [],
+    whyItMatters: 'AI systems parse bullet points, numbered lists, and clear headings more easily than dense paragraphs. Structured content gets extracted and cited more often.',
+    recommendation: '',
+  };
+
+  if (aeo.hasStructuredLists) {
+    structureCheck.score += 8;
+    structureCheck.details.push('✓ Structured lists (bullet points/numbered) found');
+  } else {
+    structureCheck.details.push('✗ No structured lists detected');
+  }
+
+  if (aeo.hasQAFormat) {
+    structureCheck.score += 7;
+    structureCheck.details.push('✓ Q&A format content found');
     checks.structuredContent = true;
   } else {
-    issues.push('Content not structured for LLM parsing');
-    recommendations.push('Use bullet points, numbered lists, and clear headings');
+    structureCheck.details.push('✗ No Q&A format content');
   }
+
+  if (aeo.hasComparisonContent) {
+    structureCheck.details.push('✓ Comparison content found (vs, compared to)');
+  }
+
+  structureCheck.status = structureCheck.score >= 12 ? 'good' : structureCheck.score >= 5 ? 'partial' : 'missing';
+
+  if (structureCheck.score < 15) {
+    structureCheck.recommendation = 'Format your content with: bullet point lists for services, numbered steps for processes, Q&A sections, and comparison tables. AI loves to extract and cite well-structured content.';
+    if (structureCheck.score < 8) {
+      issues.push('Content not structured for LLM parsing');
+      recommendations.push('Use bullet points, numbered lists, and clear headings');
+    }
+  }
+  score += structureCheck.score;
+  detailedChecks.push(structureCheck);
 
   // LLM Recommendation Test Context
   const llmContext = {
@@ -579,6 +926,12 @@ function analyzeAEOGEO(data, industry, city, companyName) {
     reasoning: score >= 60
       ? `Site has sufficient signals for LLMs to understand and recommend ${companyName}`
       : `LLMs like ChatGPT may struggle to recommend ${companyName} for "${industry} in ${city}" queries`,
+    testQuery: `"Best ${industry.toLowerCase()} in ${city}"`,
+    prediction: score >= 70
+      ? `HIGH likelihood of being recommended - strong AI signals`
+      : score >= 50
+        ? `MEDIUM likelihood - some improvements needed`
+        : `LOW likelihood - significant improvements needed for AI visibility`,
   };
 
   return {
@@ -587,6 +940,7 @@ function analyzeAEOGEO(data, industry, city, companyName) {
     issues,
     recommendations,
     llmContext,
+    detailedChecks, // NEW: detailed breakdown for customer explanation
   };
 }
 
@@ -1144,6 +1498,24 @@ function generateReportHTML(data) {
         .a11y-pass-all { background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 10px; padding: 15px 20px; text-align: center; }
         .a11y-pass-all strong { color: #047857; font-size: 14px; }
 
+        .llm-section { background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); color: white; }
+        .llm-check-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; margin-bottom: 15px; }
+        .llm-check-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .llm-check-name { font-size: 15px; font-weight: 600; }
+        .llm-check-score { font-size: 12px; padding: 4px 12px; border-radius: 20px; font-weight: 600; }
+        .llm-check-score.good { background: rgba(16,185,129,0.2); color: #6ee7b7; }
+        .llm-check-score.partial { background: rgba(245,158,11,0.2); color: #fcd34d; }
+        .llm-check-score.missing { background: rgba(239,68,68,0.2); color: #fca5a5; }
+        .llm-check-why { font-size: 12px; color: rgba(255,255,255,0.6); font-style: italic; margin-bottom: 10px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 6px; }
+        .llm-check-details { font-size: 13px; color: rgba(255,255,255,0.85); margin-bottom: 10px; }
+        .llm-check-details li { margin-bottom: 4px; }
+        .llm-check-rec { font-size: 12px; padding: 10px 12px; background: rgba(59,130,246,0.2); border-left: 3px solid #60a5fa; border-radius: 4px; color: #93c5fd; }
+        .llm-check-rec strong { color: #60a5fa; }
+        .llm-prediction { background: linear-gradient(135deg, rgba(139,92,246,0.3) 0%, rgba(59,130,246,0.3) 100%); border: 1px solid rgba(139,92,246,0.4); border-radius: 12px; padding: 20px; margin-top: 20px; }
+        .llm-prediction h3 { font-size: 16px; color: #c4b5fd; margin-bottom: 10px; text-align: center; }
+        .llm-prediction .query { font-size: 14px; color: #a5b4fc; text-align: center; margin-bottom: 8px; }
+        .llm-prediction .result { font-size: 15px; font-weight: 600; text-align: center; color: white; }
+
         .footer { padding: 30px 40px; background: #0f172a; color: white; text-align: center; }
         .footer-main { font-size: 16px; margin-bottom: 8px; }
         .footer-sub { font-size: 13px; opacity: 0.7; margin-bottom: 15px; }
@@ -1244,6 +1616,31 @@ function generateReportHTML(data) {
         <div class="llm-box">
             <h3>🎯 ChatGPT Recommendation Test</h3>
             <p>${aiInsights.llmRecommendation}</p>
+        </div>
+    </div>
+
+    <div class="section llm-section">
+        <h2 class="section-title" style="color: white;"><span class="section-icon">🧠</span> LLM Optimization Deep Dive (AEO/GEO)</h2>
+        <p style="font-size: 13px; color: rgba(255,255,255,0.7); margin-bottom: 20px;">This section explains exactly what AI assistants like ChatGPT, Perplexity, and Google AI look for when deciding whether to recommend your business.</p>
+
+        ${aeoGeoAnalysis.detailedChecks ? aeoGeoAnalysis.detailedChecks.map(check => `
+        <div class="llm-check-card">
+            <div class="llm-check-header">
+                <div class="llm-check-name">${check.name}</div>
+                <span class="llm-check-score ${check.status}">${check.score}/${check.maxScore} pts</span>
+            </div>
+            <div class="llm-check-why">💡 Why it matters: ${check.whyItMatters}</div>
+            <ul class="llm-check-details">
+                ${check.details.map(d => `<li>${d}</li>`).join('')}
+            </ul>
+            ${check.recommendation ? `<div class="llm-check-rec"><strong>Recommendation:</strong> ${check.recommendation}</div>` : ''}
+        </div>
+        `).join('') : ''}
+
+        <div class="llm-prediction">
+            <h3>🔮 AI Recommendation Prediction</h3>
+            <div class="query">Query: "${aeoGeoAnalysis.llmContext?.testQuery || `Best ${industry} in ${city}`}"</div>
+            <div class="result">${aeoGeoAnalysis.llmContext?.prediction || (scores.aeoGeo >= 60 ? 'Likely to be recommended' : 'Improvements needed')}</div>
         </div>
     </div>
 
