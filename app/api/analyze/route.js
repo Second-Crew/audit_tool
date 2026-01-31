@@ -1045,49 +1045,313 @@ function analyzeSEO(data, pageSpeedData) {
   };
 }
 
-// Analyze security headers
+// Analyze security headers - COMPREHENSIVE analysis with recommendations
 function analyzeSecurityHeaders(url, data) {
   let score = 0;
   const issues = [];
+  const checks = {};
+  const detailedChecks = [];
 
-  // HTTPS (40 points)
+  const html = data.html || '';
+  const headers = data.headers || {};
+
+  // 1. HTTPS (25 points)
+  const httpsCheck = {
+    name: 'HTTPS / SSL Certificate',
+    status: 'missing',
+    score: 0,
+    maxScore: 25,
+    details: [],
+    whyItMatters: 'HTTPS encrypts data between visitors and your website. Without it, hackers can intercept passwords, form data, and personal information. Google also penalizes non-HTTPS sites in search rankings.',
+    recommendation: '',
+  };
+
   if (url.startsWith('https://')) {
-    score += 40;
+    httpsCheck.score = 25;
+    httpsCheck.status = 'good';
+    httpsCheck.details.push('✓ Site uses HTTPS encryption');
+    checks.https = true;
   } else {
-    issues.push('Not using HTTPS - security risk');
+    httpsCheck.status = 'missing';
+    httpsCheck.details.push('✗ Site not using HTTPS - data is transmitted unencrypted');
+    httpsCheck.recommendation = 'Install an SSL certificate immediately. Most hosts offer free SSL via Let\'s Encrypt. This is critical for security and SEO.';
+    issues.push('Not using HTTPS - customer data is at risk');
+    checks.https = false;
   }
+  score += httpsCheck.score;
+  detailedChecks.push(httpsCheck);
 
-  // Check headers if available
-  if (data.headers) {
-    // Strict-Transport-Security (15 points)
-    if (data.headers['strict-transport-security']) {
-      score += 15;
+  // 2. HSTS - HTTP Strict Transport Security (15 points)
+  const hstsCheck = {
+    name: 'HSTS (HTTP Strict Transport Security)',
+    status: 'missing',
+    score: 0,
+    maxScore: 15,
+    details: [],
+    whyItMatters: 'HSTS forces browsers to always use HTTPS, preventing downgrade attacks where hackers trick browsers into using insecure HTTP connections.',
+    recommendation: '',
+  };
+
+  if (headers['strict-transport-security']) {
+    hstsCheck.score = 15;
+    hstsCheck.status = 'good';
+    hstsCheck.details.push('✓ HSTS header present');
+    const hstsValue = headers['strict-transport-security'];
+    if (hstsValue.includes('max-age=')) {
+      const maxAge = hstsValue.match(/max-age=(\d+)/);
+      if (maxAge && parseInt(maxAge[1]) >= 31536000) {
+        hstsCheck.details.push('✓ Max-age is 1 year or more (recommended)');
+      }
+    }
+    if (hstsValue.includes('includeSubDomains')) {
+      hstsCheck.details.push('✓ Includes subdomains');
+    }
+    checks.hsts = true;
+  } else {
+    hstsCheck.status = 'missing';
+    hstsCheck.details.push('✗ No HSTS header found');
+    hstsCheck.recommendation = 'Add the header: Strict-Transport-Security: max-age=31536000; includeSubDomains. This can be configured in your web server or CDN settings.';
+    issues.push('Missing HSTS header - browsers may connect via insecure HTTP');
+    checks.hsts = false;
+  }
+  score += hstsCheck.score;
+  detailedChecks.push(hstsCheck);
+
+  // 3. Content Security Policy (15 points)
+  const cspCheck = {
+    name: 'Content Security Policy (CSP)',
+    status: 'missing',
+    score: 0,
+    maxScore: 15,
+    details: [],
+    whyItMatters: 'CSP prevents XSS (cross-site scripting) attacks by controlling which scripts, styles, and resources can load on your site. Without it, attackers can inject malicious code.',
+    recommendation: '',
+  };
+
+  if (headers['content-security-policy']) {
+    cspCheck.score = 15;
+    cspCheck.status = 'good';
+    cspCheck.details.push('✓ Content Security Policy header present');
+    const cspValue = headers['content-security-policy'];
+    if (cspValue.includes('default-src')) {
+      cspCheck.details.push('✓ Has default-src directive');
+    }
+    if (cspValue.includes('script-src')) {
+      cspCheck.details.push('✓ Has script-src directive');
+    }
+    if (cspValue.includes('unsafe-inline') || cspValue.includes('unsafe-eval')) {
+      cspCheck.details.push('⚠ Uses unsafe-inline or unsafe-eval (reduces protection)');
+      cspCheck.status = 'partial';
+      cspCheck.score = 10;
+    }
+    checks.csp = true;
+  } else {
+    cspCheck.status = 'missing';
+    cspCheck.details.push('✗ No Content Security Policy found');
+    cspCheck.recommendation = 'Implement a CSP header. Start with: Content-Security-Policy: default-src \'self\'; script-src \'self\' trusted-cdn.com; This blocks unauthorized scripts from running.';
+    issues.push('No Content Security Policy - site vulnerable to XSS attacks');
+    checks.csp = false;
+  }
+  score += cspCheck.score;
+  detailedChecks.push(cspCheck);
+
+  // 4. X-Frame-Options / Clickjacking Protection (10 points)
+  const frameCheck = {
+    name: 'Clickjacking Protection',
+    status: 'missing',
+    score: 0,
+    maxScore: 10,
+    details: [],
+    whyItMatters: 'Clickjacking attacks trick users into clicking hidden buttons by embedding your site in an invisible iframe. Attackers can steal clicks, credentials, or trigger unwanted actions.',
+    recommendation: '',
+  };
+
+  if (headers['x-frame-options'] || headers['content-security-policy']?.includes('frame-ancestors')) {
+    frameCheck.score = 10;
+    frameCheck.status = 'good';
+    if (headers['x-frame-options']) {
+      frameCheck.details.push(`✓ X-Frame-Options: ${headers['x-frame-options']}`);
+    }
+    if (headers['content-security-policy']?.includes('frame-ancestors')) {
+      frameCheck.details.push('✓ CSP frame-ancestors directive set');
+    }
+    checks.clickjacking = true;
+  } else {
+    frameCheck.status = 'missing';
+    frameCheck.details.push('✗ No clickjacking protection found');
+    frameCheck.recommendation = 'Add the header: X-Frame-Options: DENY (or SAMEORIGIN if you embed your own content). This prevents your site from being embedded in malicious iframes.';
+    issues.push('No clickjacking protection - site can be embedded in malicious iframes');
+    checks.clickjacking = false;
+  }
+  score += frameCheck.score;
+  detailedChecks.push(frameCheck);
+
+  // 5. X-Content-Type-Options (10 points)
+  const mimeCheck = {
+    name: 'MIME Type Sniffing Protection',
+    status: 'missing',
+    score: 0,
+    maxScore: 10,
+    details: [],
+    whyItMatters: 'MIME sniffing allows browsers to "guess" file types, which attackers exploit by uploading malicious files disguised as images. This header prevents that behavior.',
+    recommendation: '',
+  };
+
+  if (headers['x-content-type-options'] === 'nosniff') {
+    mimeCheck.score = 10;
+    mimeCheck.status = 'good';
+    mimeCheck.details.push('✓ X-Content-Type-Options: nosniff');
+    checks.mimeSniffing = true;
+  } else if (headers['x-content-type-options']) {
+    mimeCheck.score = 5;
+    mimeCheck.status = 'partial';
+    mimeCheck.details.push(`⚠ X-Content-Type-Options present but not set to "nosniff"`);
+    checks.mimeSniffing = false;
+  } else {
+    mimeCheck.status = 'missing';
+    mimeCheck.details.push('✗ No X-Content-Type-Options header');
+    mimeCheck.recommendation = 'Add the header: X-Content-Type-Options: nosniff. This is a simple, one-line security improvement.';
+    checks.mimeSniffing = false;
+  }
+  score += mimeCheck.score;
+  detailedChecks.push(mimeCheck);
+
+  // 6. Referrer Policy (5 points)
+  const referrerCheck = {
+    name: 'Referrer Policy',
+    status: 'missing',
+    score: 0,
+    maxScore: 5,
+    details: [],
+    whyItMatters: 'Controls what URL information is sent when users click links to other sites. Without it, sensitive page URLs (with tokens, IDs, etc.) may leak to third parties.',
+    recommendation: '',
+  };
+
+  if (headers['referrer-policy']) {
+    referrerCheck.score = 5;
+    referrerCheck.status = 'good';
+    referrerCheck.details.push(`✓ Referrer-Policy: ${headers['referrer-policy']}`);
+    checks.referrerPolicy = true;
+  } else {
+    referrerCheck.status = 'missing';
+    referrerCheck.details.push('✗ No Referrer-Policy header');
+    referrerCheck.recommendation = 'Add: Referrer-Policy: strict-origin-when-cross-origin. This limits what URL info is shared with other sites.';
+    checks.referrerPolicy = false;
+  }
+  score += referrerCheck.score;
+  detailedChecks.push(referrerCheck);
+
+  // 7. Permissions Policy (5 points)
+  const permissionsCheck = {
+    name: 'Permissions Policy (Feature Policy)',
+    status: 'missing',
+    score: 0,
+    maxScore: 5,
+    details: [],
+    whyItMatters: 'Controls which browser features (camera, microphone, geolocation) can be used. Prevents malicious scripts from accessing sensitive device features.',
+    recommendation: '',
+  };
+
+  if (headers['permissions-policy'] || headers['feature-policy']) {
+    permissionsCheck.score = 5;
+    permissionsCheck.status = 'good';
+    permissionsCheck.details.push('✓ Permissions Policy header present');
+    checks.permissionsPolicy = true;
+  } else {
+    permissionsCheck.status = 'missing';
+    permissionsCheck.details.push('✗ No Permissions Policy header');
+    permissionsCheck.recommendation = 'Add: Permissions-Policy: camera=(), microphone=(), geolocation=(). This blocks unwanted access to device features.';
+    checks.permissionsPolicy = false;
+  }
+  score += permissionsCheck.score;
+  detailedChecks.push(permissionsCheck);
+
+  // 8. Mixed Content Check (10 points)
+  const mixedContentCheck = {
+    name: 'Mixed Content',
+    status: 'missing',
+    score: 0,
+    maxScore: 10,
+    details: [],
+    whyItMatters: 'Mixed content occurs when HTTPS pages load resources (images, scripts) over HTTP. This creates security holes that attackers can exploit, and browsers may block the content.',
+    recommendation: '',
+  };
+
+  if (url.startsWith('https://')) {
+    const httpResources = html.match(/http:\/\/[^"'\s]+\.(js|css|png|jpg|jpeg|gif|svg|woff|woff2)/gi) || [];
+    const httpScripts = html.match(/src=["']http:\/\//gi) || [];
+    const httpLinks = html.match(/href=["']http:\/\/[^"']*\.(css|js)/gi) || [];
+
+    if (httpResources.length === 0 && httpScripts.length === 0 && httpLinks.length === 0) {
+      mixedContentCheck.score = 10;
+      mixedContentCheck.status = 'good';
+      mixedContentCheck.details.push('✓ No mixed content detected');
+      checks.mixedContent = true;
     } else {
-      issues.push('Missing HSTS header');
-    }
-
-    // X-Content-Type-Options (15 points)
-    if (data.headers['x-content-type-options']) {
-      score += 15;
-    }
-
-    // X-Frame-Options or CSP frame-ancestors (15 points)
-    if (data.headers['x-frame-options'] || data.headers['content-security-policy']?.includes('frame-ancestors')) {
-      score += 15;
-    }
-
-    // Content-Security-Policy (15 points)
-    if (data.headers['content-security-policy']) {
-      score += 15;
+      mixedContentCheck.status = 'missing';
+      mixedContentCheck.details.push(`✗ Found ${httpResources.length + httpScripts.length + httpLinks.length} HTTP resources on HTTPS page`);
+      mixedContentCheck.recommendation = 'Update all resource URLs to use HTTPS, or use protocol-relative URLs (//example.com/resource.js). Check images, scripts, stylesheets, and fonts.';
+      issues.push('Mixed content found - HTTP resources on HTTPS page');
+      checks.mixedContent = false;
     }
   } else {
-    score += 30; // Give partial credit if we couldn't check headers
+    mixedContentCheck.status = 'partial';
+    mixedContentCheck.details.push('⚠ Cannot check - site not using HTTPS');
+    mixedContentCheck.score = 0;
+    checks.mixedContent = false;
   }
+  score += mixedContentCheck.score;
+  detailedChecks.push(mixedContentCheck);
+
+  // 9. Exposed Server Info (5 points) - Check for info disclosure
+  const serverInfoCheck = {
+    name: 'Server Information Exposure',
+    status: 'missing',
+    score: 0,
+    maxScore: 5,
+    details: [],
+    whyItMatters: 'Exposing server software and versions helps attackers find known vulnerabilities. Hiding this info makes attacks harder.',
+    recommendation: '',
+  };
+
+  const serverHeader = headers['server'] || '';
+  const poweredBy = headers['x-powered-by'] || '';
+
+  if (!serverHeader && !poweredBy) {
+    serverInfoCheck.score = 5;
+    serverInfoCheck.status = 'good';
+    serverInfoCheck.details.push('✓ No server version information exposed');
+    checks.serverInfo = true;
+  } else {
+    serverInfoCheck.status = 'partial';
+    if (serverHeader) {
+      serverInfoCheck.details.push(`⚠ Server header exposed: ${serverHeader}`);
+    }
+    if (poweredBy) {
+      serverInfoCheck.details.push(`⚠ X-Powered-By header exposed: ${poweredBy}`);
+    }
+    serverInfoCheck.score = 2;
+    serverInfoCheck.recommendation = 'Remove or obscure Server and X-Powered-By headers in your web server config. Attackers use this info to find exploits.';
+    checks.serverInfo = false;
+  }
+  score += serverInfoCheck.score;
+  detailedChecks.push(serverInfoCheck);
+
+  // Calculate overall security grade
+  const securityGrade = score >= 85 ? 'A' : score >= 70 ? 'B' : score >= 55 ? 'C' : score >= 40 ? 'D' : 'F';
 
   return {
     score: Math.min(score, 100),
+    grade: securityGrade,
     issues,
+    checks,
+    detailedChecks,
     hasHttps: url.startsWith('https://'),
+    summary: score >= 70
+      ? 'Good security posture with minor improvements possible.'
+      : score >= 50
+        ? 'Moderate security - several important headers missing.'
+        : 'Security needs attention - multiple vulnerabilities detected.',
   };
 }
 
@@ -1516,6 +1780,30 @@ function generateReportHTML(data) {
         .llm-prediction .query { font-size: 14px; color: #a5b4fc; text-align: center; margin-bottom: 8px; }
         .llm-prediction .result { font-size: 15px; font-weight: 600; text-align: center; color: white; }
 
+        .security-section { background: linear-gradient(135deg, #1e3a5f 0%, #0f2744 100%); color: white; }
+        .security-grade { display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 25px; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 12px; }
+        .security-grade-letter { font-size: 48px; font-weight: 700; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; border-radius: 12px; }
+        .security-grade-letter.grade-a { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        .security-grade-letter.grade-b { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); }
+        .security-grade-letter.grade-c { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+        .security-grade-letter.grade-d { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); }
+        .security-grade-letter.grade-f { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+        .security-grade-info { text-align: left; }
+        .security-grade-info h3 { font-size: 18px; margin-bottom: 5px; }
+        .security-grade-info p { font-size: 13px; color: rgba(255,255,255,0.7); }
+        .security-check-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; margin-bottom: 15px; }
+        .security-check-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .security-check-name { font-size: 15px; font-weight: 600; }
+        .security-check-score { font-size: 12px; padding: 4px 12px; border-radius: 20px; font-weight: 600; }
+        .security-check-score.good { background: rgba(16,185,129,0.2); color: #6ee7b7; }
+        .security-check-score.partial { background: rgba(245,158,11,0.2); color: #fcd34d; }
+        .security-check-score.missing { background: rgba(239,68,68,0.2); color: #fca5a5; }
+        .security-check-why { font-size: 12px; color: rgba(255,255,255,0.6); font-style: italic; margin-bottom: 10px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 6px; }
+        .security-check-details { font-size: 13px; color: rgba(255,255,255,0.85); margin-bottom: 10px; list-style: none; padding: 0; }
+        .security-check-details li { margin-bottom: 4px; }
+        .security-check-rec { font-size: 12px; padding: 10px 12px; background: rgba(59,130,246,0.2); border-left: 3px solid #60a5fa; border-radius: 4px; color: #93c5fd; }
+        .security-check-rec strong { color: #60a5fa; }
+
         .footer { padding: 30px 40px; background: #0f172a; color: white; text-align: center; }
         .footer-main { font-size: 16px; margin-bottom: 8px; }
         .footer-sub { font-size: 13px; opacity: 0.7; margin-bottom: 15px; }
@@ -1713,6 +2001,33 @@ function generateReportHTML(data) {
             </ul>
         </div>
         ` : '<div class="a11y-pass-all"><strong>✨ Great job!</strong> No major accessibility issues detected.</div>'}
+    </div>
+
+    <div class="section security-section">
+        <h2 class="section-title" style="color: white;"><span class="section-icon">🔒</span> Security Analysis</h2>
+        <p style="font-size: 13px; color: rgba(255,255,255,0.7); margin-bottom: 20px;">Security protects your customers' data and your business reputation. These checks verify essential security measures are in place.</p>
+
+        <div class="security-grade">
+            <div class="security-grade-letter grade-${(securityAnalysis.grade || 'c').toLowerCase()}">${securityAnalysis.grade || 'C'}</div>
+            <div class="security-grade-info">
+                <h3>Security Grade: ${securityAnalysis.grade || 'C'}</h3>
+                <p>${securityAnalysis.summary || 'Security assessment complete.'}</p>
+            </div>
+        </div>
+
+        ${securityAnalysis.detailedChecks ? securityAnalysis.detailedChecks.map(check => `
+        <div class="security-check-card">
+            <div class="security-check-header">
+                <div class="security-check-name">${check.name}</div>
+                <span class="security-check-score ${check.status}">${check.score}/${check.maxScore} pts</span>
+            </div>
+            <div class="security-check-why">🛡️ Why it matters: ${check.whyItMatters}</div>
+            <ul class="security-check-details">
+                ${check.details.map(d => `<li>${d}</li>`).join('')}
+            </ul>
+            ${check.recommendation ? `<div class="security-check-rec"><strong>Recommendation:</strong> ${check.recommendation}</div>` : ''}
+        </div>
+        `).join('') : ''}
     </div>
 
     <div class="section issues-section">
