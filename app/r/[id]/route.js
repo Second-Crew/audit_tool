@@ -19,39 +19,24 @@ export async function GET(request, { params }) {
   }
 
   try {
-    const sends = await supabaseRequest(
-      config,
-      `/report_sends?id=eq.${sendId}&select=id,audit_id,first_opened_at,open_count`,
-      { method: 'GET' }
-    );
-    const send = Array.isArray(sends) ? sends[0] : null;
-    if (!send?.audit_id) {
+    // Atomic increment + lookup in one call; concurrent opens all count.
+    const auditId = await supabaseRequest(config, '/rpc/record_report_open', {
+      method: 'POST',
+      body: JSON.stringify({ send_id: sendId }),
+    });
+    if (!auditId) {
       return htmlMessage(404, 'Report not found', 'This report link does not exist or was removed.');
     }
 
     const audits = await supabaseRequest(
       config,
-      `/audits?id=eq.${send.audit_id}&select=report`,
+      `/audits?id=eq.${auditId}&select=report`,
       { method: 'GET' }
     );
     const html = Array.isArray(audits) ? audits[0]?.report?.html : null;
     if (!html) {
       return htmlMessage(404, 'Report not found', 'The report for this link is no longer available.');
     }
-
-    const now = new Date().toISOString();
-    await supabaseRequest(config, `/report_sends?id=eq.${sendId}`, {
-      method: 'PATCH',
-      headers: { Prefer: 'return=minimal' },
-      body: JSON.stringify({
-        open_count: (send.open_count || 0) + 1,
-        first_opened_at: send.first_opened_at || now,
-        last_opened_at: now,
-      }),
-    }).catch((error) => {
-      // Never block the prospect's report view on tracking failures.
-      console.error('Open tracking error:', error);
-    });
 
     return new Response(html, {
       status: 200,
