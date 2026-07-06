@@ -11,6 +11,7 @@ import CompetitorsTab from './components/CompetitorsTab.js';
 import CrawlTab from './components/CrawlTab.js';
 import { ActionPlanView, PlanUnlockCta } from './components/ActionPlan.js';
 import SendReportPanel from './components/SendReportPanel.js';
+import HistoryPanel from './components/HistoryPanel.js';
 
 const tabs = [
   { id: 'overview', label: 'Overview' },
@@ -148,19 +149,24 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[#f4f7fb] text-slate-950 print:bg-white">
       {!report ? (
-        <AuditForm
-          url={url}
-          companyName={companyName}
-          competitorUrls={competitorUrls}
-          onUrlChange={setUrl}
-          onCompanyNameChange={setCompanyName}
-          onCompetitorUrlsChange={setCompetitorUrls}
-          onSubmit={handleSubmit}
-          loading={loading}
-          progress={progress}
-          elapsedSeconds={elapsedSeconds}
-          error={error}
-        />
+        <>
+          <AuditForm
+            url={url}
+            companyName={companyName}
+            competitorUrls={competitorUrls}
+            onUrlChange={setUrl}
+            onCompanyNameChange={setCompanyName}
+            onCompetitorUrlsChange={setCompetitorUrls}
+            onSubmit={handleSubmit}
+            loading={loading}
+            progress={progress}
+            elapsedSeconds={elapsedSeconds}
+            error={error}
+          />
+          <div className="mx-auto max-w-5xl px-5 pb-16">
+            <HistoryPanel />
+          </div>
+        </>
       ) : (
         <div className="min-h-screen">
           <header className="border-b border-slate-200 bg-white">
