@@ -4,7 +4,7 @@ import { getScoreTone } from './ui.js';
 // Home-screen list of past diagnostics with their send/open status, loaded
 // from Supabase via /api/history. Each row can reopen the stored report,
 // download the LLM-ready Markdown, or send a tracked link to the prospect.
-export default function HistoryPanel() {
+export default function HistoryPanel({ onOpenAudit }) {
   const [state, setState] = useState({ status: 'loading', audits: [], error: '' });
 
   useEffect(() => {
@@ -88,7 +88,7 @@ export default function HistoryPanel() {
             </thead>
             <tbody>
               {state.audits.map((audit) => (
-                <HistoryRow key={audit.id} audit={audit} />
+                <HistoryRow key={audit.id} audit={audit} onOpenAudit={onOpenAudit} />
               ))}
             </tbody>
           </table>
@@ -100,7 +100,7 @@ export default function HistoryPanel() {
   );
 }
 
-function HistoryRow({ audit }) {
+function HistoryRow({ audit, onOpenAudit }) {
   const [sendOpen, setSendOpen] = useState(false);
   const [extraSends, setExtraSends] = useState([]);
 
@@ -145,13 +145,22 @@ function HistoryRow({ audit }) {
         </td>
         <td className="whitespace-nowrap px-4 py-3">
           <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => onOpenAudit?.(audit.id)}
+              className="text-sm font-semibold text-cyan-700 hover:text-cyan-900"
+              title="Reopen in the full workspace with tabs, action plan, and exports"
+            >
+              Open
+            </button>
             <a
               href={`/reports/${audit.id}`}
               target="_blank"
               rel="noreferrer"
               className="text-sm font-semibold text-cyan-700 hover:text-cyan-900"
+              title="Static HTML report (what the prospect sees)"
             >
-              View
+              HTML
             </a>
             <a
               href={`/reports/${audit.id}?format=markdown`}

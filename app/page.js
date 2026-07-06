@@ -131,9 +131,13 @@ export default function Home() {
   };
 
   // LLM-ready version of the report, for handing the plan to Claude/ChatGPT.
+  // Older stored audits have no inline markdown; the server generates it.
   const downloadMarkdown = () => {
-    if (!report?.markdown) return;
-    downloadBlob(report.markdown, 'text/markdown', `${reportBasename()}_Report.md`);
+    if (report?.markdown) {
+      downloadBlob(report.markdown, 'text/markdown', `${reportBasename()}_Report.md`);
+    } else if (report?.persistence?.auditId) {
+      window.location.href = `/reports/${report.persistence.auditId}?format=markdown`;
+    }
   };
 
   const resetReport = () => {
@@ -149,6 +153,24 @@ export default function Home() {
   const openActionPlan = () => {
     setPlanUnlocked(true);
     setActiveTab('plan');
+  };
+
+  // Reopens a saved audit from the dashboard in the full workspace.
+  const openStoredAudit = async (auditId) => {
+    setError('');
+    try {
+      const response = await fetch(`/api/audits/${auditId}`);
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.error || 'Failed to load the saved report');
+      setReport(data);
+      setCompanyName(data.companyName || '');
+      setUrl(data.audit?.primary?.startUrl || '');
+      setSeverityFilter('all');
+      setActiveTab('overview');
+      setPlanUnlocked(false);
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   const openFindingsWithSeverity = (severity) => {
@@ -184,7 +206,7 @@ export default function Home() {
               elapsedSeconds={elapsedSeconds}
               error={error}
             />
-            <HistoryPanel />
+            <HistoryPanel onOpenAudit={openStoredAudit} />
           </div>
 
           <div className="mt-10 text-sm text-slate-500">Powered by Second Crew</div>
@@ -211,7 +233,7 @@ export default function Home() {
                   <button onClick={downloadHTML} className="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-50">
                     Download HTML
                   </button>
-                  {report.markdown && (
+                  {(report.markdown || report.persistence?.auditId) && (
                     <button onClick={downloadMarkdown} className="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-50">
                       Export Markdown
                     </button>
