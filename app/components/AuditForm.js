@@ -12,19 +12,14 @@ export default function AuditForm({
   error,
 }) {
   return (
-    <div className="mx-auto flex min-h-screen max-w-5xl flex-col justify-center px-5 py-10">
-      <div className="mb-10">
-        <div className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-500">Second Crew</div>
-        <h1 className="mt-4 max-w-3xl text-4xl font-semibold tracking-normal text-slate-950 md:text-5xl">
-          GEO / AEO diagnostic workspace
-        </h1>
-        <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600">
-          Crawl the site, collect evidence, compare manual competitors, and generate a paid-diagnostic style report.
-        </p>
-      </div>
+    <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm md:p-8">
+      <h2 className="text-xl font-semibold text-slate-950">Run a Diagnostic</h2>
+      <p className="mt-1 text-sm text-slate-500">
+        Crawl the site, collect evidence, compare manual competitors, and generate a paid-diagnostic style report.
+      </p>
 
-      <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm md:p-8">
-        <form onSubmit={onSubmit} className="space-y-6">
+      <form onSubmit={onSubmit} className="mt-6 space-y-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <div>
             <label className="mb-2 block text-sm font-medium text-slate-700">Website URL</label>
             <input
@@ -47,38 +42,36 @@ export default function AuditForm({
               className="w-full rounded-md border border-slate-300 bg-white px-4 py-3 text-slate-950 placeholder-slate-400 outline-none transition focus:border-cyan-500 focus:ring-4 focus:ring-cyan-100"
             />
           </div>
+        </div>
 
-          <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">Manual Competitor URLs</label>
-            <textarea
-              value={competitorUrls}
-              onChange={(e) => onCompetitorUrlsChange(e.target.value)}
-              placeholder={'competitor-one.com\nhttps://competitor-two.com'}
-              rows={4}
-              className="w-full rounded-md border border-slate-300 bg-white px-4 py-3 text-slate-950 placeholder-slate-400 outline-none transition focus:border-cyan-500 focus:ring-4 focus:ring-cyan-100"
-            />
-          </div>
+        <div>
+          <label className="mb-2 block text-sm font-medium text-slate-700">Manual Competitor URLs</label>
+          <textarea
+            value={competitorUrls}
+            onChange={(e) => onCompetitorUrlsChange(e.target.value)}
+            placeholder={'competitor-one.com\nhttps://competitor-two.com'}
+            rows={3}
+            className="w-full rounded-md border border-slate-300 bg-white px-4 py-3 text-slate-950 placeholder-slate-400 outline-none transition focus:border-cyan-500 focus:ring-4 focus:ring-cyan-100"
+          />
+        </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="flex w-full items-center justify-center rounded-md bg-slate-950 px-5 py-4 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {loading ? 'Analyzing...' : 'Run Diagnostic'}
-          </button>
-        </form>
+        <button
+          type="submit"
+          disabled={loading}
+          className="flex w-full items-center justify-center rounded-md bg-slate-950 px-5 py-4 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {loading ? 'Analyzing...' : 'Run Diagnostic'}
+        </button>
+      </form>
 
-        {loading && <ProgressPanel progress={progress} elapsedSeconds={elapsedSeconds} />}
+      {loading && <ProgressPanel progress={progress} elapsedSeconds={elapsedSeconds} />}
 
-        {error && (
-          <div className="mt-6 rounded-md border border-red-200 bg-red-50 p-4">
-            <p className="text-sm font-medium text-red-700">{error}</p>
-          </div>
-        )}
-      </section>
-
-      <div className="mt-8 text-sm text-slate-500">Powered by Second Crew</div>
-    </div>
+      {error && (
+        <div className="mt-6 rounded-md border border-red-200 bg-red-50 p-4">
+          <p className="text-sm font-medium text-red-700">{error}</p>
+        </div>
+      )}
+    </section>
   );
 }
 

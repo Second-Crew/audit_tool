@@ -33,7 +33,6 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState('overview');
   const [severityFilter, setSeverityFilter] = useState('all');
   const [planUnlocked, setPlanUnlocked] = useState(false);
-  const [sendPanelOpen, setSendPanelOpen] = useState(false);
 
   const audit = report?.audit;
   const primary = audit?.primary;
@@ -149,24 +148,36 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[#f4f7fb] text-slate-950 print:bg-white">
       {!report ? (
-        <>
-          <AuditForm
-            url={url}
-            companyName={companyName}
-            competitorUrls={competitorUrls}
-            onUrlChange={setUrl}
-            onCompanyNameChange={setCompanyName}
-            onCompetitorUrlsChange={setCompetitorUrls}
-            onSubmit={handleSubmit}
-            loading={loading}
-            progress={progress}
-            elapsedSeconds={elapsedSeconds}
-            error={error}
-          />
-          <div className="mx-auto max-w-5xl px-5 pb-16">
+        <div className="mx-auto max-w-5xl px-5 py-10">
+          <div className="mb-8">
+            <div className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-500">Second Crew</div>
+            <h1 className="mt-3 text-3xl font-semibold tracking-normal text-slate-950 md:text-4xl">
+              GEO / AEO diagnostic dashboard
+            </h1>
+            <p className="mt-2 max-w-2xl text-base leading-7 text-slate-600">
+              Run diagnostics on prospect websites, review the results, and track who you sent each report to and whether they opened it.
+            </p>
+          </div>
+
+          <div className="space-y-6">
+            <AuditForm
+              url={url}
+              companyName={companyName}
+              competitorUrls={competitorUrls}
+              onUrlChange={setUrl}
+              onCompanyNameChange={setCompanyName}
+              onCompetitorUrlsChange={setCompetitorUrls}
+              onSubmit={handleSubmit}
+              loading={loading}
+              progress={progress}
+              elapsedSeconds={elapsedSeconds}
+              error={error}
+            />
             <HistoryPanel />
           </div>
-        </>
+
+          <div className="mt-10 text-sm text-slate-500">Powered by Second Crew</div>
+        </div>
       ) : (
         <div className="min-h-screen">
           <header className="border-b border-slate-200 bg-white">
@@ -183,16 +194,6 @@ export default function Home() {
                 </div>
 
                 <div className="flex flex-wrap gap-3 print:hidden">
-                  <button
-                    onClick={() => setSendPanelOpen((open) => !open)}
-                    className={`rounded-md px-4 py-2 text-sm font-semibold transition ${
-                      sendPanelOpen
-                        ? 'bg-cyan-600 text-white hover:bg-cyan-500'
-                        : 'border border-cyan-300 bg-cyan-50 text-cyan-800 hover:bg-cyan-100'
-                    }`}
-                  >
-                    Send to Prospect
-                  </button>
                   <button onClick={printPDF} className="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-50">
                     Print PDF
                   </button>
@@ -226,12 +227,6 @@ export default function Home() {
           </div>
 
           <div className="mx-auto max-w-7xl px-5 py-6">
-            {sendPanelOpen && (
-              <div className="mb-6">
-                <SendReportPanel domain={primary?.domain} persistence={report.persistence} />
-              </div>
-            )}
-
             {activeTab === 'overview' && (
               <OverviewTab
                 report={report}
@@ -272,6 +267,10 @@ export default function Home() {
             {activeTab !== 'plan' && (
               <PlanUnlockCta plan={actionPlan} onOpen={openActionPlan} unlocked={planUnlocked} />
             )}
+
+            <div className="mt-6">
+              <SendReportPanel domain={primary?.domain} persistence={report.persistence} />
+            </div>
           </div>
         </div>
       )}
