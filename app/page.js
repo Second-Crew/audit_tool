@@ -113,16 +113,27 @@ export default function Home() {
     window.print();
   };
 
+  const downloadBlob = (content, mimeType, filename) => {
+    const blob = new Blob([content], { type: mimeType });
+    const blobUrl = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(blobUrl);
+  };
+
+  const reportBasename = () => (companyName || primary?.domain || 'audit').replace(/\s+/g, '_');
+
   const downloadHTML = () => {
     if (!report) return;
+    downloadBlob(report.html, 'text/html', `${reportBasename()}_Report.html`);
+  };
 
-    const blob = new Blob([report.html], { type: 'text/html' });
-    const reportUrl = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = reportUrl;
-    a.download = `${(companyName || primary?.domain || 'audit').replace(/\s+/g, '_')}_Report.html`;
-    a.click();
-    URL.revokeObjectURL(reportUrl);
+  // LLM-ready version of the report, for handing the plan to Claude/ChatGPT.
+  const downloadMarkdown = () => {
+    if (!report?.markdown) return;
+    downloadBlob(report.markdown, 'text/markdown', `${reportBasename()}_Report.md`);
   };
 
   const resetReport = () => {
@@ -200,6 +211,11 @@ export default function Home() {
                   <button onClick={downloadHTML} className="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-50">
                     Download HTML
                   </button>
+                  {report.markdown && (
+                    <button onClick={downloadMarkdown} className="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-50">
+                      Export Markdown
+                    </button>
+                  )}
                   <button onClick={resetReport} className="rounded-md bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800">
                     New Audit
                   </button>

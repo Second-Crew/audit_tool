@@ -20,7 +20,7 @@ export async function GET() {
   try {
     const rows = await supabaseRequest(
       config,
-      '/audits?select=id,domain,requested_url,created_at,scores,client:clients(company_name),sends:report_sends(id,prospect_name,prospect_email,sent_at,open_count,last_opened_at)&order=created_at.desc&limit=50',
+      '/audits?select=id,client_id,domain,requested_url,created_at,scores,client:clients(company_name),sends:report_sends(id,prospect_name,prospect_email,sent_at,open_count,last_opened_at)&order=created_at.desc&limit=50',
       { method: 'GET' }
     );
     return NextResponse.json({ audits: rows || [] });
