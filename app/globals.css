@@ -18,6 +18,21 @@ body {
   min-height: 100vh;
 }
 
+/* Print stylesheet: the "Print PDF" button calls window.print(); app chrome
+   (buttons, tab bar, plan CTA) is hidden with Tailwind print:hidden classes. */
+@media print {
+  body,
+  main {
+    background: #fff !important;
+    color: #0f172a;
+  }
+
+  article,
+  details {
+    break-inside: avoid;
+  }
+}
+
 /* Loading animation */
 @keyframes pulse {
   0%, 100% { opacity: 1; }
