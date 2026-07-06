@@ -1,12 +1,26 @@
+import { buildComparisonChartSvg } from '../../lib/comparison-chart.js';
 import { Metric, TextList } from './ui.js';
 
-export default function CompetitorsTab({ competitorComparison }) {
+export default function CompetitorsTab({ competitorComparison, primaryName, primaryScores }) {
+  const chartSvg = buildComparisonChartSvg({
+    primaryName,
+    primaryScores,
+    competitors: competitorComparison,
+  });
+
   return (
     <section className="space-y-4">
       <div>
         <h2 className="text-2xl font-semibold text-slate-950">Manual Competitor Comparison</h2>
         <p className="mt-1 text-sm text-slate-500">Phase 1 compares manually submitted competitors without paid SERP APIs.</p>
       </div>
+      {chartSvg && (
+        <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+          <h3 className="text-lg font-semibold text-slate-950">Score Comparison</h3>
+          <p className="mt-1 text-sm text-slate-500">How the audited site scores against each submitted competitor across the core readiness dimensions.</p>
+          <div className="mt-5" dangerouslySetInnerHTML={{ __html: chartSvg }} />
+        </div>
+      )}
       {competitorComparison.length ? (
         <div className="grid grid-cols-1 gap-4">
           {competitorComparison.map((competitor) => (

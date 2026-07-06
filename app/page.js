@@ -10,6 +10,7 @@ import CategoriesTab from './components/CategoriesTab.js';
 import CompetitorsTab from './components/CompetitorsTab.js';
 import CrawlTab from './components/CrawlTab.js';
 import { ActionPlanView, PlanUnlockCta } from './components/ActionPlan.js';
+import SendReportPanel from './components/SendReportPanel.js';
 
 const tabs = [
   { id: 'overview', label: 'Overview' },
@@ -31,6 +32,7 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState('overview');
   const [severityFilter, setSeverityFilter] = useState('all');
   const [planUnlocked, setPlanUnlocked] = useState(false);
+  const [sendPanelOpen, setSendPanelOpen] = useState(false);
 
   const audit = report?.audit;
   const primary = audit?.primary;
@@ -175,6 +177,16 @@ export default function Home() {
                 </div>
 
                 <div className="flex flex-wrap gap-3 print:hidden">
+                  <button
+                    onClick={() => setSendPanelOpen((open) => !open)}
+                    className={`rounded-md px-4 py-2 text-sm font-semibold transition ${
+                      sendPanelOpen
+                        ? 'bg-cyan-600 text-white hover:bg-cyan-500'
+                        : 'border border-cyan-300 bg-cyan-50 text-cyan-800 hover:bg-cyan-100'
+                    }`}
+                  >
+                    Send to Prospect
+                  </button>
                   <button onClick={printPDF} className="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-50">
                     Print PDF
                   </button>
@@ -208,6 +220,12 @@ export default function Home() {
           </div>
 
           <div className="mx-auto max-w-7xl px-5 py-6">
+            {sendPanelOpen && (
+              <div className="mb-6">
+                <SendReportPanel domain={primary?.domain} persistence={report.persistence} />
+              </div>
+            )}
+
             {activeTab === 'overview' && (
               <OverviewTab
                 report={report}
@@ -227,7 +245,13 @@ export default function Home() {
 
             {activeTab === 'categories' && <CategoriesTab categoryDetails={categoryDetails} />}
 
-            {activeTab === 'competitors' && <CompetitorsTab competitorComparison={competitorComparison} />}
+            {activeTab === 'competitors' && (
+              <CompetitorsTab
+                competitorComparison={competitorComparison}
+                primaryName={companyName || primary?.domain}
+                primaryScores={primary?.scores}
+              />
+            )}
 
             {activeTab === 'crawl' && <CrawlTab report={report} audit={audit} primary={primary} />}
 
