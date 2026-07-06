@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { getSupabaseConfig, supabaseRequest } from '../../../lib/supabase.js';
 
 export const runtime = 'nodejs';
+// No request params are read, so without this Next would statically cache the
+// (empty) response at build time.
+export const dynamic = 'force-dynamic';
 
 // Diagnostic history for the workspace home screen: recent audits with the
 // client they belong to and every logged send with its open status.
