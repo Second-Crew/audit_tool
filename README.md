@@ -20,7 +20,7 @@ Set these env vars to enable it:
 
 ```
 GEMINI_API_KEY=your_key
-GEMINI_MODEL=gemini-1.5-flash
+GEMINI_MODEL=gemini-2.5-flash
 AUDIT_LLM_PROVIDER=gemini
 ```
 
