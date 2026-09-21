@@ -2,6 +2,14 @@
 
 GEO/AEO website audit tool for evidence-backed diagnostics.
 
+## TypeSafe Preview pilot
+
+Set `TYPESAFE_API_KEY` in Vercel Preview to enable an internal content assessment
+in the Overview tab. It evaluates sampled HTML excerpts with Jev and shows
+page purpose, content scores, uncertainty, evidence, and token usage. Existing
+published grades remain unchanged while the pilot is evaluated. Production is
+off by default. See [setup, limits, and validation](docs/typesafe-pilot.md).
+
 ## Backend v2
 
 - Crawls up to 250 pages per submitted site.
