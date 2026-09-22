@@ -21,6 +21,14 @@ The set contains 24 implementation-authored examples across local services, ecom
 
 Outputs include accepted-claim precision, supported-claim recall, false accepts, unavailable/review counts, per-profile summaries, token use, elapsed time and a Wilson 95% precision interval. A quote-matching-only baseline makes it possible to see whether semantic checks add discrimination beyond exact matching. Code catches fabricated quotes for both approaches; that benefit must not be credited to TypeSafe. If no claims are accepted, precision is null, not 100%. A high precision value based on very few accepted claims is not approval.
 
+## Recorded live development run — 2026-09-22
+
+Preview ran `synthetic-claims-1` against jev-1.13.0 with the unchanged 0.8 threshold. Of 24 cases, two supported claims were accepted, two supported claims required review, and all 20 negative cases were rejected. No provider requests failed. Supported-claim recall was 50%; the accepted-claim precision interval was approximately 34%–100% (Wilson 95%), reflecting only two accepted cases. This is not evidence of 100% real-world accuracy.
+
+Quote matching alone accepted 16 negative cases; semantic verification rejected those 16. Both approaches rejected the four fabricated quotes using code. The two withheld valid claims were in local services and ecommerce, so those profiles especially need further independent examples. The threshold was not lowered to improve the result.
+
+The run reported 12,365 input tokens, 928 output tokens and 1,112 ms evaluation time. These are one-run observations, not a latency guarantee or measured dollar cost. All cases remain synthetic and implementation-authored; no scoring or outreach approval was granted.
+
 ## Standard still required for real use
 
 - Freeze independently reviewed evidence from representative real websites across the supported business/page types, with both valid findings and convincing false positives.
