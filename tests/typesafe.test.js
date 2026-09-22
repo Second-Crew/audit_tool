@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { evaluateTypeSafe, prepareTypeSafePage, MODEL } from '../lib/audit/typesafe.js';
 
-const env = { TYPESAFE_API_KEY: 'test-key', VERCEL_ENV: 'preview' };
+const env = { TYPESAFE_API_KEY: 'test-key', VERCEL_ENV: 'preview', TYPESAFE_AUDIT_MODE: 'shadow' };
 const body = '<main><h1>Pipe repair</h1><p>We repair copper supply pipes in occupied homes. Inspections take 45 minutes. A technician isolates the leak and explains the repair choices before work begins.</p></main>';
 const page = (n = 0) => ({ url: `https://example.com/services/${n}`, status: 200, html: `<html><head><title>Pipe repair</title></head><body>${body}</body></html>` });
 function response(confidence = 0.95) {
@@ -33,7 +33,7 @@ describe('TypeSafe evidence preparation', () => {
 describe('TypeSafe pilot', () => {
   it('skips without a key, with the kill switch, or in production by default', async () => {
     const client = { systemOne: vi.fn() };
-    for (const config of [{}, { ...env, TYPESAFE_AUDIT_MODE: 'off' }, { ...env, VERCEL_ENV: 'production' }]) {
+    for (const config of [{}, { ...env, TYPESAFE_AUDIT_MODE: 'off' }, { TYPESAFE_API_KEY:'test-key', VERCEL_ENV:'production' }, { TYPESAFE_API_KEY:'test-key', VERCEL_ENV:'preview' }]) {
       const result = await evaluateTypeSafe({ pages: [page()] }, { env: config, client });
       expect(result.status).toBe('skipped');
       expect(result.score).toBeNull();

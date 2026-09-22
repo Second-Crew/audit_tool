@@ -2,13 +2,13 @@
 
 Add `TYPESAFE_API_KEY` to the project's Vercel **Preview** environment. Install with `npm ci` and deploy this branch to Preview. Node.js 20+ is required by the official SDK. No database migration is required: the assessment is saved in the existing report workspace JSON and survives reopening an audit.
 
-The pilot runs automatically when a key is present on Preview or local development. Production defaults to off, even if a key is present. `TYPESAFE_AUDIT_MODE=off` disables it; `shadow` explicitly enables the pilot. It does not enable a production scoring replacement.
+The old content-scoring pilot is off by default in every environment. Explicit `TYPESAFE_AUDIT_MODE=shadow` is required for diagnostic use. Production defaults to off, even if a key is present. `TYPESAFE_AUDIT_MODE=off` disables it; `shadow` explicitly enables the pilot. It does not enable a production scoring replacement.
 
 ## What it measures
 
 TypeSafe classifies page purpose and judges three separate dimensions of cleaned HTML excerpts: topic clarity (40%), useful detail (40%), and supporting evidence (20%). Four concrete rubric levels map to 0–100. Code combines the dimensions and equally weights sampled pages. Requested model is pinned to `jev-1.13.0`; each response records the resolved model. Rubric version is `content-pilot-1`.
 
-The internal Overview panel shows the scores, raw confidence, source excerpts, URLs, coverage, and token counts. JSON uses `audit.semantic`; saved history uses `report.workspace.semantic`. Old reports remain compatible. The pilot deliberately does not alter GEO/AEO/SEO grades, feed Gemini, create action-plan tasks, enter HTML/Markdown/printed prospect reports, or authorize outreach. `outreachEligible` is always false. It does not measure AI search inclusion or independently verify claims made by a site.
+The archived pilot panel inside the collapsed Internal diagnostics section shows the scores, raw confidence, source excerpts, URLs, coverage, and token counts. JSON uses `audit.semantic`; saved history uses `report.workspace.semantic`. Old reports remain compatible. The pilot deliberately does not alter GEO/AEO/SEO grades, feed Gemini, create action-plan tasks, enter HTML/Markdown/printed prospect reports, or authorize outreach. `outreachEligible` is always false. It does not measure AI search inclusion or independently verify claims made by a site.
 
 ## Bounds and failure behavior
 
@@ -26,3 +26,5 @@ Build a held-out, manually labeled set spanning local services, SaaS, ecommerce,
 Only after this evaluation should a separate change introduce calibrated weights into published scores or a claim-verification gate for outreach. The older deterministic engine still has other review findings; this pilot does not silently certify or repair those scores.
 
 References: [JavaScript SDK](https://docs.typesafe.ai/sdk/javascript), [Score](https://docs.typesafe.ai/primitives/score), [Confidence](https://docs.typesafe.ai/confidence), [Models](https://docs.typesafe.ai/models).
+
+The normal report no longer displays the provider-branded content score. Use the Preview-only claim-support evaluation in Internal diagnostics to measure a narrower semantic task; see docs/claim-verification.md.

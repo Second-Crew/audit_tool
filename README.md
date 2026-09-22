@@ -2,13 +2,14 @@
 
 GEO/AEO website audit tool for evidence-backed diagnostics.
 
-## TypeSafe Preview pilot
+## TypeSafe evidence verification
 
-Set `TYPESAFE_API_KEY` in Vercel Preview to enable an internal content assessment
-in the Overview tab. It evaluates sampled HTML excerpts with Jev and shows
-page purpose, content scores, uncertainty, evidence, and token usage. Existing
-published grades remain unchanged while the pilot is evaluated. Production is
-off by default. See [setup, limits, and validation](docs/typesafe-pilot.md).
+The normal report does not display a provider-branded content score. Preview
+workspaces offer a collapsed Internal diagnostics section with a fixed
+claim-support development evaluation and archived pilot output. TypeSafe is
+being evaluated for verifying evidence-backed claims; synthetic results do not
+certify real-world accuracy or authorize outreach. The old generic scoring pilot
+is off by default. See [claim verification](docs/claim-verification.md).
 
 ## Backend v2
 

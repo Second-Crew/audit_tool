@@ -1,6 +1,5 @@
 import EvidencePanel from './EvidencePanel.js';
 import { Metric, ScoreCard, SeverityBadge, SignalPanel, StatusPill, formatScore, getScoreTone } from './ui.js';
-import TypeSafePanel from './TypeSafePanel.js';
 
 export default function OverviewTab({ report, primary, findings, onSelectSeverity }) {
   const topFindings = findings.slice(0, 5);
@@ -23,7 +22,6 @@ export default function OverviewTab({ report, primary, findings, onSelectSeverit
         ))}
       </section>
 
-      <TypeSafePanel result={report?.audit?.semantic} />
 
       <section className="grid grid-cols-1 gap-5 xl:grid-cols-[1.2fr_0.8fr]">
         <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">

@@ -7,7 +7,7 @@ const html = `<html><head><title>Drain clearing service</title></head><body>
 <p>We clear blocked kitchen and bathroom drains. A technician first checks the accessible trap and asks which fixtures drain slowly. If the blockage is farther down the pipe, the technician explains whether a cable or water jet is appropriate before starting.</p>
 <p>A standard visit takes 60 to 90 minutes. The quote includes inspection and clearing one accessible drain. Excavation and replacement pipes require a separate written quote. Please keep the area under the sink clear before the visit.</p>
 </main><script>FAQ certified award winning testimonials</script></body></html>`;
-const result = await evaluateTypeSafe({ pages: [{ url: 'https://example.com/services/drains', status: 200, html }] });
+const result = await evaluateTypeSafe({ pages: [{ url: 'https://example.com/services/drains', status: 200, html }] }, {env:{...process.env,TYPESAFE_AUDIT_MODE:'shadow'}});
 console.log(JSON.stringify({
   status: result.status, reason: result.reason, score: result.score,
   coverage: result.coverage, usage: result.usage, elapsedMs: result.elapsedMs,

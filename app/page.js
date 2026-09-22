@@ -5,6 +5,7 @@ import { buildActionPlan } from '../lib/action-plan.js';
 import { readAuditStream } from '../lib/audit-stream.js';
 import AuditForm from './components/AuditForm.js';
 import OverviewTab from './components/OverviewTab.js';
+import InternalDiagnostics from './components/InternalDiagnostics.js';
 import FindingsTab from './components/FindingsTab.js';
 import CategoriesTab from './components/CategoriesTab.js';
 import CompetitorsTab from './components/CompetitorsTab.js';
@@ -312,6 +313,7 @@ export default function Home() {
           </div>
         </div>
       )}
+      <InternalDiagnostics semantic={audit?.semantic} />
     </main>
   );
 }
