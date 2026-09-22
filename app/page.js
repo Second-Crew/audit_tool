@@ -25,6 +25,8 @@ const tabs = [
 export default function Home() {
   const [url, setUrl] = useState('');
   const [companyName, setCompanyName] = useState('');
+  const [websiteType, setWebsiteType] = useState('marketing');
+  const [ecommerceFunctionality, setEcommerceFunctionality] = useState('no');
   const [competitorUrls, setCompetitorUrls] = useState('');
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState({ step: '', percent: 0 });
@@ -75,6 +77,8 @@ export default function Home() {
         body: JSON.stringify({
           url,
           companyName,
+          websiteType,
+          ecommerceFunctionality,
           competitorUrls,
           maxPages: 250,
           maxDurationMs: 150000,
@@ -165,6 +169,8 @@ export default function Home() {
       if (!response.ok) throw new Error(data.error || 'Failed to load the saved report');
       setReport(data);
       setCompanyName(data.companyName || '');
+      setWebsiteType(data.audit?.input?.websiteType || 'auto');
+      setEcommerceFunctionality(data.audit?.input?.ecommerceFunctionality || 'auto');
       setUrl(data.audit?.primary?.startUrl || '');
       setSeverityFilter('all');
       setActiveTab('overview');
@@ -196,6 +202,10 @@ export default function Home() {
           <div className="space-y-6">
             <AuditForm
               url={url}
+              websiteType={websiteType}
+              ecommerceFunctionality={ecommerceFunctionality}
+              onWebsiteTypeChange={setWebsiteType}
+              onEcommerceFunctionalityChange={setEcommerceFunctionality}
               companyName={companyName}
               competitorUrls={competitorUrls}
               onUrlChange={setUrl}

@@ -33,3 +33,7 @@ Saved result data includes public page observations. Set a retention policy appr
 ## Validation
 
 `npm test` covers API auth/scopes, requests, worker lifecycle and extraction regressions. `tests/agent-jobs.sql` runs against an isolated PostgreSQL database after the migration and verifies idempotency, quota enforcement, lease recovery, stale-write fencing and database role restrictions. Never run fixture SQL against production. `npm run agent:smoke` is the deployed end-to-end smoke check. Neither tests nor smoke checks replace the held-out accuracy benchmark.
+
+## Website scope
+
+Set `websiteType` to `marketing`, `corporate`, `ecommerce`, or `auto`. Independently set `ecommerceFunctionality` to `yes`, `no`, or `auto` to support a marketing/corporate website with a store. Explicit `no` always excludes ecommerce scoring and findings. Auto detects same-host cart/checkout/basket links as review candidates; it does not activate ecommerce scoring. Store type or explicit yes enables it. Broad keywords and Product/Offer schema alone do not identify an ecommerce site. The resolved scope is returned in `siteType`. Existing saved reports retain their original results; rerun with the new scope to replace legacy classification.

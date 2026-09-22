@@ -508,6 +508,26 @@
             "minimum": 1,
             "maximum": 100,
             "default": 50
+          },
+          "websiteType": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "marketing",
+              "corporate",
+              "ecommerce"
+            ],
+            "default": "auto"
+          },
+          "ecommerceFunctionality": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "yes",
+              "no"
+            ],
+            "default": "auto",
+            "description": "Explicit no excludes ecommerce. Auto flags transaction links for review without scoring ecommerce."
           }
         }
       },

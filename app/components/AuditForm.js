@@ -1,4 +1,5 @@
 export default function AuditForm({
+  websiteType, ecommerceFunctionality, onWebsiteTypeChange, onEcommerceFunctionalityChange,
   url,
   companyName,
   competitorUrls,
@@ -19,6 +20,23 @@ export default function AuditForm({
       </p>
 
       <form onSubmit={onSubmit} className="mt-6 space-y-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <label className="text-sm font-medium text-slate-700">Website type
+            <select className="mt-2 block w-full rounded-md border p-3" value={websiteType} onChange={e => { onWebsiteTypeChange(e.target.value); if(e.target.value === 'ecommerce') onEcommerceFunctionalityChange('yes'); }}>
+              <option value="marketing">Marketing / lead generation</option>
+              <option value="corporate">Corporate / informational</option>
+              <option value="ecommerce">Ecommerce store</option>
+              <option value="auto">Other / unsure</option>
+            </select>
+          </label>
+          <label className="text-sm font-medium text-slate-700">Does this website sell products online?
+            <select className="mt-2 block w-full rounded-md border p-3" value={ecommerceFunctionality} onChange={e => onEcommerceFunctionalityChange(e.target.value)}>
+              <option value="no">No — exclude ecommerce assessment</option>
+              <option value="yes">Yes — include ecommerce assessment</option>
+              <option value="auto">Unsure — flag possible ecommerce for review</option>
+            </select>
+          </label>
+        </div>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <div>
             <label className="mb-2 block text-sm font-medium text-slate-700">Website URL</label>
