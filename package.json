@@ -11,7 +11,9 @@
     "start": "next start",
     "lint": "next lint",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "agent:worker": "node scripts/agent-worker.mjs",
+    "agent:smoke": "node scripts/agent-smoke.mjs"
   },
   "dependencies": {
     "@google/genai": "^1.16.0",

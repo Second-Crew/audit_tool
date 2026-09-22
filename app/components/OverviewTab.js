@@ -1,3 +1,4 @@
+import EvidencePanel from './EvidencePanel.js';
 import { Metric, ScoreCard, SeverityBadge, SignalPanel, StatusPill, formatScore, getScoreTone } from './ui.js';
 import TypeSafePanel from './TypeSafePanel.js';
 
@@ -14,6 +15,8 @@ export default function OverviewTab({ report, primary, findings, onSelectSeverit
 
   return (
     <div className="space-y-6">
+      <EvidencePanel result={report?.audit?.assessment} />
+      <p className="text-sm text-slate-600">The category scores below are legacy heuristics under review, not verified AI visibility or approved outreach claims.</p>
       <section className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-6">
         {scoreCards.map((card) => (
           <ScoreCard key={card.label} {...card} />

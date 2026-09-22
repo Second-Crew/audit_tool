@@ -135,7 +135,7 @@ describe('scoreSite', () => {
 });
 
 describe('compareCompetitors', () => {
-  it('computes score diff, gaps, and advantages for successful crawls', () => {
+  it('withholds unvalidated competitor rankings and raw-count advantage claims', () => {
     const primary = makeScoredSite({ schema: { count: 4 } });
     const competitorSite = makeScoredSite({ schema: { count: 12 }, entity: { trustPages: [] } });
     const competitor = { input: { url: 'https://rival.com', name: 'Rival' }, ...competitorSite };
@@ -144,9 +144,10 @@ describe('compareCompetitors', () => {
 
     expect(comparison.name).toBe('Rival');
     expect(comparison.error).toBeUndefined();
-    expect(comparison.scoreDiff).toBe(competitorSite.scoring.scores.aeoGeo - primary.scoring.scores.aeoGeo);
-    expect(comparison.gaps.some((gap) => gap.startsWith('Schema coverage'))).toBe(true);
-    expect(comparison.advantages.some((adv) => adv.startsWith('Trust pages'))).toBe(true);
+    expect(comparison.scoreDiff).toBeNull();
+    expect(comparison.comparisonStatus).toBe('inconclusive');
+    expect(comparison.gaps).toEqual([]);
+    expect(comparison.advantages).toEqual([]);
   });
 
   it('keeps failed competitor crawls in the comparison with their error', () => {

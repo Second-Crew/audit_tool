@@ -66,12 +66,12 @@ function CompetitorCard({ competitor }) {
         <div className="grid grid-cols-3 gap-3">
           <Metric label="GEO / AEO" value={competitor.scores?.aeoGeo ?? 'N/A'} />
           <Metric label="Overall" value={competitor.scores?.overall ?? 'N/A'} />
-          <Metric label="Diff" value={`${competitor.scoreDiff > 0 ? '+' : ''}${competitor.scoreDiff}`} />
+          <Metric label="Diff" value={competitor.scoreDiff == null ? 'Not assessed' : `${competitor.scoreDiff > 0 ? '+' : ''}${competitor.scoreDiff}`} />
         </div>
       </div>
       <div className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <TextList title="Gaps" items={competitor.gaps} empty="No major gaps detected." />
-        <TextList title="Advantages" items={competitor.advantages} empty="No major advantages detected." />
+        <TextList title="Gaps" items={competitor.gaps} empty={competitor.comparisonReason || "No major gaps detected."} />
+        <TextList title="Advantages" items={competitor.advantages} empty={competitor.comparisonReason || "No major advantages detected."} />
       </div>
     </article>
   );
