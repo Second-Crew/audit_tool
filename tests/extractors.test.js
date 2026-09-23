@@ -145,8 +145,8 @@ describe('page purpose classification', () => {
     expect(signals.entity.contactPage).toBeUndefined();
     expect(signals.entity.contactRoute).toMatchObject({url:'https://form.typeform.com/to/Cis8by',label:'Request a Proposal',sourcePageUrl:'https://agency.example/'});
     const checks = scoreSite(signals).categoryDetails.entityTrust.checks;
-    expect(checks.find(check => check.label === 'Public contact path exists')).toMatchObject({status:'passed',evidence:'https://form.typeform.com/to/Cis8by'});
-    expect(checks.find(check => check.label === 'Contact method is accessible')).toMatchObject({status:'passed'});
+    expect(checks.find(check => check.label === 'Public contact route or details observed')).toMatchObject({status:'passed',evidence:'https://form.typeform.com/to/Cis8by'});
+    expect(checks.find(check => check.label === 'Public phone or email details')).toMatchObject({status:'unknown'});
   });
 
   it('does not treat an unrelated external link labeled contact as a verified form route', () => {
