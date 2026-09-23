@@ -1,6 +1,6 @@
 import {describe,it,expect} from 'vitest';
 import {parseRobotsTxt} from '../lib/audit/robots.js';
-import {renderSparsePages,isAllowedRenderHost,needsRendering,sanitizeConnectionError,normalizeBrowserEndpoint} from '../lib/audit/render.js';
+import {renderSparsePages,isAllowedRenderHost,needsRendering,sanitizeConnectionError,normalizeBrowserEndpoint,waitForContentHtml} from '../lib/audit/render.js';
 import {extractSiteSignals} from '../lib/audit/extractors.js';
 import {scoreSite} from '../lib/audit/scoring.js';
 import {buildActionPlan} from '../lib/action-plan.js';
@@ -13,6 +13,21 @@ function crawl() {const page={url:'https://agency.example/',requestedUrl:'https:
 return {domain:'agency.example',startUrl:page.url,origin:'https://agency.example',pages:[page],errors:[],blockedByRobots:[],summary:{requestedMaxPages:1,crawledPages:1,failedRequests:0,blockedByRobots:0,stoppedBy:'queue_empty'},auxiliary:{robots:{url:'https://agency.example/robots.txt',found:true,status:200,body:'User-agent: *\nAllow: /',parsed:parseRobotsTxt('User-agent: *\nAllow: /')},llms:{url:'https://agency.example/llms.txt',found:false,status:404,body:''},sitemap:{url:'https://agency.example/sitemap.xml',found:false,status:404,urls:[]}}};}
 
 describe('rendered content evidence',()=>{
+ it('waits past a long navigation shell until the actual page content arrives',async()=>{
+  let reads=0,waits=0;
+  const shell=`<html><body><nav>${'Navigation '.repeat(30)}</nav><main></main><footer>${'Footer '.repeat(30)}</footer></body></html>`;
+  const page={content:async()=>++reads<3?shell:rendered,waitForTimeout:async()=>{waits++;}};
+  expect(await waitForContentHtml(page,'https://agency.example/web-design',Date.now()+1000)).toBe(rendered);
+  expect(waits).toBe(2);
+ });
+ it('keeps sparse ecommerce utility pages visible without treating an empty cart as missing core content',()=>{
+  const c=crawl();
+  c.pages=[{...c.pages[0],html:rendered},...Array.from({length:20},(_,i)=>({...c.pages[0],url:`https://agency.example/products/item-${i}`,html:rendered})),...['cart','checkout','basket','account'].map(path=>({...c.pages[0],url:`https://agency.example/${path}`}))];
+  const signals=extractSiteSignals(c,{websiteType:'ecommerce',ecommerceFunctionality:'yes'});
+  expect(signals.contentEvidence).toMatchObject({status:'sufficient',pages:25,usablePages:21,sparsePages:4,criticalSparseUrls:[]});
+  expect(scoreSite(signals).categoryDetails.verticalReadiness.name).toBe('Ecommerce Readiness');
+  expect(signals.pages.filter(page=>page.text.length<80)).toHaveLength(4);
+ });
  it('marks a script shell as incomplete and withholds content grades and absence findings',async()=>{const c=crawl();expect(needsRendering(c.pages[0])).toBe(true);await renderSparsePages(c,{env:{}});const signals=extractSiteSignals(c);const scored=scoreSite(signals);expect(signals.contentEvidence.status).toBe('incomplete');expect(scored.scores).toMatchObject({overall:null,aeoGeo:null,seo:null,answerReadiness:null});expect(scored.findings.some(f=>/direct answers|structured data|trust/i.test(f.title))).toBe(false);const plan=buildActionPlan(null,{pages:[{url:c.pages[0].url,contentEvidenceIncomplete:true,wordCount:0,h1Count:0,schemaCount:0}]},{},[]);expect(plan.pagePlans).toEqual([]);});
  it('uses rendered DOM only when extraction succeeds',async()=>{const c=crawl();await renderSparsePages(c,{renderer:async()=>({html:rendered})});const signals=extractSiteSignals(c);expect(c.summary.rendering).toMatchObject({attempted:1,succeeded:1});expect(signals.contentEvidence).toMatchObject({status:'sufficient',renderedPages:1});expect(signals.pages[0]).toMatchObject({evidenceSource:'rendered_dom'});expect(signals.pages[0].text).toContain('We plan, design');});
  it('renders a mid-sized site beyond the old 30-page cap',async()=>{const c=crawl();c.pages=Array.from({length:56},(_,i)=>({...c.pages[0],url:`https://agency.example/page-${i}`}));await renderSparsePages(c,{renderer:async()=>({html:rendered})});expect(c.summary.rendering).toMatchObject({attempted:56,succeeded:56,skipped:0});expect(extractSiteSignals(c).contentEvidence).toMatchObject({status:'sufficient',usablePages:56});});

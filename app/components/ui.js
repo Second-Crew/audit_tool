@@ -15,7 +15,7 @@ export function ScoreCard({ label, value, caption }) {
 
 export function StatusPill({ score }) {
   const tone = getScoreTone(score);
-  const label = score >= 80 ? 'Strong' : score >= 60 ? 'Developing' : 'Needs Work';
+  const label = score == null ? 'Not assessed' : score >= 80 ? 'Strong' : score >= 60 ? 'Developing' : 'Needs Work';
 
   return <span className={`rounded-full px-3 py-1 text-xs font-semibold ${tone.pill}`}>{label}</span>;
 }
