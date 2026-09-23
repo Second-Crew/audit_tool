@@ -16,6 +16,39 @@ describe('rendered content evidence',()=>{
  it('marks a script shell as incomplete and withholds content grades and absence findings',async()=>{const c=crawl();expect(needsRendering(c.pages[0])).toBe(true);await renderSparsePages(c,{env:{}});const signals=extractSiteSignals(c);const scored=scoreSite(signals);expect(signals.contentEvidence.status).toBe('incomplete');expect(scored.scores).toMatchObject({overall:null,aeoGeo:null,seo:null,answerReadiness:null});expect(scored.findings.some(f=>/direct answers|structured data|trust/i.test(f.title))).toBe(false);const plan=buildActionPlan(null,{pages:[{url:c.pages[0].url,contentEvidenceIncomplete:true,wordCount:0,h1Count:0,schemaCount:0}]},{},[]);expect(plan.pagePlans).toEqual([]);});
  it('uses rendered DOM only when extraction succeeds',async()=>{const c=crawl();await renderSparsePages(c,{renderer:async()=>({html:rendered})});const signals=extractSiteSignals(c);expect(c.summary.rendering).toMatchObject({attempted:1,succeeded:1});expect(signals.contentEvidence).toMatchObject({status:'sufficient',renderedPages:1});expect(signals.pages[0]).toMatchObject({evidenceSource:'rendered_dom'});expect(signals.pages[0].text).toContain('We plan, design');});
  it('renders a mid-sized site beyond the old 30-page cap',async()=>{const c=crawl();c.pages=Array.from({length:56},(_,i)=>({...c.pages[0],url:`https://agency.example/page-${i}`}));await renderSparsePages(c,{renderer:async()=>({html:rendered})});expect(c.summary.rendering).toMatchObject({attempted:56,succeeded:56,skipped:0});expect(extractSiteSignals(c).contentEvidence).toMatchObject({status:'sufficient',usablePages:56});});
+ it('retries a failed core page once and restores its evidence',async()=>{
+  const c=crawl();let calls=0;
+  await renderSparsePages(c,{renderer:async()=>{if(++calls===1) throw Error('render_navigation_failed');return {html:rendered};}});
+  expect(c.summary.rendering).toMatchObject({attempted:1,retryAttempts:1,succeeded:1,failed:0,failureReasons:{}});
+  expect(extractSiteSignals(c).contentEvidence.status).toBe('sufficient');
+ });
+ it('withholds grades when one core landing page is sparse despite high overall coverage',async()=>{
+  const c=crawl();
+  c.pages=[
+   {...c.pages[0],html:rendered},
+   ...Array.from({length:4},(_,i)=>({...c.pages[0],url:`https://agency.example/blog/post-${i}`,html:rendered})),
+   {...c.pages[0],url:'https://agency.example/web-design'},
+  ];
+  c.summary.crawledPages=c.pages.length;
+  await renderSparsePages(c,{renderer:async()=>{throw Error('render_navigation_failed');}});
+  const signals=extractSiteSignals(c),scored=scoreSite(signals);
+  expect(c.summary.rendering).toMatchObject({attempted:1,retryAttempts:1,succeeded:0,failed:1});
+  expect(signals.contentEvidence).toMatchObject({status:'incomplete',usablePages:5,pages:6,criticalSparseUrls:['https://agency.example/web-design']});
+  expect(scored.scores).toMatchObject({overall:null,aeoGeo:null,seo:null,structuredData:null});
+  const plan=buildActionPlan({scores:scored.scores},{...signals,crawl:{summary:c.summary}},scored.categoryDetails,scored.findings);
+  expect(plan).toMatchObject({status:'evidence_incomplete',totalTasks:1,pagePlans:[]});
+  expect(plan.generalTasks[0].evidence).toContain('https://agency.example/web-design');
+  expect(buildExecutiveSummary({input:{companyName:'Agency'},primary:{signals,scoring:scored}})).toContain('https://agency.example/web-design');
+ });
+ it('keeps a high-coverage crawl usable when only a nested article is sparse',()=>{
+  const c=crawl();
+  c.pages=[
+   {...c.pages[0],html:rendered},
+   ...Array.from({length:4},(_,i)=>({...c.pages[0],url:`https://agency.example/blog/post-${i}`,html:rendered})),
+   {...c.pages[0],url:'https://agency.example/blog/unavailable'},
+  ];
+  expect(extractSiteSignals(c).contentEvidence).toMatchObject({status:'sufficient',usablePages:5,pages:6,criticalSparseUrls:[]});
+ });
  it('withholds implementation tasks when site content coverage is incomplete',()=>{const plan=buildActionPlan({aiInsights:{roadmap:[{actions:['Add new sales copy']}]}},{contentEvidence:{status:'incomplete',usablePages:30,pages:56},crawl:{summary:{rendering:{succeeded:30,failed:0,skipped:26}}},pages:[{url:'https://agency.example/',wordCount:50,contentEvidenceIncomplete:false}]},{content:{name:'Content',score:10,checks:[{status:'failed',label:'Direct answers',maxScore:20}]}},[{title:'Add content',severity:'high'}]);expect(plan).toMatchObject({status:'evidence_incomplete',totalTasks:1,categoryTasks:[],pagePlans:[]});expect(plan.generalTasks[0].evidence).toContain('30 of 56');});
  it('explains unavailable measurements and withholds a ranked plan when content is sufficient',()=>{
   const categoryDetails={pageExperience:{name:'Page Experience',score:null,reason:'Only 75% of weighted checks were measured; at least 80% is required.',checks:[{status:'unknown',label:'Desktop PageSpeed performance',maxScore:25,score:0,evidence:'Unavailable'}]}};
