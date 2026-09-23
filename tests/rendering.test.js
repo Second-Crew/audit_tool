@@ -1,6 +1,6 @@
 import {describe,it,expect} from 'vitest';
 import {parseRobotsTxt} from '../lib/audit/robots.js';
-import {renderSparsePages,isAllowedRenderHost,needsRendering} from '../lib/audit/render.js';
+import {renderSparsePages,isAllowedRenderHost,needsRendering,sanitizeConnectionError} from '../lib/audit/render.js';
 import {extractSiteSignals} from '../lib/audit/extractors.js';
 import {scoreSite} from '../lib/audit/scoring.js';
 import {buildActionPlan} from '../lib/action-plan.js';
@@ -16,4 +16,5 @@ describe('rendered content evidence',()=>{
  it('rejects related-post lists as article evidence',async()=>{const c=crawl();c.pages[0].url='https://agency.example/blog/article';const shortArticle='<main><h2>OTHER NEWS</h2><p>Another article about design strategy and related content.</p><p>More recommendations and recent posts.</p></main>';await renderSparsePages(c,{renderer:async()=>({html:shortArticle})});expect(c.summary.rendering.failed).toBe(1);expect(extractSiteSignals(c).contentEvidence.status).toBe('incomplete');});
  it('keeps failed rendering incomplete without leaking provider errors',async()=>{const c=crawl();await renderSparsePages(c,{renderer:async()=>{throw Error('wss://browser.example/playwright?token=secret failed')}});expect(c.pages[0].html).toBe(sparse);expect(c.summary.rendering).toMatchObject({failed:1,failureReasons:{render_browser_error:1}});expect(JSON.stringify(c.summary)).not.toContain('secret');expect(extractSiteSignals(c).contentEvidence.status).toBe('incomplete');});
  it('limits browser requests to the site and its subdomains',()=>{expect(isAllowedRenderHost('https://api.agency.example/content','https://agency.example')).toBe(true);expect(isAllowedRenderHost('https://agency.example.evil.test/script','https://agency.example')).toBe(false);expect(isAllowedRenderHost('http://127.0.0.1/private','https://agency.example')).toBe(false);});
+ it('redacts browser endpoint credentials from operational errors',()=>{const endpoint='wss://production-sfo.browserless.io/chromium/playwright?token=private-token-123';const error=Error(`connect to ${endpoint} failed: token=private-token-123`);const sanitized=sanitizeConnectionError(error,endpoint);expect(sanitized).not.toContain('private-token-123');expect(sanitized).not.toContain('browserless.io');expect(sanitized).toContain('failed');});
 });
