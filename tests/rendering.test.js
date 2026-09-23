@@ -1,6 +1,6 @@
 import {describe,it,expect} from 'vitest';
 import {parseRobotsTxt} from '../lib/audit/robots.js';
-import {renderSparsePages,isAllowedRenderHost,needsRendering,sanitizeConnectionError} from '../lib/audit/render.js';
+import {renderSparsePages,isAllowedRenderHost,needsRendering,sanitizeConnectionError,normalizeBrowserEndpoint} from '../lib/audit/render.js';
 import {extractSiteSignals} from '../lib/audit/extractors.js';
 import {scoreSite} from '../lib/audit/scoring.js';
 import {buildActionPlan} from '../lib/action-plan.js';
@@ -17,4 +17,5 @@ describe('rendered content evidence',()=>{
  it('keeps failed rendering incomplete without leaking provider errors',async()=>{const c=crawl();await renderSparsePages(c,{renderer:async()=>{throw Error('wss://browser.example/playwright?token=secret failed')}});expect(c.pages[0].html).toBe(sparse);expect(c.summary.rendering).toMatchObject({failed:1,failureReasons:{render_browser_error:1}});expect(JSON.stringify(c.summary)).not.toContain('secret');expect(extractSiteSignals(c).contentEvidence.status).toBe('incomplete');});
  it('limits browser requests to the site and its subdomains',()=>{expect(isAllowedRenderHost('https://api.agency.example/content','https://agency.example')).toBe(true);expect(isAllowedRenderHost('https://agency.example.evil.test/script','https://agency.example')).toBe(false);expect(isAllowedRenderHost('http://127.0.0.1/private','https://agency.example')).toBe(false);});
  it('redacts browser endpoint credentials from operational errors',()=>{const endpoint='wss://production-sfo.browserless.io/chromium/playwright?token=private-token-123';const error=Error(`connect to ${endpoint} failed: token=private-token-123`);const sanitized=sanitizeConnectionError(error,endpoint);expect(sanitized).not.toContain('private-token-123');expect(sanitized).not.toContain('browserless.io');expect(sanitized).toContain('failed');});
+ it('normalizes pasted WebSocket URLs and rejects invalid endpoint shapes',()=>{const url='wss://production-sfo.browserless.io/chromium/playwright?token=real-token';expect(normalizeBrowserEndpoint(`  "${url}"\n`)).toBe(url);expect(()=>normalizeBrowserEndpoint('RENDER_BROWSER_WS_ENDPOINT='+url)).toThrow('browser_endpoint_invalid');expect(()=>normalizeBrowserEndpoint('wss://production-sfo.browserless.io?token=real-token')).toThrow('browser_endpoint_invalid');expect(()=>normalizeBrowserEndpoint('wss://production-sfo.browserless.io/chromium/playwright?token=YOUR_TOKEN')).toThrow('browser_auth_failed');});
 });
