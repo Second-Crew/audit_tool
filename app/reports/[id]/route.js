@@ -82,6 +82,6 @@ function buildStoredMarkdown(row) {
     categoryDetails: row.category_details || {},
     competitorComparison: row.competitors || [],
     aiInsights,
-    actionPlan: buildActionPlan({ aiInsights }, { pages: [] }, row.category_details || {}, row.findings || []),
+    actionPlan: buildActionPlan({ aiInsights, scores: row.scores || {} }, { pages: [] }, row.category_details || {}, row.findings || []),
   });
 }

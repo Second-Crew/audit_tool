@@ -1,15 +1,15 @@
 import { Metric, getScoreTone } from './ui.js';
 
 export function PlanUnlockCta({ plan, onOpen, unlocked }) {
-  const incomplete = plan.status === 'evidence_incomplete';
+  const incomplete = plan.status !== 'ready_for_review';
   return (
     <section className="mt-8 rounded-lg border border-slate-800 bg-slate-950 p-6 text-white shadow-sm print:hidden md:p-7">
       <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <div className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-300">Execution workspace</div>
-          <h2 className="mt-2 text-2xl font-semibold tracking-normal">{incomplete ? 'Evidence Review Needed' : 'Action Plan for Review'}</h2>
+          <h2 className="mt-2 text-2xl font-semibold tracking-normal">{incomplete ? 'Assessment Review Needed' : 'Action Plan for Review'}</h2>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-300">
-            {incomplete ? 'The audit needs more page evidence before content and page recommendations can be trusted.' : 'Review provisional sitewide and page tasks against their evidence before making changes.'}
+            {incomplete ? 'Required evidence or measurements are missing, so ranked recommendations are withheld.' : 'Review provisional sitewide and page tasks against their evidence before making changes.'}
           </p>
         </div>
         <div className="grid grid-cols-3 gap-3 lg:min-w-[360px]">
@@ -32,23 +32,23 @@ export function PlanUnlockCta({ plan, onOpen, unlocked }) {
         onClick={onOpen}
         className="mt-6 w-full rounded-md bg-cyan-400 px-5 py-4 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300 md:w-auto"
       >
-        {incomplete ? 'Review Evidence Gap' : unlocked ? 'Open Action Plan' : 'Review Action Plan'}
+        {incomplete ? 'Review Assessment Gap' : unlocked ? 'Open Action Plan' : 'Review Action Plan'}
       </button>
     </section>
   );
 }
 
 export function ActionPlanView({ plan, primary, onOpenFindings }) {
-  const incomplete = plan.status === 'evidence_incomplete';
+  const incomplete = plan.status !== 'ready_for_review';
   return (
     <section className="space-y-6">
       <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm md:p-7">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
           <div>
             <div className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-700">Execution plan</div>
-            <h2 className="mt-2 text-3xl font-semibold tracking-normal text-slate-950">{incomplete ? 'Complete the evidence first' : 'Page-by-page plan for review'}</h2>
+            <h2 className="mt-2 text-3xl font-semibold tracking-normal text-slate-950">{incomplete ? 'Complete the assessment first' : 'Page-by-page plan for review'}</h2>
             <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-600">
-              {incomplete ? 'Content and page recommendations are withheld because the audit could not assess enough sampled pages.' : 'These tasks are provisional. Check each page and confirm the evidence before implementation.'}
+              {incomplete ? 'Ranked content and page recommendations are withheld until missing evidence or measurements can be checked.' : 'These tasks are provisional. Check each page and confirm the evidence before implementation.'}
             </p>
           </div>
           <button
@@ -70,8 +70,8 @@ export function ActionPlanView({ plan, primary, onOpenFindings }) {
 
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
         <PlanSection
-          title="General Score-Lift Plan"
-          description={incomplete ? 'Resolve the coverage gap before using this report for outreach or client recommendations.' : 'Review these sitewide suggestions against the observed evidence.'}
+          title={incomplete ? 'Assessment Recovery' : 'General Score-Lift Plan'}
+          description={incomplete ? 'Resolve the assessment gap before using this report for outreach or client recommendations.' : 'Review these sitewide suggestions against the observed evidence.'}
           tasks={plan.generalTasks}
           empty="No sitewide tasks were generated from this audit."
         />
@@ -79,7 +79,7 @@ export function ActionPlanView({ plan, primary, onOpenFindings }) {
           title="Category Fixes"
           description="These tasks come directly from failed, partial, or unknown scoring checks."
           tasks={plan.categoryTasks}
-          empty={incomplete ? 'Category fixes are withheld until the content evidence is complete.' : 'No category fixes were generated.'}
+          empty={incomplete ? 'Category fixes are withheld until the assessment is complete.' : 'No category fixes were generated.'}
         />
       </div>
 

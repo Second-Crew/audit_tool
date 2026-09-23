@@ -16,6 +16,7 @@ export default function OverviewTab({ report, primary, findings, onSelectSeverit
     <div className="space-y-6">
       {primary?.siteType && <p className="text-sm text-slate-600">Website type: {{marketing:'Marketing / lead generation',corporate:'Corporate / informational',ecommerce:'Ecommerce store',auto:'Not specified'}[primary.siteType.value]}. {primary.siteType.ecommerce.status === 'needs_review' ? 'Possible ecommerce functionality found; confirm the audit setup to include its assessment.' : ''}</p>}
       {primary?.contentEvidence?.status === 'incomplete' && <div role="status" className="rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-950">Content assessment unavailable: {primary.contentEvidence.usablePages} of {primary.contentEvidence.pages} sampled pages had enough extractable text. {primary?.crawl?.summary?.rendering?.attempted ? 'Browser rendering was attempted, but some pages still need content review or a deeper rerun.' : 'Browser rendering is needed.'} Do not use content recommendations or an overall grade from this audit.</div>}
+      {primary?.contentEvidence?.status === 'sufficient' && report?.scores?.overall == null && <div role="status" className="rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-950">Overall assessment unavailable: page content was sufficient, but {Object.values(primary?.categoryDetails || {}).filter(category => category.score == null).map(category => category.name).join(', ') || 'a required category'} could not be fully measured. Check the unknown measurements and rerun before using a ranked action plan.</div>}
       <EvidencePanel result={report?.audit?.assessment} />
       <p className="text-sm text-slate-600">The category scores below are legacy heuristics under review, not verified AI visibility or approved outreach claims.</p>
       <section className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-6">
@@ -87,9 +88,9 @@ export default function OverviewTab({ report, primary, findings, onSelectSeverit
         </div>
 
         <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="text-xl font-semibold text-slate-950">Recommended Roadmap</h2>
+          <h2 className="text-xl font-semibold text-slate-950">{report?.scores?.overall == null ? 'Assessment Recovery' : 'Recommended Roadmap'}</h2>
           <div className="mt-4 space-y-3">
-            {(report.aiInsights?.roadmap || []).map((item) => (
+            {report?.scores?.overall == null ? <p className="text-sm leading-6 text-slate-600">Complete the unavailable evidence or measurements and rerun the audit before ranking website changes.</p> : (report.aiInsights?.roadmap || []).map((item) => (
               <div key={`${item.phase}-${item.title}`} className="rounded-md border border-cyan-100 bg-cyan-50 p-4">
                 <div className="text-xs font-semibold uppercase tracking-[0.14em] text-cyan-700">{item.phase}</div>
                 <div className="mt-1 font-semibold text-slate-950">{item.title}</div>
