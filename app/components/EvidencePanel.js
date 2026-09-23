@@ -14,6 +14,6 @@ export default function EvidencePanel({ result }) {
       <pre className="mt-2 overflow-auto whitespace-pre-wrap text-xs">{JSON.stringify(result.evidence.find(e=>e.id===f.evidenceIds[0])?.observation,null,2)}</pre>
     </details>)}</div>
     {failures.length>20&&<p className="mt-2 text-sm">Showing 20 of {failures.length} checks needing attention.</p>}
-    <p className="mt-3 text-xs text-slate-500">Methodology: {result.methodologyVersion}. HTML-only coverage; rendered content and live AI visibility are unassessed.</p>
+    <p className="mt-3 text-xs text-slate-500">Methodology: {result.methodologyVersion}. Evidence from fetched HTML{result.coverage.rendered ? ` and ${result.coverage.renderedPages} rendered pages` : ''}; live AI visibility is unassessed.</p>
   </section>;
 }
