@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { buildFreshnessPattern, extractSiteSignals } from '../lib/audit/extractors.js';
+import { scoreSite } from '../lib/audit/scoring.js';
 import { parseRobotsTxt } from '../lib/audit/robots.js';
 
 function makeCrawl(pages) {
@@ -135,6 +136,26 @@ describe('freshness signals', () => {
 });
 
 describe('page purpose classification', () => {
+  it('recognizes an external proposal form as a public contact path without inventing a contact page', () => {
+    const crawl = makeCrawl([{
+      url: 'https://agency.example/',
+      html: '<html><head><title>Agency</title></head><body><header><a href="https://form.typeform.com/to/Cis8by">Request a Proposal</a></header><main><h1>Web design</h1><p>Our team designs and builds websites for local companies. We explain the process and show project examples so visitors can decide whether to ask for a proposal.</p></main></body></html>',
+    }]);
+    const signals = extractSiteSignals(crawl);
+    expect(signals.entity.contactPage).toBeUndefined();
+    expect(signals.entity.contactRoute).toMatchObject({url:'https://form.typeform.com/to/Cis8by',label:'Request a Proposal',sourcePageUrl:'https://agency.example/'});
+    const checks = scoreSite(signals).categoryDetails.entityTrust.checks;
+    expect(checks.find(check => check.label === 'Public contact path exists')).toMatchObject({status:'passed',evidence:'https://form.typeform.com/to/Cis8by'});
+    expect(checks.find(check => check.label === 'Contact method is accessible')).toMatchObject({status:'passed'});
+  });
+
+  it('does not treat an unrelated external link labeled contact as a verified form route', () => {
+    const crawl = makeCrawl([{
+      url:'https://agency.example/',
+      html:'<html><body><a href="https://unrelated.example/privacy">Contact us</a><main><p>We provide website design and strategy with a detailed process, examples, and clear next steps for local businesses considering a new site.</p></main></body></html>',
+    }]);
+    expect(extractSiteSignals(crawl).entity.contactRoute).toBeNull();
+  });
   it('recognizes a named service landing page without a /services path', () => {
     const crawl = makeCrawl([{
       url: 'https://agency.example/web-design',
