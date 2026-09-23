@@ -48,3 +48,7 @@ The app still runs without Supabase env vars; persistence is skipped in local/de
 ## Agent workflow integration (Preview)
 
 The versioned agent API and persistent worker are documented in [docs/agent-api.md](docs/agent-api.md), with an [OpenAPI contract](docs/agent-openapi.json). Apply the separate SQL migration and configure the worker before enabling the API. Authentication uses scoped machine credentials; dashboard cookies do not grant access. Evidence assessments distinguish unknown from failed checks and default to no automatic outreach until benchmark approval. This build does not claim calibrated GEO/AEO accuracy or observed AI-search visibility.
+
+### JavaScript-rendered pages
+
+The audit makes a bounded browser-rendering pass when fetched HTML contains scripts but little extractable main text. Configure a local Chrome executable (`RENDER_CHROME_EXECUTABLE_PATH`) on a worker or a trusted Playwright-native remote browser (`RENDER_BROWSER_WS_ENDPOINT`) as a server-only environment variable. Without a configured renderer, or when article content is still unavailable, the report shows incomplete evidence and withholds content-based and overall grades. See [rendered evidence](docs/rendered-evidence.md).
