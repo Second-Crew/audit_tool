@@ -133,3 +133,32 @@ describe('freshness signals', () => {
     expect(extractSiteSignals(crawl).content.hasFreshnessSignals).toBe(false);
   });
 });
+
+describe('page purpose classification', () => {
+  it('recognizes a named service landing page without a /services path', () => {
+    const crawl = makeCrawl([{
+      url: 'https://agency.example/web-design',
+      html: '<html><head><title>Second Crew | Web Design</title></head><body><main><h1>Web Design</h1><h2>Our web design process</h2><p>We build websites for businesses and help clients request a proposal.</p></main></body></html>',
+    }]);
+    expect(extractSiteSignals(crawl).content.servicePages.map((page) => page.url)).toEqual(['https://agency.example/web-design']);
+  });
+
+  it('keeps articles and portfolio proof out of the service-page count even when they mention services', () => {
+    const crawl = makeCrawl([
+      {url:'https://agency.example/blog/web-design-services',html:'<html><head><title>Web Design Services Guide</title></head><body><main><h1>Web Design Services</h1><p>We offer tips for choosing a provider.</p></main></body></html>'},
+      {url:'https://agency.example/our-clients/portfolio/reseed',html:'<html><head><title>Service Design for Reseed</title></head><body><main><h1>Service Design</h1><p>Our process helped this client.</p></main></body></html>'},
+    ]);
+    const signals = extractSiteSignals(crawl);
+    expect(signals.content.servicePages).toEqual([]);
+    expect(signals.pages.map((page) => page.contentType)).toEqual(['education','case_study']);
+  });
+
+  it('preserves product, contact and company page intent across site types', () => {
+    const crawl = makeCrawl([
+      {url:'https://store.example/products/widget',html:'<html><head><title>Widget</title></head><body><main><h1>Widget</h1><p>Our process makes this product reliable.</p></main></body></html>'},
+      {url:'https://store.example/contact',html:'<html><head><title>Contact</title></head><body><main><h1>Contact</h1></main></body></html>'},
+      {url:'https://store.example/about-us',html:'<html><head><title>About Us</title></head><body><main><h1>About Us</h1></main></body></html>'},
+    ]);
+    expect(extractSiteSignals(crawl).pages.map((page) => page.contentType)).toEqual(['product','contact','about']);
+  });
+});
