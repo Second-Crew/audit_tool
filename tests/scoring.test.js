@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { compareCompetitors, scoreSite } from '../lib/audit/scoring.js';
+import { buildActionPlan } from '../lib/action-plan.js';
 
 function makeSignals(overrides = {}) {
   const base = {
@@ -131,6 +132,23 @@ describe('scoreSite', () => {
     const weight = { high: 3, medium: 2, low: 1 };
     const sorted = [...severities].sort((a, b) => weight[b] - weight[a]);
     expect(severities).toEqual(sorted);
+  });
+
+  it('does not penalize a marketing site for optional review markup or prescribe self-serving ratings', () => {
+    const signals = makeSignals({
+      siteType: { ecommerce: { applicable: false } },
+      content: { educationalPages: [], faqPages: [] },
+      schema: { found: false, count: 0, types: [], hasLocalBusiness: false, hasService: false, hasProduct: false, hasFAQ: false, hasArticle: false, hasBreadcrumb: false, hasReview: false },
+    });
+    const scored = scoreSite(signals);
+    const labels = scored.categoryDetails.structuredData.checks.map((check) => check.label);
+    expect(labels).not.toContain('Review or rating schema exists');
+    expect(labels).not.toContain('Article or FAQ schema type found for eligible content');
+    const finding = scored.findings.find((item) => item.title === 'No structured data found');
+    expect(finding).toMatchObject({ severity: 'medium' });
+    expect(finding.recommendation).not.toMatch(/Review|AggregateRating|FAQPage/);
+    const plan = buildActionPlan({ scores: { overall: 50 } }, { pages: [] }, { structuredData: scored.categoryDetails.structuredData }, []);
+    expect(plan.categoryTasks.map((task) => task.detail).join(' ')).not.toMatch(/FAQPage|AggregateRating|Review markup/);
   });
 });
 
