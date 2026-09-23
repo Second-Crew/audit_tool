@@ -1,4 +1,4 @@
-import { Metric, getScoreTone } from './ui.js';
+import { Metric } from './ui.js';
 
 export function PlanUnlockCta({ plan, onOpen, unlocked }) {
   const incomplete = plan.status !== 'ready_for_review';
@@ -7,9 +7,9 @@ export function PlanUnlockCta({ plan, onOpen, unlocked }) {
       <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <div className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-300">Execution workspace</div>
-          <h2 className="mt-2 text-2xl font-semibold tracking-normal">{incomplete ? 'Assessment Review Needed' : 'Action Plan for Review'}</h2>
+          <h2 className="mt-2 text-2xl font-semibold tracking-normal">{incomplete ? 'Assessment Review Needed' : 'Prioritized Review Plan'}</h2>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-300">
-            {incomplete ? 'Required evidence or measurements are missing, so ranked recommendations are withheld.' : 'Review provisional sitewide and page tasks against their evidence before making changes.'}
+            {incomplete ? 'Required evidence or measurements are missing, so ranked recommendations are withheld.' : 'Review observed gaps and representative pages before making changes.'}
           </p>
         </div>
         <div className="grid grid-cols-3 gap-3 lg:min-w-[360px]">
@@ -19,7 +19,7 @@ export function PlanUnlockCta({ plan, onOpen, unlocked }) {
           </div>
           <div className="rounded-md border border-slate-700 bg-slate-900 p-3">
             <div className="text-xl font-semibold">{plan.pagePlans.length}</div>
-            <div className="mt-1 text-xs text-slate-400">Pages</div>
+            <div className="mt-1 text-xs text-slate-400">Priority pages shown</div>
           </div>
           <div className="rounded-md border border-slate-700 bg-slate-900 p-3">
             <div className="text-xl font-semibold">{plan.highImpactTasks}</div>
@@ -46,7 +46,7 @@ export function ActionPlanView({ plan, primary, onOpenFindings }) {
         <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
           <div>
             <div className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-700">Execution plan</div>
-            <h2 className="mt-2 text-3xl font-semibold tracking-normal text-slate-950">{incomplete ? 'Complete the assessment first' : 'Page-by-page plan for review'}</h2>
+            <h2 className="mt-2 text-3xl font-semibold tracking-normal text-slate-950">{incomplete ? 'Complete the assessment first' : 'Prioritized review plan'}</h2>
             <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-600">
               {incomplete ? 'Ranked content and page recommendations are withheld until missing evidence or measurements can be checked.' : 'These tasks are provisional. Check each page and confirm the evidence before implementation.'}
             </p>
@@ -63,21 +63,21 @@ export function ActionPlanView({ plan, primary, onOpenFindings }) {
         <div className="mt-6 grid grid-cols-1 gap-3 md:grid-cols-4">
           <Metric label="Total Tasks" value={plan.totalTasks} />
           <Metric label="High Impact" value={plan.highImpactTasks} />
-          <Metric label="Pages With Work" value={plan.pagePlans.length} />
+          <Metric label="Priority Pages Shown" value={plan.pagePlans.length} />
           <Metric label="Pages Crawled" value={primary?.pageCount || 0} />
         </div>
       </div>
 
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
         <PlanSection
-          title={incomplete ? 'Assessment Recovery' : 'General Score-Lift Plan'}
+          title={incomplete ? 'Assessment Recovery' : 'Supported Findings'}
           description={incomplete ? 'Resolve the assessment gap before using this report for outreach or client recommendations.' : 'Review these sitewide suggestions against the observed evidence.'}
           tasks={plan.generalTasks}
           empty="No sitewide tasks were generated from this audit."
         />
         <PlanSection
-          title="Category Fixes"
-          description="These tasks come directly from failed, partial, or unknown scoring checks."
+          title="Category Checks for Review"
+          description="Related observations are grouped so one underlying issue creates one review task."
           tasks={plan.categoryTasks}
           empty={incomplete ? 'Category fixes are withheld until the assessment is complete.' : 'No category fixes were generated.'}
         />
@@ -85,9 +85,9 @@ export function ActionPlanView({ plan, primary, onOpenFindings }) {
 
       {!incomplete && <section className="space-y-4">
         <div>
-          <h2 className="text-2xl font-semibold text-slate-950">Page-by-Page Execution</h2>
+          <h2 className="text-2xl font-semibold text-slate-950">Priority Page Checks</h2>
           <p className="mt-1 text-sm text-slate-500">
-            The highest-priority pages are listed first. Use the checkboxes as a lightweight execution tracker during implementation.
+            The highest-priority pages are listed first. {plan.additionalPagesWithWork > 0 ? `${plan.additionalPagesWithWork} other pages have similar observations; review the full crawl evidence before applying a template-wide fix.` : 'Use the checkboxes as a lightweight execution tracker during implementation.'}
           </p>
         </div>
 
@@ -155,9 +155,9 @@ function PagePlanCard({ pagePlan, defaultOpen }) {
               {pagePlan.url}
             </a>
           </div>
-          <div className={`rounded-md px-4 py-3 text-center ${getScoreTone(pagePlan.readiness).pill}`}>
-            <div className="text-2xl font-semibold">{pagePlan.readiness}</div>
-            <div className="text-xs font-semibold">Page readiness</div>
+          <div className="rounded-md bg-slate-100 px-4 py-3 text-center text-slate-700">
+            <div className="text-2xl font-semibold">{pagePlan.tasks.length}</div>
+            <div className="text-xs font-semibold">Observed issues</div>
           </div>
         </div>
       </summary>
