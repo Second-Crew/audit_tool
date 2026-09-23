@@ -136,6 +136,16 @@ describe('freshness signals', () => {
 });
 
 describe('page purpose classification', () => {
+  it('retains visible footer contact details without importing navigation into content evidence', () => {
+    const signals = extractSiteSignals(makeCrawl([{
+      url:'https://agency.example/',
+      html:'<html><body><main><p>We design and build useful websites for companies. Explore our work and learn how our experienced team approaches each project.</p></main><footer><p>(650) 924-9903</p><a href="mailto:hello@example.com">hello@example.com</a><p hidden>hidden@example.com</p></footer><script>secret@example.com</script></body></html>',
+    }]));
+    expect(signals.local.phones).toEqual(['(650) 924-9903']);
+    expect(signals.local.emails).toEqual(['hello@example.com']);
+    expect(signals.pages[0].text).not.toContain('hello@example.com');
+    expect(scoreSite(signals).categoryDetails.entityTrust.checks.find(check=>check.label==='Public phone or email details').status).toBe('passed');
+  });
   it('recognizes an external proposal form as a public contact path without inventing a contact page', () => {
     const crawl = makeCrawl([{
       url: 'https://agency.example/',
