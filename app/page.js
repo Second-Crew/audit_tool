@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 import { buildActionPlan } from '../lib/action-plan.js';
 import { readAuditStream } from '../lib/audit-stream.js';
+import { labelLegacyHtml, labelLegacyMarkdown } from '../lib/audit/legacy.js';
 import AuditForm from './components/AuditForm.js';
 import OverviewTab from './components/OverviewTab.js';
 import InternalDiagnostics from './components/InternalDiagnostics.js';
@@ -132,14 +133,14 @@ export default function Home() {
 
   const downloadHTML = () => {
     if (!report) return;
-    downloadBlob(report.html, 'text/html', `${reportBasename()}_Report.html`);
+    downloadBlob(labelLegacyHtml(report.html, report.scores), 'text/html', `${reportBasename()}_Report.html`);
   };
 
   // LLM-ready version of the report, for handing the plan to Claude/ChatGPT.
   // Older stored audits have no inline markdown; the server generates it.
   const downloadMarkdown = () => {
     if (report?.markdown) {
-      downloadBlob(report.markdown, 'text/markdown', `${reportBasename()}_Report.md`);
+      downloadBlob(labelLegacyMarkdown(report.markdown, report.scores), 'text/markdown', `${reportBasename()}_Report.md`);
     } else if (report?.persistence?.auditId) {
       window.location.href = `/reports/${report.persistence.auditId}?format=markdown`;
     }

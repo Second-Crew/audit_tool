@@ -138,6 +138,20 @@ describe('freshness signals', () => {
 });
 
 describe('content evidence calibration', () => {
+  it('keeps a sparse FAQ page as a page-level gap when the rest of the store has usable content', () => {
+    const longCopy = 'Our chocolate is made in small batches with careful sourcing and detailed ingredient information for every product. ';
+    const signals = extractSiteSignals(makeCrawl([
+      { url: 'https://example.com/', html: `<html><body><main><h1>Chocolate store</h1><p>${longCopy}</p></main></body></html>` },
+      { url: 'https://example.com/product/truffles', html: `<html><body><main><h1>Truffles</h1><p>${longCopy}</p></main></body></html>` },
+      { url: 'https://example.com/product/bars', html: `<html><body><main><h1>Bars</h1><p>${longCopy}</p></main></body></html>` },
+      { url: 'https://example.com/product/boxes', html: `<html><body><main><h1>Boxes</h1><p>${longCopy}</p></main></body></html>` },
+      { url: 'https://example.com/product/gifts', html: `<html><body><main><h1>Gifts</h1><p>${longCopy}</p></main></body></html>` },
+      { url: 'https://example.com/faq', html: '<html><body><main><h1>FAQ</h1></main></body></html>' },
+    ]));
+    expect(signals.contentEvidence).toMatchObject({ status: 'sufficient', sparsePages: 1, criticalSparseUrls: [] });
+    expect(signals.content.faqPages).toHaveLength(0);
+    expect(scoreSite(signals).scores.seo).not.toBeNull();
+  });
   it('does not turn incidental body copy into a comparison page or direct answer', () => {
     const signals = extractSiteSignals(makeCrawl([{
       url: 'https://example.com/services',
@@ -155,6 +169,23 @@ describe('content evidence calibration', () => {
     }]));
     expect(signals.content.hasDirectAnswers).toBe(true);
     expect(signals.pages[0].directAnswerCount).toBe(1);
+    expect(signals.content.faqPages).toHaveLength(0);
+  });
+
+  it('does not label product marketing questions as an FAQ page', () => {
+    const signals = extractSiteSignals(makeCrawl([{
+      url: 'https://example.com/product/gift-box',
+      html: '<html><body><main><h1>Gift box</h1><h2>Why gift this box?</h2><p>It contains carefully made chocolates and a handwritten note for the recipient.</p><h2>Who is it for?</h2><p>Choose a gift for your family or friends and add a personal message at checkout.</p></main></body></html>',
+    }]));
+    expect(signals.content.faqPages).toHaveLength(0);
+  });
+
+  it('recognizes a substantive FAQ answer on a dedicated page', () => {
+    const signals = extractSiteSignals(makeCrawl([{
+      url: 'https://example.com/faq',
+      html: '<html><body><main><h1>Frequently asked questions</h1><h2>When will my order ship?</h2><p>Orders placed before noon on a weekday usually ship the next working day, and a tracking link is emailed after dispatch.</p></main></body></html>',
+    }]));
+    expect(signals.content.faqPages).toHaveLength(1);
   });
 
   it('requires visible rating evidence on a product page', () => {

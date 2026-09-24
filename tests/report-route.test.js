@@ -17,4 +17,17 @@ describe('saved report exports',()=>{
     expect(preview.headers.get('Content-Type')).toContain('text/plain');
     expect(preview.headers.get('X-Content-Type-Options')).toBe('nosniff');
   });
+
+  it('flags an archived numeric GEO/AEO grade in stored HTML and Markdown', async () => {
+    supabaseRequest.mockResolvedValue([{
+      domain: 'example.com',
+      scores: { aeoGeo: 83, overall: 74 },
+      report: { html: '<html><body><h1>Audit</h1></body></html>', markdown: '# Audit\nGEO/AEO: 83' },
+    }]);
+    const params = { id: 'e24fbb09-9149-47b7-b7c7-adc500d8d40d' };
+    const html = await GET({ nextUrl: new URL(`https://audit.example/reports/${params.id}`) }, { params });
+    const markdown = await GET({ nextUrl: new URL(`https://audit.example/reports/${params.id}?format=markdown`) }, { params });
+    expect(await html.text()).toContain('earlier, uncalibrated scoring method');
+    expect(await markdown.text()).toContain('earlier, uncalibrated scoring method');
+  });
 });

@@ -1,5 +1,6 @@
 import EvidencePanel from './EvidencePanel.js';
 import { Metric, ScoreCard, SeverityBadge, SignalPanel, StatusPill, formatScore, getScoreTone } from './ui.js';
+import { hasLegacyOutcomeScores, LEGACY_SCORE_NOTICE } from '../../lib/audit/legacy.js';
 
 export default function OverviewTab({ report, primary, findings, onSelectSeverity }) {
   const topFindings = findings.slice(0, 5);
@@ -14,8 +15,10 @@ export default function OverviewTab({ report, primary, findings, onSelectSeverit
 
   return (
     <div className="space-y-6">
+      {hasLegacyOutcomeScores(report?.scores) && <div role="status" className="rounded-lg border-2 border-amber-400 bg-amber-50 p-4 text-sm font-semibold text-amber-950">{LEGACY_SCORE_NOTICE}</div>}
       {primary?.siteType && <p className="text-sm text-slate-600">Website type: {{marketing:'Marketing / lead generation',corporate:'Corporate / informational',ecommerce:'Ecommerce store',auto:'Not specified'}[primary.siteType.value]}. {primary.siteType.ecommerce.status === 'needs_review' ? 'Possible ecommerce functionality found; confirm the audit setup to include its assessment.' : ''}</p>}
       {primary?.contentEvidence?.status === 'incomplete' && <div role="status" className="rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-950">Content assessment unavailable: {primary.contentEvidence.usablePages} of {primary.contentEvidence.pages} sampled pages had enough extractable text. {primary.contentEvidence.limitation} {primary?.crawl?.summary?.rendering?.attempted ? 'Browser rendering was attempted; review unresolved pages or rerun.' : 'Browser rendering is needed.'} Do not use content recommendations or an overall grade from this audit.</div>}
+      {primary?.contentEvidence?.status === 'sufficient' && primary.contentEvidence.sparsePages > 0 && <div role="status" className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950">{primary.contentEvidence.sparsePages} of {primary.contentEvidence.pages} sampled pages had too little extractable content. Review them in Crawl Coverage; their missing content is not evidence that the site lacks answers or product facts.</div>}
       {primary?.contentEvidence?.status === 'sufficient' && report?.scores?.overall == null && <div role="status" className="rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-950">Overall and GEO/AEO grades are withheld because this crawl did not measure search positions, AI answers, or citations. Review the sampled-page evidence below; outcome calibration requires a fixed query panel.</div>}
       <EvidencePanel result={report?.audit?.assessment} />
       <p className="text-sm text-slate-600">The SEO number covers sampled technical checks only. Other available numbers are diagnostics, not measured search or AI visibility.</p>

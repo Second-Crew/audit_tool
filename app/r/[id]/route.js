@@ -1,4 +1,5 @@
 import { getSupabaseConfig, supabaseRequest } from '../../../lib/supabase.js';
+import { labelLegacyHtml } from '../../../lib/audit/legacy.js';
 
 export const runtime = 'nodejs';
 
@@ -30,15 +31,16 @@ export async function GET(request, { params }) {
 
     const audits = await supabaseRequest(
       config,
-      `/audits?id=eq.${auditId}&select=report`,
+      `/audits?id=eq.${auditId}&select=report,scores`,
       { method: 'GET' }
     );
-    const html = Array.isArray(audits) ? audits[0]?.report?.html : null;
+    const row = Array.isArray(audits) ? audits[0] : null;
+    const html = row?.report?.html;
     if (!html) {
       return htmlMessage(404, 'Report not found', 'The report for this link is no longer available.');
     }
 
-    return new Response(html, {
+    return new Response(labelLegacyHtml(html, row.scores), {
       status: 200,
       headers: {
         'Content-Type': 'text/html; charset=utf-8',

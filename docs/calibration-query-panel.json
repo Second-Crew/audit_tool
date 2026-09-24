@@ -1,0 +1,19 @@
+{
+  "version": "sf-sj-ecommerce-agency-v1",
+  "createdAt": "2026-09-23",
+  "market": "San Francisco Bay Area, California, United States",
+  "language": "en-US",
+  "targetDomain": "secondcrew.com",
+  "queries": [
+    { "id": "sj-web-design", "intent": "broad agency discovery", "prompt": "Which web design agencies in San Jose, California should a growing ecommerce brand consider?", "seoQuery": "web design agency san jose ca ecommerce" },
+    { "id": "sf-web-design", "intent": "broad agency discovery", "prompt": "Which web design agencies in San Francisco, California have experience with ecommerce websites?", "seoQuery": "web design agency san francisco ca ecommerce" },
+    { "id": "sj-shopify", "intent": "Shopify agency discovery", "prompt": "What are some Shopify website design agencies serving San Jose, California?", "seoQuery": "shopify web design agency san jose ca" },
+    { "id": "sf-shopify", "intent": "Shopify agency discovery", "prompt": "What are some Shopify website design agencies in San Francisco, California?", "seoQuery": "shopify web design agency san francisco ca" },
+    { "id": "sj-woocommerce", "intent": "WooCommerce agency discovery", "prompt": "Which agencies can design and build a WooCommerce store for a business in San Jose, California?", "seoQuery": "woocommerce web design agency san jose ca" },
+    { "id": "sf-woocommerce", "intent": "WooCommerce agency discovery", "prompt": "Which agencies can design and build a WooCommerce store for a business in San Francisco, California?", "seoQuery": "woocommerce web design agency san francisco ca" },
+    { "id": "sj-redesign", "intent": "store redesign", "prompt": "I run an ecommerce store near San Jose and need a redesign that makes products easier to find. Which local agencies could help?", "seoQuery": "ecommerce store redesign agency san jose ca" },
+    { "id": "sf-redesign", "intent": "store redesign", "prompt": "I run an online store in San Francisco and want to improve product pages and checkout. Which web design agencies could help?", "seoQuery": "ecommerce website redesign agency san francisco ca" },
+    { "id": "bay-shopify-migration", "intent": "platform migration", "prompt": "Which Bay Area agencies could help migrate an established online store to Shopify and redesign it?", "seoQuery": "bay area shopify migration web design agency" },
+    { "id": "bay-platform-choice", "intent": "platform advice", "prompt": "I need a Bay Area ecommerce agency to help choose between Shopify and WooCommerce, then build the store. Who should I look at?", "seoQuery": "bay area shopify woocommerce ecommerce agency" }
+  ]
+}

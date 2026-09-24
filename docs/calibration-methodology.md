@@ -49,6 +49,12 @@ The corrected crawl reached Ramotion's homepage, about, contact, and services in
 
 An additional eight-page pass tested live-result agencies Clear Digital, Thomas Digital, Sleepless Media, and Ecommerce Pro. All four reached **100/100 on the sampled technical SEO checklist** despite different result positions and query intents. This ceiling effect confirms that the current checklist measures basic on-page hygiene and cannot predict organic rank or distinguish strong performers. The same fetched-HTML pass on Second Crew returned sparse script shells, so its content and SEO grades were correctly withheld; a browser-rendered pass is needed before comparing its page evidence with the agency sample. Concurrent crawling also exceeded an eight-page request in this test, so capacity is now reserved for in-flight workers and the page limit is regression-tested.
 
+## Full Preview workflow checks (2026-09-23)
+
+Two ecommerce audits completed through the Preview dashboard, saved in history, and reopened: [Melt Chocolates](https://meltchocolates.com/) (WooCommerce case-study sample; 250 pages, 211 seconds) and [Hiut Denim](https://hiutdenim.co.uk/) (Shopify showcase sample; 250 pages, 152 seconds). Neither report assigned an overall or GEO/AEO grade. Melt sampled 228 product URLs and observed Product/Offer types in fetched JSON-LD. Hiut sampled 120 product URLs; Product/Offer markup was not observed in fetched JSON-LD, so the ecommerce checks remained **unknown** pending rendered-page or Rich Results Test confirmation. These observations do not establish rich-result eligibility or relative store quality.
+
+The Melt run exposed a genuine sparse `/faq` page: its public browser view showed a heading but no FAQ answers. The earlier global content gate treated that one page as critical and withheld all site-level content checks, despite 249 of 250 pages having usable extracted text. The revised rule keeps a sparse FAQ as a page-level review item while preserving the measured coverage of the other pages. The same run incorrectly called 218 product pages “FAQ-like” because ordinary question headings on product pages met a loose pattern. FAQ-page detection now requires a substantive answer plus explicit FAQ page or section context; a bare FAQ URL or repeated marketing questions cannot establish answer content. Both changes are regression-tested but still need a repeat Preview audit on the updated deployment.
+
 ## Scoring contract
 
 | Dimension | Current assessment | Outcome calibration needed |
@@ -59,6 +65,8 @@ An additional eight-page pass tested live-result agencies Clear Digital, Thomas 
 | Overall | Withheld. | Define a business outcome (qualified leads or ecommerce revenue), then calibrate explicit weights on a held-out set. Do not average SEO and AI proxy scores into a “visibility” claim. |
 
 For a query panel, the observed citation score is `100 × mean(per-query cited responses ÷ valid repeated responses)`. Queries are equally weighted so a frequently repeated prompt cannot dominate. Report the answer-trigger and brand-mention rates separately. Do not pool ChatGPT Search, Google AI features, and other engines into one score. A citation is an observed URL from the target domain, not merely permission in `robots.txt`.
+
+The [frozen 10-query San Francisco/San Jose ecommerce agency panel](./calibration-query-panel.json) and [collection protocol](./query-panel-protocol.md) define the next observation run. The earlier two single-run ChatGPT answers are discovery examples and are excluded from panel scoring.
 
 For SEO outcome evaluation, preserve the exact query, search surface, date, market, language, device, organic position, and landing URL. Keep directory rankings, ads, and local packs separate from organic web results. Use Search Console as the site owner's evidence for impressions/clicks and indexing. Before adopting any 0–100 predictive score, label a training set and a held-out set, test agreement between human reviewers on ambiguous checks, and report calibration error plus false-positive/false-negative counts by site type. Eight pages chosen by a sitemap are not a comparable sample across a corporate agency and a large store.
 
