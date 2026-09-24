@@ -22,6 +22,18 @@ The research queries were `web design agency San Francisco CA`, `web design agen
 
 These platform showcases establish platform and sample diversity. They do not certify search performance or imply that a store passes every audit check. A 403 is an access limitation for this crawler; it is not evidence that Googlebot or customers are blocked.
 
+## Live search observations (2026-09-23, signed-in California browser)
+
+The following are **one-session Google web-result observations**, after separating sponsored and local-business blocks. Positions are within the web-result list seen in that session, not a universal or stable ranking. Reopen the linked query to collect a new observation with its own timestamp and context.
+
+| Exact query | First four web results observed | Calibration implication |
+| --- | --- | --- |
+| [web design agency san jose ca](https://www.google.com/search?q=web+design+agency+san+jose+ca) | Baunfire; Clear Digital; DesignRush directory; Rasteroids | Baunfire and Clear Digital are directly visible agency examples; the directory is a separate result type. |
+| [web design agency san francisco ca](https://www.google.com/search?q=web+design+agency+san+francisco+ca) | Thomas Digital; SF Website Design; DesignRush directory; Razorfrog | The earlier Clay/Ramotion discovery sample is not evidence of a top organic position for this query. |
+| [shopify web design agency san francisco ca](https://www.google.com/search?q=shopify+web+design+agency+san+francisco+ca) | Shopify editorial list; Sleepless Media; Ecommerce Pro; Web Tonic article | Publisher pages and agency pages must be labeled separately; Sleepless Media and Ecommerce Pro are direct agency examples. |
+
+Two single-run ChatGPT web-search prompts asked for five ecommerce web-design agencies in San Jose and San Francisco, respectively. The San Jose answer cited Baunfire, Solutionarian, Sure Exposure, Blue Astral, and Web Design Stop. The San Francisco answer cited Ecommerce Pro, Mage, Spiral Scout, Firesqueak, and Co-Curator. These are **observed answer mentions/citations in one signed-in session**, not a repeatable ChatGPT ranking, endorsement, or GEO score. The prompt, date, engine, cited destination, and response should be retained for a controlled panel; any cited claim still needs checking against the linked source.
+
 ## Current smoke-test findings
 
 Run `node scripts/calibration-smoke.mjs <sample ids>` to repeat the limited, read-only public crawl. The script explicitly passes marketing versus ecommerce scope and prints observed page types, evidence status, checks, and unknowns. It makes no AI-answer or ranking claims.
@@ -34,6 +46,8 @@ The first eight-page pass exposed four calibration errors:
 4. If no product page was sampled, Product markup, offers, and reviews must be **unknown**, not a failing store grade. A platform-success showcase is not a ground-truth SEO score.
 
 The corrected crawl reached Ramotion's homepage, about, contact, and services in its eight-page sample; the earlier pass contained eight articles. Broad eight-page crawls still missed product pages for Verve, Allbirds, Landyachtz, and Melt. Adding one publicly listed product URL per store yielded four HTTP 200 product pages with Product/Offer schema observed in the fetched HTML. That shows why matching page types changes the evidence; it does not validate every schema property or prove rich-result eligibility. JavaScript-rendered content and PageSpeed field data were not available in this local smoke run. The public crawl results are diagnostic, not a finished store-by-store ranking.
+
+An additional eight-page pass tested live-result agencies Clear Digital, Thomas Digital, Sleepless Media, and Ecommerce Pro. All four reached **100/100 on the sampled technical SEO checklist** despite different result positions and query intents. This ceiling effect confirms that the current checklist measures basic on-page hygiene and cannot predict organic rank or distinguish strong performers. The same fetched-HTML pass on Second Crew returned sparse script shells, so its content and SEO grades were correctly withheld; a browser-rendered pass is needed before comparing its page evidence with the agency sample. Concurrent crawling also exceeded an eight-page request in this test, so capacity is now reserved for in-flight workers and the page limit is regression-tested.
 
 ## Scoring contract
 

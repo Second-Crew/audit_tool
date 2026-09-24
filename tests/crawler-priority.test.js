@@ -15,6 +15,7 @@ vi.mock('../lib/audit/fetcher.js', () => ({
 }));
 
 import { crawlSite } from '../lib/audit/crawler.js';
+import { fetchText } from '../lib/audit/fetcher.js';
 
 describe('crawl sampling priority', () => {
   it('includes the homepage and core pages before sitemap articles under a small limit', async () => {
@@ -25,5 +26,19 @@ describe('crawl sampling priority', () => {
       requestDelayMs: 0,
     });
     expect(crawl.pages.map((page) => new URL(page.url).pathname)).toEqual(['/', '/about', '/services']);
+  });
+
+  it('does not fetch beyond the requested page limit with concurrent workers', async () => {
+    fetchText.mockClear();
+    const crawl = await crawlSite('https://example.com/', {
+      maxPages: 3,
+      maxDurationMs: 5000,
+      concurrency: 3,
+      requestDelayMs: 0,
+    });
+    const pageRequests = fetchText.mock.calls.filter(([url]) => !['/robots.txt', '/llms.txt', '/sitemap.xml'].includes(new URL(url).pathname));
+    expect(pageRequests).toHaveLength(3);
+    expect(crawl.pages).toHaveLength(3);
+    expect(crawl.summary.crawledPages).toBe(3);
   });
 });

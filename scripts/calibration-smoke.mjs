@@ -9,9 +9,14 @@ import { canonicalizeUrl } from '../lib/audit/url.js';
 // not a claim that these sites rank highest or that their current SEO is good.
 const samples = {
   baunfire: { url: 'https://www.baunfire.com/', siteType: 'marketing', city: 'San Jose', group: 'agency' },
+  secondcrew: { url: 'https://secondcrew.com/', siteType: 'marketing', city: 'San Jose', group: 'owned_baseline' },
+  cleardigital: { url: 'https://www.cleardigital.com/', siteType: 'marketing', city: 'San Jose', group: 'agency' },
   clay: { url: 'https://clay.global/', siteType: 'marketing', city: 'San Francisco', group: 'agency' },
   ramotion: { url: 'https://www.ramotion.com/', siteType: 'marketing', city: 'San Francisco', group: 'agency' },
   solutionarian: { url: 'https://solutionarianmarketing.com/', siteType: 'marketing', city: 'San Jose', group: 'agency' },
+  thomasdigital: { url: 'https://thomasdigital.com/', siteType: 'marketing', city: 'San Francisco', group: 'agency' },
+  sleepless: { url: 'https://www.sleeplessmedia.com/', siteType: 'marketing', city: 'San Francisco Bay Area', group: 'agency' },
+  ecommercepro: { url: 'https://www.ecommercepro.com/', siteType: 'marketing', city: 'San Francisco', group: 'agency' },
   hiut: { url: 'https://hiutdenim.co.uk/', siteType: 'ecommerce', group: 'shopify' },
   verve: { url: 'https://www.vervecoffee.com/', siteType: 'ecommerce', group: 'shopify', focusUrls: ['https://www.vervecoffee.com/products/rise-and-run-blend'] },
   allbirds: { url: 'https://www.allbirds.com/', siteType: 'ecommerce', group: 'shopify', focusUrls: ['https://www.allbirds.com/products/mens-tree-runners-wheat-dark-beige'] },
