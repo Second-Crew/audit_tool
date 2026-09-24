@@ -16,6 +16,7 @@
 5. Add your environment variable:
    - Click **"Environment Variables"**
    - Add: `GEMINI_API_KEY` = `your-gemini-api-key`
+   - Generated narrative stays off unless `AUDIT_GENERATED_NARRATIVE_ENABLED=true` is set for a reviewed pilot.
 6. Click **"Deploy"**
 
 That's it! Your report generator will be live in about 2 minutes.

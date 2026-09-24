@@ -23,7 +23,7 @@ is off by default. See [claim verification](docs/claim-verification.md).
 
 ## Gemini Narrative Layer
 
-Gemini is optional. The crawler/scoring engine remains the source of truth, and Gemini only rewrites evidence into executive summaries, score explanations, quick wins, and roadmap steps.
+Gemini is optional. Generated prose is disabled by default because its claims have not passed evidence validation. Client reports use deterministic summaries unless an operator explicitly enables a reviewed pilot. The crawler/scoring engine remains the source of truth.
 
 Set these env vars to enable it:
 
@@ -31,9 +31,10 @@ Set these env vars to enable it:
 GEMINI_API_KEY=your_key
 GEMINI_MODEL=gemini-2.5-flash
 AUDIT_LLM_PROVIDER=gemini
+AUDIT_GENERATED_NARRATIVE_ENABLED=true
 ```
 
-If Gemini is not configured or times out, the app falls back to deterministic report text.
+Leave `AUDIT_GENERATED_NARRATIVE_ENABLED=false` for normal client reports. If Gemini is not configured or times out, the app uses deterministic report text.
 
 ## Supabase
 
