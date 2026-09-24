@@ -7,7 +7,7 @@ export default function OverviewTab({ report, primary, findings, onSelectSeverit
     { label: 'Overall', value: report?.scores?.overall, caption: 'Awaiting outcome calibration' },
     { label: 'GEO / AEO', value: report?.scores?.aeoGeo, caption: 'Awaiting answer observations' },
     { label: 'AI Readiness', value: report?.scores?.aiReadiness, caption: 'Awaiting outcome calibration' },
-    { label: 'SEO', value: report?.scores?.seo, caption: 'Sampled technical checks' },
+    { label: 'Technical SEO', value: report?.scores?.seo, caption: 'Sampled page checks' },
     { label: 'Mobile', value: report?.scores?.mobile, caption: 'PageSpeed mobile' },
     { label: 'Security', value: report?.scores?.security, caption: 'Header baseline' },
   ];
