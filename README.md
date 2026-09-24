@@ -16,7 +16,7 @@ is off by default. See [claim verification](docs/claim-verification.md).
 - Crawls up to 250 pages per submitted site.
 - Reads sitemap, robots.txt, and llms.txt.
 - Checks ChatGPT/OpenAI, Google, Perplexity, and Claude crawler access signals.
-- Scores structured data, answer readiness, entity trust, technical SEO, page experience, security, accessibility, and vertical-specific readiness.
+- Scores sampled technical SEO, page experience, security, and accessibility when evidence is sufficient; reports structured data, answer content, entity, and vertical checks as ungraded observations. Overall and GEO/AEO outcome grades remain withheld until query-level calibration. See [calibration methodology](docs/calibration-methodology.md).
 - Accepts manual competitor URLs for API-light comparison.
 - Uses Gemini for optional evidence-grounded summaries and roadmaps.
 - Saves clients and audit history to Supabase when configured.

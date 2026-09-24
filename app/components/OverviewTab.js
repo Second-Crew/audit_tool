@@ -4,10 +4,10 @@ import { Metric, ScoreCard, SeverityBadge, SignalPanel, StatusPill, formatScore,
 export default function OverviewTab({ report, primary, findings, onSelectSeverity }) {
   const topFindings = findings.slice(0, 5);
   const scoreCards = [
-    { label: 'Overall', value: report?.scores?.overall, caption: 'Diagnostic score' },
-    { label: 'GEO / AEO', value: report?.scores?.aeoGeo, caption: 'AI answer readiness' },
-    { label: 'AI Readiness', value: report?.scores?.aiReadiness, caption: 'Entity and crawler signals' },
-    { label: 'SEO', value: report?.scores?.seo, caption: 'Technical foundation' },
+    { label: 'Overall', value: report?.scores?.overall, caption: 'Awaiting outcome calibration' },
+    { label: 'GEO / AEO', value: report?.scores?.aeoGeo, caption: 'Awaiting answer observations' },
+    { label: 'AI Readiness', value: report?.scores?.aiReadiness, caption: 'Awaiting outcome calibration' },
+    { label: 'SEO', value: report?.scores?.seo, caption: 'Sampled technical checks' },
     { label: 'Mobile', value: report?.scores?.mobile, caption: 'PageSpeed mobile' },
     { label: 'Security', value: report?.scores?.security, caption: 'Header baseline' },
   ];
@@ -16,9 +16,9 @@ export default function OverviewTab({ report, primary, findings, onSelectSeverit
     <div className="space-y-6">
       {primary?.siteType && <p className="text-sm text-slate-600">Website type: {{marketing:'Marketing / lead generation',corporate:'Corporate / informational',ecommerce:'Ecommerce store',auto:'Not specified'}[primary.siteType.value]}. {primary.siteType.ecommerce.status === 'needs_review' ? 'Possible ecommerce functionality found; confirm the audit setup to include its assessment.' : ''}</p>}
       {primary?.contentEvidence?.status === 'incomplete' && <div role="status" className="rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-950">Content assessment unavailable: {primary.contentEvidence.usablePages} of {primary.contentEvidence.pages} sampled pages had enough extractable text. {primary.contentEvidence.limitation} {primary?.crawl?.summary?.rendering?.attempted ? 'Browser rendering was attempted; review unresolved pages or rerun.' : 'Browser rendering is needed.'} Do not use content recommendations or an overall grade from this audit.</div>}
-      {primary?.contentEvidence?.status === 'sufficient' && report?.scores?.overall == null && <div role="status" className="rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-950">Overall assessment unavailable: page content was sufficient, but {Object.values(primary?.categoryDetails || {}).filter(category => category.score == null).map(category => category.name).join(', ') || 'a required category'} could not be fully measured. Check the unknown measurements and rerun before using a ranked action plan.</div>}
+      {primary?.contentEvidence?.status === 'sufficient' && report?.scores?.overall == null && <div role="status" className="rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-950">Overall and GEO/AEO grades are withheld because this crawl did not measure search positions, AI answers, or citations. Review the sampled-page evidence below; outcome calibration requires a fixed query panel.</div>}
       <EvidencePanel result={report?.audit?.assessment} />
-      <p className="text-sm text-slate-600">The category scores below are legacy heuristics under review, not verified AI visibility or approved outreach claims.</p>
+      <p className="text-sm text-slate-600">The SEO number covers sampled technical checks only. Other available numbers are diagnostics, not measured search or AI visibility.</p>
       <section className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-6">
         {scoreCards.map((card) => (
           <ScoreCard key={card.label} {...card} />
@@ -31,7 +31,7 @@ export default function OverviewTab({ report, primary, findings, onSelectSeverit
           <div className="mb-4 flex items-start justify-between gap-4">
             <div>
               <h2 className="text-xl font-semibold text-slate-950">Executive Summary</h2>
-              <p className="mt-1 text-sm text-slate-500">Evidence-backed readiness, not a live ranking guarantee.</p>
+              <p className="mt-1 text-sm text-slate-500">Sampled evidence and measurement limits.</p>
             </div>
             <StatusPill score={report?.scores?.aeoGeo} />
           </div>
@@ -88,9 +88,9 @@ export default function OverviewTab({ report, primary, findings, onSelectSeverit
         </div>
 
         <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="text-xl font-semibold text-slate-950">{report?.scores?.overall == null ? 'Assessment Recovery' : 'Recommended Roadmap'}</h2>
+          <h2 className="text-xl font-semibold text-slate-950">{report?.scores?.overall == null ? 'Evidence Review' : 'Recommended Roadmap'}</h2>
           <div className="mt-4 space-y-3">
-            {report?.scores?.overall == null ? <p className="text-sm leading-6 text-slate-600">Complete the unavailable evidence or measurements and rerun the audit before ranking website changes.</p> : (report.aiInsights?.roadmap || []).map((item) => (
+            {report?.scores?.overall == null ? <p className="text-sm leading-6 text-slate-600">Review observed findings and page checks. Use query-level search and AI-answer outcomes before assigning impact to website changes.</p> : (report.aiInsights?.roadmap || []).map((item) => (
               <div key={`${item.phase}-${item.title}`} className="rounded-md border border-cyan-100 bg-cyan-50 p-4">
                 <div className="text-xs font-semibold uppercase tracking-[0.14em] text-cyan-700">{item.phase}</div>
                 <div className="mt-1 font-semibold text-slate-950">{item.title}</div>
@@ -110,19 +110,19 @@ export default function OverviewTab({ report, primary, findings, onSelectSeverit
 
 function botAccessItems(report) {
   const access = report?.aiReadiness?.features?.aiBotAccess || {};
-  return ['Googlebot', 'OAI-SearchBot', 'ChatGPT-User', 'PerplexityBot', 'ClaudeBot'].map((bot) => ({
+  return ['Googlebot', 'OAI-SearchBot', 'PerplexityBot', 'ClaudeBot'].map((bot) => ({
     label: bot,
-    value: access[bot]?.allowed === false ? 'Blocked' : 'Allowed',
-    ok: access[bot]?.allowed !== false,
+    value: access[bot]?.allowed === false ? 'Blocked' : access[bot]?.allowed === true ? 'Permitted' : 'Unknown',
+    ok: access[bot]?.allowed === true ? true : access[bot]?.allowed === false ? false : null,
   }));
 }
 
 function contentSignalItems(primary) {
   return [
-    { label: 'FAQ pages', value: primary?.content?.faqPages?.length ?? 0, ok: (primary?.content?.faqPages?.length ?? 0) > 0 },
-    { label: 'Service pages', value: primary?.content?.servicePages?.length ?? 0, ok: (primary?.content?.servicePages?.length ?? 0) > 0 },
-    { label: 'Product pages', value: primary?.content?.productPages?.length ?? 0, ok: (primary?.content?.productPages?.length ?? 0) > 0 },
-    { label: 'Comparison pages', value: primary?.content?.comparisonPages?.length ?? 0, ok: (primary?.content?.comparisonPages?.length ?? 0) > 0 },
+    { label: 'FAQ pages sampled', value: primary?.content?.faqPages?.length ?? 0, ok: null },
+    { label: 'Service pages sampled', value: primary?.content?.servicePages?.length ?? 0, ok: null },
+    { label: 'Product pages sampled', value: primary?.content?.productPages?.length ?? 0, ok: null },
+    { label: 'Comparison pages sampled', value: primary?.content?.comparisonPages?.length ?? 0, ok: null },
   ];
 }
 

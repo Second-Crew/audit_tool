@@ -1,0 +1,61 @@
+# SEO, AEO, and GEO calibration — 2026-09-23
+
+This document distinguishes **observable site checks** from **measured discovery outcomes**. A site crawl can reveal technical and content evidence, but it cannot establish that a page ranks, appears in an AI answer, or is cited. The old weighted overall and GEO/AEO scores have been withheld pending outcome data. The displayed SEO number is limited to technical checks on the sampled pages.
+
+## Public calibration sample
+
+The research queries were `web design agency San Francisco CA`, `web design agency San Jose CA`, `Shopify ecommerce web design agencies San Francisco CA rankings`, and `Shopify ecommerce web design agencies San Jose CA rankings` on 2026-09-23. Search results were used to discover candidates, **not** as a portable Google rank label: result order varies by search provider, location, device, and time, and many results are directories or geographic landing pages. The [Clutch San Jose web-design list](https://clutch.co/web-designers/san-jose) lists Baunfire first in its own directory; that is a directory ranking, not a Google organic position. Its [San Francisco list](https://clutch.co/web-designers/san-francisco) mixes featured placement with organic directory order. Each agency's own site was then checked for location and work evidence.
+
+| Segment | Candidate | Why included | Source |
+| --- | --- | --- | --- |
+| San Jose agency | Baunfire | Local address and portfolio with ecommerce projects; appears in directory results | [Agency portfolio](https://www.baunfire.com/work/), [Clutch San Jose](https://clutch.co/web-designers/san-jose) |
+| San Jose agency | Solutionarian | Local address and Shopify/WooCommerce ecommerce service | [Agency location page](https://solutionarianmarketing.com/location/san-jose-ca/) |
+| San Francisco agency | Clay | San Francisco headquarters and substantial web-design work | [Agency about page](https://clay.global/about), [Expertise listing](https://www.expertise.com/business/web-design/california/san-francisco) |
+| San Francisco agency | Ramotion | San Francisco meeting address and web-design portfolio | [Agency location page](https://www.ramotion.com/web-design-san-francisco/) |
+| Shopify store | Hiut Denim | Apparel, product and brand-story templates | [Shopify's 2026 showcase](https://www.shopify.com/blog/shopify-stores) |
+| Shopify store | Verve Coffee | Consumables, catalog, education, local retail | [Shopify's 2026 showcase](https://www.shopify.com/blog/shopify-stores) |
+| Shopify store | Allbirds | Large catalog and editorial content | [Shopify's 2026 showcase](https://www.shopify.com/blog/shopify-stores) |
+| WooCommerce store | Landyachtz | Multi-region, large catalog, current WooCommerce case study | [WooCommerce case study](https://woocommerce.com/posts/landyachtz-woocommerce-success-story/) |
+| WooCommerce store | Melt Chocolates | Premium food, seasonal catalog, current WooCommerce case study | [WooCommerce case study](https://woocommerce.com/posts/melt-chocolates-klaviyo-woocommerce-success-story/) |
+| WooCommerce store | No Pong | Personal care, subscription and wholesale mix | [WooCommerce case study](https://woocommerce.com/posts/no-pong-woocommerce-success-story/) |
+| WooCommerce access stress case | grüum | High-volume subscription store; our public crawler received HTTP 403 | [WooCommerce case study](https://woocommerce.com/posts/why-gruum-chose-woocommerce/) |
+
+These platform showcases establish platform and sample diversity. They do not certify search performance or imply that a store passes every audit check. A 403 is an access limitation for this crawler; it is not evidence that Googlebot or customers are blocked.
+
+## Current smoke-test findings
+
+Run `node scripts/calibration-smoke.mjs <sample ids>` to repeat the limited, read-only public crawl. The script explicitly passes marketing versus ecommerce scope and prints observed page types, evidence status, checks, and unknowns. It makes no AI-answer or ranking claims.
+
+The first eight-page pass exposed four calibration errors:
+
+1. Sitemaps dominated by articles could crowd out homepage, about, service, and product pages. The crawler now prioritizes the requested URL and core paths.
+2. Body mentions of “vs”, “we are”, or a current copyright year produced false comparison, answer, and freshness signals. Detection now requires page-intent evidence, a question with a nearby substantive answer, or an explicit recent publish/update date.
+3. Featured “Add to cart” cards on a homepage and staff pages about product development could be mislabeled as product pages. Product paths and stronger page evidence are now required.
+4. If no product page was sampled, Product markup, offers, and reviews must be **unknown**, not a failing store grade. A platform-success showcase is not a ground-truth SEO score.
+
+The corrected crawl reached Ramotion's homepage, about, contact, and services in its eight-page sample; the earlier pass contained eight articles. Broad eight-page crawls still missed product pages for Verve, Allbirds, Landyachtz, and Melt. Adding one publicly listed product URL per store yielded four HTTP 200 product pages with Product/Offer schema observed in the fetched HTML. That shows why matching page types changes the evidence; it does not validate every schema property or prove rich-result eligibility. JavaScript-rendered content and PageSpeed field data were not available in this local smoke run. The public crawl results are diagnostic, not a finished store-by-store ranking.
+
+## Scoring contract
+
+| Dimension | Current assessment | Outcome calibration needed |
+| --- | --- | --- |
+| SEO technical health | A 0–100 diagnostic over sampled titles, descriptions, H1 presence, important-page indexing directives, and duplicate metadata; show measured coverage and page evidence. Do not call it organic rank or traffic. Optional sitemap and breadcrumb observations are separate. | Search Console query/page impressions, clicks, indexing, and field Core Web Vitals; a location/device-controlled organic query panel. Compare like page types and branded vs nonbranded intents. |
+| AEO | On-site answer evidence checklist; no composite number. Useful answers and source facts are reviewed for accuracy and fit to actual questions. FAQ syntax alone is not an outcome. | Fixed information and commercial question panel; record whether an answer is triggered, whether the site's facts are represented accurately, whether the site is cited, and human evidence labels. |
+| GEO | Crawler access and content facts remain checks; no proxy grade. | Fixed prompt panel per engine, location, and intent, repeated at least three times. Record answer trigger, exact cited URL/domain, brand mention, timestamp, and engine. `scoreObservedVisibility` reports a panel citation rate only after at least 10 queries have complete repeats. Report each engine separately and track change over time. |
+| Overall | Withheld. | Define a business outcome (qualified leads or ecommerce revenue), then calibrate explicit weights on a held-out set. Do not average SEO and AI proxy scores into a “visibility” claim. |
+
+For a query panel, the observed citation score is `100 × mean(per-query cited responses ÷ valid repeated responses)`. Queries are equally weighted so a frequently repeated prompt cannot dominate. Report the answer-trigger and brand-mention rates separately. Do not pool ChatGPT Search, Google AI features, and other engines into one score. A citation is an observed URL from the target domain, not merely permission in `robots.txt`.
+
+For SEO outcome evaluation, preserve the exact query, search surface, date, market, language, device, organic position, and landing URL. Keep directory rankings, ads, and local packs separate from organic web results. Use Search Console as the site owner's evidence for impressions/clicks and indexing. Before adopting any 0–100 predictive score, label a training set and a held-out set, test agreement between human reviewers on ambiguous checks, and report calibration error plus false-positive/false-negative counts by site type. Eight pages chosen by a sitemap are not a comparable sample across a corporate agency and a large store.
+
+## Current guidance and optimization tactics
+
+- Google's [2026 generative-search guide](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide) says core SEO remains relevant to AI features and explicitly rejects special `llms.txt` files, artificial content chunking, AI-only rewrites, inauthentic mentions, and overfocus on schema as Google AI ranking tactics. Its [AI features guide](https://developers.google.com/search/docs/appearance/ai-features) says there is no special schema or additional eligibility requirement beyond indexed, snippet-eligible pages. Optimize useful, original content and clear site structure for people first.
+- Google's [Search Essentials](https://developers.google.com/search/docs/essentials) support crawlable links, clear titles/headings, and helpful content. [Search Console](https://developers.google.com/search/docs/monitor-debug/search-console-start) supplies actual query, page, index, and performance evidence; on-site checks alone cannot replace it.
+- [OpenAI's crawler documentation](https://developers.openai.com/api/docs/bots) distinguishes OAI-SearchBot, which controls ChatGPT Search surfacing, from ChatGPT-User, which is user-initiated and does not decide search inclusion. A robots allowance is only a permission check, not proof of retrieval or citation.
+- For stores, Google's [Product structured-data guide](https://developers.google.com/search/docs/appearance/structured-data/product) supports applicable Product/Offer facts, shipping/returns details, and Merchant Center feeds. Validate markup against the visible product and feed; absence in an unmatched sample is unknown. Google's [Core Web Vitals guide](https://developers.google.com/search/docs/appearance/core-web-vitals) identifies LCP, INP, and CLS as field experience measures.
+- The peer-reviewed [GEO paper](https://arxiv.org/abs/2311.09735) proposes black-box visibility evaluation on query benchmarks and reports that intervention effects vary by domain. It supports a query-level experiment design, not a universal checklist-to-citation conversion or guaranteed uplift for this product.
+
+## Inputs needed for a reliable client calibration
+
+Read-only access or exports for the audited site's Google Search Console query/page/indexing reports and its priority markets, plus the actual commercial questions customers ask. Merchant Center and Business Profile data are useful only if those channels apply. For revenue claims, use analytics/conversion data with a stable attribution window. For GEO/AEO outcome claims, collect timestamped answer/citation observations for the same fixed query panel and engines; a site crawl cannot infer them.

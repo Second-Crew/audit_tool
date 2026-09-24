@@ -65,18 +65,18 @@ describe('rendered content evidence',()=>{
   expect(extractSiteSignals(c).contentEvidence).toMatchObject({status:'sufficient',usablePages:5,pages:6,criticalSparseUrls:[]});
  });
  it('withholds implementation tasks when site content coverage is incomplete',()=>{const plan=buildActionPlan({aiInsights:{roadmap:[{actions:['Add new sales copy']}]}},{contentEvidence:{status:'incomplete',usablePages:30,pages:56},crawl:{summary:{rendering:{succeeded:30,failed:0,skipped:26}}},pages:[{url:'https://agency.example/',wordCount:50,contentEvidenceIncomplete:false}]},{content:{name:'Content',score:10,checks:[{status:'failed',label:'Direct answers',maxScore:20}]}},[{title:'Add content',severity:'high'}]);expect(plan).toMatchObject({status:'evidence_incomplete',totalTasks:1,categoryTasks:[],pagePlans:[]});expect(plan.generalTasks[0].evidence).toContain('30 of 56');});
- it('explains unavailable measurements and withholds a ranked plan when content is sufficient',()=>{
+ it('explains unavailable measurements while preserving evidence-review tasks',()=>{
   const categoryDetails={pageExperience:{name:'Page Experience',score:null,reason:'Only 75% of weighted checks were measured; at least 80% is required.',checks:[{status:'unknown',label:'Desktop PageSpeed performance',maxScore:25,score:0,evidence:'Unavailable'}]}};
   const scores={overall:null,aeoGeo:72};
   const plan=buildActionPlan({scores,aiInsights:{roadmap:[{actions:['Add new sales copy']}]}},{contentEvidence:{status:'sufficient'},pages:[{url:'https://agency.example/',wordCount:400,h1Count:0,schemaCount:0}]},categoryDetails,[{title:'Add content',severity:'high'}]);
-  expect(plan).toMatchObject({status:'measurement_incomplete',totalTasks:1,categoryTasks:[],pagePlans:[]});
-  expect(plan.generalTasks[0].evidence).toContain('Desktop PageSpeed performance');
+  expect(plan).toMatchObject({status:'evidence_review',categoryTasks:[]});
+  expect(plan.generalTasks.find(task=>task.id==='measurement-recovery').evidence).toContain('Desktop PageSpeed performance');
   const summary=buildExecutiveSummary({input:{companyName:'Agency'},primary:{signals:{domain:'agency.example',contentEvidence:{status:'sufficient'}},scoring:{scores,categoryDetails}}});
   expect(summary).toContain('Desktop PageSpeed performance');
   expect(summary).not.toContain('insufficient extractable content');
   const markdown=buildMarkdownReport({domain:'agency.example',contentEvidence:{status:'sufficient'},scores,categoryDetails,actionPlan:plan,aiInsights:{executiveSummary:summary,roadmap:[{phase:'Now',title:'Add new sales copy',actions:['Add new sales copy']}]}});
   expect(markdown).toContain('### Page Experience — Not assessed');
-  expect(markdown).toContain('### Assessment Recovery');
+  expect(markdown).toContain('### Supported Findings');
   expect(markdown).not.toContain('## Recommended Roadmap');
   expect(markdown).not.toContain('null/100');
  });

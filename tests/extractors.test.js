@@ -103,27 +103,29 @@ describe('JSON-LD aggregation', () => {
 });
 
 describe('freshness signals', () => {
-  it('builds the year pattern from the given year and its predecessor', () => {
+  it('requires an explicit recent publication or update date', () => {
     const pattern = buildFreshnessPattern(2030);
-    expect(pattern.test('Copyright 2030')).toBe(true);
-    expect(pattern.test('As of 2029, we serve 40 cities')).toBe(true);
+    expect(pattern.test('Last updated: March 2, 2030')).toBe(true);
+    expect(pattern.test('Published in 2029')).toBe(true);
+    expect(pattern.test('Copyright 2030')).toBe(false);
+    expect(pattern.test('As of 2029, we serve 40 cities')).toBe(false);
     expect(pattern.test('Founded in 2010')).toBe(false);
     expect(pattern.test('12030 units sold in 12019')).toBe(false);
   });
 
-  it('still matches explicit freshness language regardless of year', () => {
+  it('does not infer freshness from undated marketing language', () => {
     const pattern = buildFreshnessPattern(2030);
-    expect(pattern.test('Last updated: March')).toBe(true);
-    expect(pattern.test('our latest work')).toBe(true);
+    expect(pattern.test('Last updated: March')).toBe(false);
+    expect(pattern.test('our latest work')).toBe(false);
   });
 
-  it('detects the runtime current year in crawled text', () => {
+  it('does not treat a copyright year as an editorial update', () => {
     const year = new Date().getFullYear();
     const crawl = makeCrawl([
       { url: 'https://example.com', html: `<html><head><title>T</title></head><body>© ${year} Example Co</body></html>` },
     ]);
 
-    expect(extractSiteSignals(crawl).content.hasFreshnessSignals).toBe(true);
+    expect(extractSiteSignals(crawl).content.hasFreshnessSignals).toBe(false);
   });
 
   it('does not treat stale years alone as freshness', () => {
@@ -132,6 +134,91 @@ describe('freshness signals', () => {
     ]);
 
     expect(extractSiteSignals(crawl).content.hasFreshnessSignals).toBe(false);
+  });
+});
+
+describe('content evidence calibration', () => {
+  it('does not turn incidental body copy into a comparison page or direct answer', () => {
+    const signals = extractSiteSignals(makeCrawl([{
+      url: 'https://example.com/services',
+      html: '<html><head><title>Website services</title></head><body><main><h1>Website services</h1><p>We are a design agency. Our work includes ecommerce vs corporate examples and the latest projects.</p></main></body></html>',
+    }]));
+    expect(signals.content.comparisonPages).toEqual([]);
+    expect(signals.content.hasDirectAnswers).toBe(false);
+    expect(signals.content.hasFreshnessSignals).toBe(false);
+  });
+
+  it('recognizes a question with a nearby substantive answer', () => {
+    const signals = extractSiteSignals(makeCrawl([{
+      url: 'https://example.com/guide',
+      html: '<html><body><main><h2>How long does implementation take?</h2><p>Implementation normally takes six to eight weeks after discovery, depending on the number of integrations and the review cycle.</p></main></body></html>',
+    }]));
+    expect(signals.content.hasDirectAnswers).toBe(true);
+    expect(signals.pages[0].directAnswerCount).toBe(1);
+  });
+
+  it('requires visible rating evidence on a product page', () => {
+    const withoutRating = extractSiteSignals(makeCrawl([{
+      url: 'https://example.com/products/widget',
+      html: '<html><body><main><h1>Widget</h1><p>Read customer reviews below.</p></main></body></html>',
+    }]), { siteType: 'ecommerce' });
+    const withRating = extractSiteSignals(makeCrawl([{
+      url: 'https://example.com/products/widget',
+      html: '<html><body><main><h1>Widget</h1><p>Rated 4.8 out of 5 by buyers.</p></main></body></html>',
+    }]), { siteType: 'ecommerce' });
+    expect(withoutRating.commerce.hasReviews).toBe(false);
+    expect(withRating.commerce.hasReviews).toBe(true);
+  });
+
+  it('does not classify legal pages or product-team articles as purchasable products', () => {
+    const signals = extractSiteSignals(makeCrawl([
+      { url: 'https://example.com/terms-of-service', html: '<html><head><title>Terms of Service</title></head><body><main><h1>Terms of Service</h1><p>Our terms.</p></main></body></html>' },
+      { url: 'https://example.com/director-of-product-development', html: '<html><head><title>Director of Product Development</title></head><body><main><h1>Director of Product Development</h1><p>Meet the team.</p></main></body></html>' },
+    ]), { websiteType: 'ecommerce', ecommerceFunctionality: 'yes' });
+    expect(signals.pages.map((page) => page.contentType)).toEqual(['legal', 'general']);
+    expect(signals.commerce.productPageCount).toBe(0);
+  });
+
+  it('does not classify an article saying talk about as a company About page', () => {
+    const signals = extractSiteSignals(makeCrawl([{
+      url: 'https://example.com/newsletters/we-need-to-talk-about-chocolate',
+      html: '<html><head><title>We need to talk about chocolate</title></head><body><main><h1>We need to talk about chocolate</h1><p>Chocolate is delicious.</p></main></body></html>',
+    }]));
+    expect(signals.pages[0].contentType).not.toBe('about');
+  });
+
+  it('keeps a storefront homepage with featured products out of product-page checks', () => {
+    const signals = extractSiteSignals(makeCrawl([{
+      url: 'https://example.com/',
+      html: '<html><body><main><h1>Store</h1><p>Featured item: $20. Add to cart.</p></main></body></html>',
+    }]), { websiteType: 'ecommerce', ecommerceFunctionality: 'yes' });
+    expect(signals.pages[0].contentType).toBe('general');
+    expect(signals.commerce.productPageCount).toBe(0);
+  });
+
+  it('does not use sitewide Product schema as evidence for sampled product pages', () => {
+    const signals = extractSiteSignals(makeCrawl([
+      pageWithJsonLd('https://example.com/', [{ '@type': 'Product', name: 'Featured item' }]),
+      { url: 'https://example.com/products/widget', html: '<html><body><main><h1>Widget</h1><p>Product details.</p></main></body></html>' },
+    ]), { websiteType: 'ecommerce', ecommerceFunctionality: 'yes' });
+    expect(signals.commerce.productPageCount).toBe(1);
+    expect(signals.commerce.hasProductSchema).toBe(false);
+  });
+
+  it('requires both shipping and returns evidence for the combined commerce check', () => {
+    const signals = extractSiteSignals(makeCrawl([{
+      url: 'https://example.com/products/widget',
+      html: '<html><body><main><h1>Widget</h1><p>Free shipping on every order.</p></main></body></html>',
+    }]), { websiteType: 'ecommerce', ecommerceFunctionality: 'yes' });
+    expect(signals.commerce.hasShippingReturns).toBe(false);
+  });
+
+  it('does not count a privacy page as third-party proof', () => {
+    const signals = extractSiteSignals(makeCrawl([{
+      url: 'https://example.com/privacy',
+      html: '<html><head><title>Privacy Policy</title></head><body><main><h1>Privacy Policy</h1><p>How we handle data.</p></main></body></html>',
+    }]));
+    expect(signals.entity.trustPages).toEqual([]);
   });
 });
 

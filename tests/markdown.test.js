@@ -85,7 +85,7 @@ describe('buildMarkdownReport', () => {
     expect(result).toContain('https://form.typeform.com/to/example');
     expect(result).toContain('| Overall | Not assessed |');
     expect(result).toContain('| Public phone or email details | unknown |');
-    expect(result).toContain('provisional heuristics');
+    expect(result).toContain('GEO/AEO and overall grades are withheld until outcome calibration');
   });
 
   it('covers competitors including failed crawls', () => {
