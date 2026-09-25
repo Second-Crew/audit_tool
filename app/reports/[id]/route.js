@@ -1,6 +1,7 @@
 import { getSupabaseConfig, supabaseRequest } from '../../../lib/supabase.js';
 import { buildMarkdownReport } from '../../../lib/audit/markdown.js';
 import { buildActionPlan } from '../../../lib/action-plan.js';
+import { labelLegacyHtml, labelLegacyMarkdown } from '../../../lib/audit/legacy.js';
 
 export const runtime = 'nodejs';
 
@@ -22,6 +23,7 @@ export async function GET(request, { params }) {
   }
 
   const wantsMarkdown = request.nextUrl.searchParams.get('format') === 'markdown';
+  const previewMarkdown = wantsMarkdown && request.nextUrl.searchParams.get('preview') === '1';
 
   try {
     const rows = await supabaseRequest(
@@ -33,13 +35,15 @@ export async function GET(request, { params }) {
     if (!row) return new Response('Report not found', { status: 404 });
 
     if (wantsMarkdown) {
-      const markdown = row.report?.markdown || buildStoredMarkdown(row);
+      const markdown = labelLegacyMarkdown(row.report?.markdown || buildStoredMarkdown(row), row.scores);
       return new Response(markdown, {
         status: 200,
         headers: {
-          'Content-Type': 'text/markdown; charset=utf-8',
-          'Content-Disposition': `attachment; filename="${row.domain.replace(/[^a-z0-9.-]/gi, '_')}-audit.md"`,
+          'Content-Type': previewMarkdown ? 'text/plain; charset=utf-8' : 'text/markdown; charset=utf-8',
+          'Content-Disposition': `${previewMarkdown ? 'inline' : 'attachment'}; filename="${row.domain.replace(/[^a-z0-9.-]/gi, '_')}-audit.md"`,
           'Cache-Control': 'no-store',
+          'X-Robots-Tag': 'noindex',
+          'X-Content-Type-Options': 'nosniff',
         },
       });
     }
@@ -47,7 +51,7 @@ export async function GET(request, { params }) {
     const html = row.report?.html;
     if (!html) return new Response('Report not found', { status: 404 });
 
-    return new Response(html, {
+    return new Response(labelLegacyHtml(html, row.scores), {
       status: 200,
       headers: {
         'Content-Type': 'text/html; charset=utf-8',
@@ -82,6 +86,6 @@ function buildStoredMarkdown(row) {
     categoryDetails: row.category_details || {},
     competitorComparison: row.competitors || [],
     aiInsights,
-    actionPlan: buildActionPlan({ aiInsights }, { pages: [] }, row.category_details || {}, row.findings || []),
+    actionPlan: buildActionPlan({ aiInsights, scores: row.scores || {} }, { pages: [] }, row.category_details || {}, row.findings || []),
   });
 }

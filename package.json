@@ -2,20 +2,27 @@
   "name": "secondcrew-report-generator",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "agent:worker": "node scripts/agent-worker.mjs",
+    "agent:smoke": "node scripts/agent-smoke.mjs"
   },
   "dependencies": {
-    "next": "14.0.4",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
     "@google/genai": "^1.16.0",
-    "cheerio": "1.0.0-rc.12"
+    "@typesafe-ai/sdk": "^0.6.0",
+    "cheerio": "1.0.0-rc.12",
+    "next": "14.0.4",
+    "playwright-core": "1.62.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.16",

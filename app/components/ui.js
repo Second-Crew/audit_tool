@@ -15,7 +15,7 @@ export function ScoreCard({ label, value, caption }) {
 
 export function StatusPill({ score }) {
   const tone = getScoreTone(score);
-  const label = score >= 80 ? 'Strong' : score >= 60 ? 'Developing' : 'Needs Work';
+  const label = score == null ? 'Not assessed' : score >= 80 ? 'Strong' : score >= 60 ? 'Developing' : 'Needs Work';
 
   return <span className={`rounded-full px-3 py-1 text-xs font-semibold ${tone.pill}`}>{label}</span>;
 }
@@ -46,7 +46,7 @@ export function SignalPanel({ title, items }) {
         {items.map((item) => (
           <div key={item.label} className="flex items-center justify-between gap-3 border-b border-slate-100 pb-3 last:border-0 last:pb-0">
             <div className="text-sm text-slate-600">{item.label}</div>
-            <div className={`text-sm font-semibold ${item.ok ? 'text-emerald-700' : 'text-amber-700'}`}>{item.value}</div>
+            <div className={`text-sm font-semibold ${item.ok == null ? 'text-slate-700' : item.ok ? 'text-emerald-700' : 'text-amber-700'}`}>{item.value}</div>
           </div>
         ))}
       </div>

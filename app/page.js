@@ -3,8 +3,10 @@
 import { useMemo, useState } from 'react';
 import { buildActionPlan } from '../lib/action-plan.js';
 import { readAuditStream } from '../lib/audit-stream.js';
+import { labelLegacyHtml, labelLegacyMarkdown } from '../lib/audit/legacy.js';
 import AuditForm from './components/AuditForm.js';
 import OverviewTab from './components/OverviewTab.js';
+import InternalDiagnostics from './components/InternalDiagnostics.js';
 import FindingsTab from './components/FindingsTab.js';
 import CategoriesTab from './components/CategoriesTab.js';
 import CompetitorsTab from './components/CompetitorsTab.js';
@@ -24,6 +26,8 @@ const tabs = [
 export default function Home() {
   const [url, setUrl] = useState('');
   const [companyName, setCompanyName] = useState('');
+  const [websiteType, setWebsiteType] = useState('marketing');
+  const [ecommerceFunctionality, setEcommerceFunctionality] = useState('no');
   const [competitorUrls, setCompetitorUrls] = useState('');
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState({ step: '', percent: 0 });
@@ -74,6 +78,8 @@ export default function Home() {
         body: JSON.stringify({
           url,
           companyName,
+          websiteType,
+          ecommerceFunctionality,
           competitorUrls,
           maxPages: 250,
           maxDurationMs: 150000,
@@ -127,14 +133,14 @@ export default function Home() {
 
   const downloadHTML = () => {
     if (!report) return;
-    downloadBlob(report.html, 'text/html', `${reportBasename()}_Report.html`);
+    downloadBlob(labelLegacyHtml(report.html, report.scores), 'text/html', `${reportBasename()}_Report.html`);
   };
 
   // LLM-ready version of the report, for handing the plan to Claude/ChatGPT.
   // Older stored audits have no inline markdown; the server generates it.
   const downloadMarkdown = () => {
     if (report?.markdown) {
-      downloadBlob(report.markdown, 'text/markdown', `${reportBasename()}_Report.md`);
+      downloadBlob(labelLegacyMarkdown(report.markdown, report.scores), 'text/markdown', `${reportBasename()}_Report.md`);
     } else if (report?.persistence?.auditId) {
       window.location.href = `/reports/${report.persistence.auditId}?format=markdown`;
     }
@@ -164,6 +170,8 @@ export default function Home() {
       if (!response.ok) throw new Error(data.error || 'Failed to load the saved report');
       setReport(data);
       setCompanyName(data.companyName || '');
+      setWebsiteType(data.audit?.input?.websiteType || 'auto');
+      setEcommerceFunctionality(data.audit?.input?.ecommerceFunctionality || 'auto');
       setUrl(data.audit?.primary?.startUrl || '');
       setSeverityFilter('all');
       setActiveTab('overview');
@@ -195,6 +203,10 @@ export default function Home() {
           <div className="space-y-6">
             <AuditForm
               url={url}
+              websiteType={websiteType}
+              ecommerceFunctionality={ecommerceFunctionality}
+              onWebsiteTypeChange={setWebsiteType}
+              onEcommerceFunctionalityChange={setEcommerceFunctionality}
               companyName={companyName}
               competitorUrls={competitorUrls}
               onUrlChange={setUrl}
@@ -312,6 +324,7 @@ export default function Home() {
           </div>
         </div>
       )}
+      <InternalDiagnostics semantic={audit?.semantic} />
     </main>
   );
 }

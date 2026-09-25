@@ -1,3 +1,4 @@
+import { WEBSITE_TYPES, COMMERCE_MODES } from '../../../lib/audit/site-type.js';
 import { NextResponse } from 'next/server';
 import { runAudit } from '../../../lib/audit/index.js';
 import { persistAudit } from '../../../lib/audit/persistence.js';
@@ -61,6 +62,8 @@ export async function POST(request) {
           {
             url: body.url || body.domain,
             companyName: body.companyName || '',
+            websiteType: body.websiteType || 'auto',
+            ecommerceFunctionality: body.ecommerceFunctionality || 'auto',
             industry: body.industry || '',
             city: body.city || '',
             competitors: body.competitors || body.competitorUrls || [],
@@ -106,6 +109,7 @@ export async function POST(request) {
 }
 
 function validateBody(body) {
+  if (body && (!WEBSITE_TYPES.includes(body.websiteType || 'auto') || !COMMERCE_MODES.includes(body.ecommerceFunctionality || 'auto'))) return 'Invalid website type or ecommerce setting';
   if (!body || typeof body !== 'object') return 'A JSON body is required';
 
   const url = body.url || body.domain;

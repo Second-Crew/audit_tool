@@ -1,0 +1,88 @@
+import {describe,it,expect} from 'vitest';
+import {parseRobotsTxt} from '../lib/audit/robots.js';
+import {renderSparsePages,isAllowedRenderHost,needsRendering,sanitizeConnectionError,normalizeBrowserEndpoint,waitForContentHtml} from '../lib/audit/render.js';
+import {extractSiteSignals} from '../lib/audit/extractors.js';
+import {scoreSite} from '../lib/audit/scoring.js';
+import {buildActionPlan} from '../lib/action-plan.js';
+import {buildExecutiveSummary} from '../lib/audit/compat.js';
+import {buildMarkdownReport} from '../lib/audit/markdown.js';
+
+const sparse='<html><head><title>Agency</title><meta name="description" content="A web design agency"></head><body><div id="root"></div><script src="/app.js"></script></body></html>';
+const rendered='<html><head><title>Agency</title><meta name="description" content="A web design agency"></head><body><main><h1>Web design agency</h1><p>We plan, design and build websites for local companies in San Jose. Our team explains the process, shows examples of prior work and helps clients request a proposal for their own project.</p></main></body></html>';
+function crawl() {const page={url:'https://agency.example/',requestedUrl:'https://agency.example/',status:200,headers:{'content-type':'text/html'},html:sparse,truncated:false,observedAt:'2026-09-22T00:00:00Z'};
+return {domain:'agency.example',startUrl:page.url,origin:'https://agency.example',pages:[page],errors:[],blockedByRobots:[],summary:{requestedMaxPages:1,crawledPages:1,failedRequests:0,blockedByRobots:0,stoppedBy:'queue_empty'},auxiliary:{robots:{url:'https://agency.example/robots.txt',found:true,status:200,body:'User-agent: *\nAllow: /',parsed:parseRobotsTxt('User-agent: *\nAllow: /')},llms:{url:'https://agency.example/llms.txt',found:false,status:404,body:''},sitemap:{url:'https://agency.example/sitemap.xml',found:false,status:404,urls:[]}}};}
+
+describe('rendered content evidence',()=>{
+ it('waits past a long navigation shell until the actual page content arrives',async()=>{
+  let reads=0,waits=0;
+  const shell=`<html><body><nav>${'Navigation '.repeat(30)}</nav><main></main><footer>${'Footer '.repeat(30)}</footer></body></html>`;
+  const page={content:async()=>++reads<3?shell:rendered,waitForTimeout:async()=>{waits++;}};
+  expect(await waitForContentHtml(page,'https://agency.example/web-design',Date.now()+1000)).toBe(rendered);
+  expect(waits).toBe(2);
+ });
+ it('keeps sparse ecommerce utility pages visible without treating an empty cart as missing core content',()=>{
+  const c=crawl();
+  c.pages=[{...c.pages[0],html:rendered},...Array.from({length:20},(_,i)=>({...c.pages[0],url:`https://agency.example/products/item-${i}`,html:rendered})),...['cart','checkout','basket','account'].map(path=>({...c.pages[0],url:`https://agency.example/${path}`}))];
+  const signals=extractSiteSignals(c,{websiteType:'ecommerce',ecommerceFunctionality:'yes'});
+  expect(signals.contentEvidence).toMatchObject({status:'sufficient',pages:25,usablePages:21,sparsePages:4,criticalSparseUrls:[]});
+  expect(scoreSite(signals).categoryDetails.verticalReadiness.name).toBe('Ecommerce Readiness');
+  expect(signals.pages.filter(page=>page.text.length<80)).toHaveLength(4);
+ });
+ it('marks a script shell as incomplete and withholds content grades and absence findings',async()=>{const c=crawl();expect(needsRendering(c.pages[0])).toBe(true);await renderSparsePages(c,{env:{}});const signals=extractSiteSignals(c);const scored=scoreSite(signals);expect(signals.contentEvidence.status).toBe('incomplete');expect(scored.scores).toMatchObject({overall:null,aeoGeo:null,seo:null,answerReadiness:null});expect(scored.findings.some(f=>/direct answers|structured data|trust/i.test(f.title))).toBe(false);const plan=buildActionPlan(null,{pages:[{url:c.pages[0].url,contentEvidenceIncomplete:true,wordCount:0,h1Count:0,schemaCount:0}]},{},[]);expect(plan.pagePlans).toEqual([]);});
+ it('uses rendered DOM only when extraction succeeds',async()=>{const c=crawl();await renderSparsePages(c,{renderer:async()=>({html:rendered})});const signals=extractSiteSignals(c);expect(c.summary.rendering).toMatchObject({attempted:1,succeeded:1});expect(signals.contentEvidence).toMatchObject({status:'sufficient',renderedPages:1});expect(signals.pages[0]).toMatchObject({evidenceSource:'rendered_dom'});expect(signals.pages[0].text).toContain('We plan, design');});
+ it('renders a mid-sized site beyond the old 30-page cap',async()=>{const c=crawl();c.pages=Array.from({length:56},(_,i)=>({...c.pages[0],url:`https://agency.example/page-${i}`}));await renderSparsePages(c,{renderer:async()=>({html:rendered})});expect(c.summary.rendering).toMatchObject({attempted:56,succeeded:56,skipped:0});expect(extractSiteSignals(c).contentEvidence).toMatchObject({status:'sufficient',usablePages:56});});
+ it('retries a failed core page once and restores its evidence',async()=>{
+  const c=crawl();let calls=0;
+  await renderSparsePages(c,{renderer:async()=>{if(++calls===1) throw Error('render_navigation_failed');return {html:rendered};}});
+  expect(c.summary.rendering).toMatchObject({attempted:1,retryAttempts:1,succeeded:1,failed:0,failureReasons:{}});
+  expect(extractSiteSignals(c).contentEvidence.status).toBe('sufficient');
+ });
+ it('withholds grades when one core landing page is sparse despite high overall coverage',async()=>{
+  const c=crawl();
+  c.pages=[
+   {...c.pages[0],html:rendered},
+   ...Array.from({length:4},(_,i)=>({...c.pages[0],url:`https://agency.example/blog/post-${i}`,html:rendered})),
+   {...c.pages[0],url:'https://agency.example/web-design'},
+  ];
+  c.summary.crawledPages=c.pages.length;
+  await renderSparsePages(c,{renderer:async()=>{throw Error('render_navigation_failed');}});
+  const signals=extractSiteSignals(c),scored=scoreSite(signals);
+  expect(c.summary.rendering).toMatchObject({attempted:1,retryAttempts:1,succeeded:0,failed:1});
+  expect(signals.contentEvidence).toMatchObject({status:'incomplete',usablePages:5,pages:6,criticalSparseUrls:['https://agency.example/web-design']});
+  expect(scored.scores).toMatchObject({overall:null,aeoGeo:null,seo:null,structuredData:null});
+  const plan=buildActionPlan({scores:scored.scores},{...signals,crawl:{summary:c.summary}},scored.categoryDetails,scored.findings);
+  expect(plan).toMatchObject({status:'evidence_incomplete',totalTasks:1,pagePlans:[]});
+  expect(plan.generalTasks[0].evidence).toContain('https://agency.example/web-design');
+  expect(buildExecutiveSummary({input:{companyName:'Agency'},primary:{signals,scoring:scored}})).toContain('https://agency.example/web-design');
+ });
+ it('keeps a high-coverage crawl usable when only a nested article is sparse',()=>{
+  const c=crawl();
+  c.pages=[
+   {...c.pages[0],html:rendered},
+   ...Array.from({length:4},(_,i)=>({...c.pages[0],url:`https://agency.example/blog/post-${i}`,html:rendered})),
+   {...c.pages[0],url:'https://agency.example/blog/unavailable'},
+  ];
+  expect(extractSiteSignals(c).contentEvidence).toMatchObject({status:'sufficient',usablePages:5,pages:6,criticalSparseUrls:[]});
+ });
+ it('withholds implementation tasks when site content coverage is incomplete',()=>{const plan=buildActionPlan({aiInsights:{roadmap:[{actions:['Add new sales copy']}]}},{contentEvidence:{status:'incomplete',usablePages:30,pages:56},crawl:{summary:{rendering:{succeeded:30,failed:0,skipped:26}}},pages:[{url:'https://agency.example/',wordCount:50,contentEvidenceIncomplete:false}]},{content:{name:'Content',score:10,checks:[{status:'failed',label:'Direct answers',maxScore:20}]}},[{title:'Add content',severity:'high'}]);expect(plan).toMatchObject({status:'evidence_incomplete',totalTasks:1,categoryTasks:[],pagePlans:[]});expect(plan.generalTasks[0].evidence).toContain('30 of 56');});
+ it('explains unavailable measurements while preserving evidence-review tasks',()=>{
+  const categoryDetails={pageExperience:{name:'Page Experience',score:null,reason:'Only 75% of weighted checks were measured; at least 80% is required.',checks:[{status:'unknown',label:'Desktop PageSpeed performance',maxScore:25,score:0,evidence:'Unavailable'}]}};
+  const scores={overall:null,aeoGeo:72};
+  const plan=buildActionPlan({scores,aiInsights:{roadmap:[{actions:['Add new sales copy']}]}},{contentEvidence:{status:'sufficient'},pages:[{url:'https://agency.example/',wordCount:400,h1Count:0,schemaCount:0}]},categoryDetails,[{title:'Add content',severity:'high'}]);
+  expect(plan).toMatchObject({status:'evidence_review',categoryTasks:[]});
+  expect(plan.generalTasks.find(task=>task.id==='measurement-recovery').evidence).toContain('Desktop PageSpeed performance');
+  const summary=buildExecutiveSummary({input:{companyName:'Agency'},primary:{signals:{domain:'agency.example',contentEvidence:{status:'sufficient'}},scoring:{scores,categoryDetails}}});
+  expect(summary).toContain('Desktop PageSpeed performance');
+  expect(summary).not.toContain('insufficient extractable content');
+  const markdown=buildMarkdownReport({domain:'agency.example',contentEvidence:{status:'sufficient'},scores,categoryDetails,actionPlan:plan,aiInsights:{executiveSummary:summary,roadmap:[{phase:'Now',title:'Add new sales copy',actions:['Add new sales copy']}]}});
+  expect(markdown).toContain('### Page Experience — Not assessed');
+  expect(markdown).toContain('### Supported Findings');
+  expect(markdown).not.toContain('## Recommended Roadmap');
+  expect(markdown).not.toContain('null/100');
+ });
+ it('rejects related-post lists as article evidence',async()=>{const c=crawl();c.pages[0].url='https://agency.example/blog/article';const shortArticle='<main><h2>OTHER NEWS</h2><p>Another article about design strategy and related content.</p><p>More recommendations and recent posts.</p></main>';await renderSparsePages(c,{renderer:async()=>({html:shortArticle})});expect(c.summary.rendering.failed).toBe(1);expect(extractSiteSignals(c).contentEvidence.status).toBe('incomplete');});
+ it('keeps failed rendering incomplete without leaking provider errors',async()=>{const c=crawl();await renderSparsePages(c,{renderer:async()=>{throw Error('wss://browser.example/playwright?token=secret failed')}});expect(c.pages[0].html).toBe(sparse);expect(c.summary.rendering).toMatchObject({failed:1,failureReasons:{render_browser_error:1}});expect(JSON.stringify(c.summary)).not.toContain('secret');expect(extractSiteSignals(c).contentEvidence.status).toBe('incomplete');});
+ it('limits browser requests to the site and its subdomains',()=>{expect(isAllowedRenderHost('https://api.agency.example/content','https://agency.example')).toBe(true);expect(isAllowedRenderHost('https://agency.example.evil.test/script','https://agency.example')).toBe(false);expect(isAllowedRenderHost('http://127.0.0.1/private','https://agency.example')).toBe(false);});
+ it('redacts browser endpoint credentials from operational errors',()=>{const endpoint='wss://production-sfo.browserless.io/chromium/playwright?token=private-token-123';const error=Error(`connect to ${endpoint} failed: token=private-token-123`);const sanitized=sanitizeConnectionError(error,endpoint);expect(sanitized).not.toContain('private-token-123');expect(sanitized).not.toContain('browserless.io');expect(sanitized).toContain('failed');});
+ it('normalizes pasted WebSocket URLs and rejects invalid endpoint shapes',()=>{const url='wss://production-sfo.browserless.io/chromium/playwright?token=real-token';expect(normalizeBrowserEndpoint(`  "${url}"\n`)).toBe(url);expect(()=>normalizeBrowserEndpoint('RENDER_BROWSER_WS_ENDPOINT='+url)).toThrow('browser_endpoint_invalid');expect(()=>normalizeBrowserEndpoint('wss://production-sfo.browserless.io?token=real-token')).toThrow('browser_endpoint_invalid');expect(()=>normalizeBrowserEndpoint('wss://production-sfo.browserless.io/chromium/playwright?token=YOUR_TOKEN')).toThrow('browser_auth_failed');});
+});

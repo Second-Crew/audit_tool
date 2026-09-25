@@ -49,7 +49,6 @@ const fixture = {
         url: 'https://example.com/services',
         title: 'Services',
         contentType: 'service',
-        readiness: 60,
         tasks: [{ id: 'p1', title: 'Add FAQ blocks', detail: 'Add 3-5 Q&As.', impact: 'Medium', effort: 'Standard fix', source: 'AEO', evidence: 'No FAQ detected' }],
       },
     ],
@@ -72,10 +71,21 @@ describe('buildMarkdownReport', () => {
     expect(markdown).toContain('**Recommendation:** Add JSON-LD for Organization and Service types.');
   });
 
-  it('lists only non-passed checks and escapes pipes in table cells', () => {
+  it('preserves positive evidence as well as gaps and escapes pipes in table cells', () => {
     expect(markdown).toContain('llms.txt exists | failed (0/8)');
-    expect(markdown).not.toContain('Sitemap exists | passed');
+    expect(markdown).toContain('Sitemap exists | passed (14/14) | 40 URLs');
     expect(markdown).toContain('llms.txt missing \\| pipe test');
+  });
+
+  it('preserves a form-only contact route and unknown measurements for future agents', () => {
+    const result = buildMarkdownReport({scores:{overall:null},categoryDetails:{entity:{name:'Entity Trust',score:100,checks:[
+      {label:'Public contact route or details observed',status:'passed',score:14,maxScore:14,evidence:'https://form.typeform.com/to/example'},
+      {label:'Public phone or email details',status:'unknown',score:null,maxScore:16,evidence:'A linked form was observed'},
+    ]}}});
+    expect(result).toContain('https://form.typeform.com/to/example');
+    expect(result).toContain('| Overall | Not assessed |');
+    expect(result).toContain('| Public phone or email details | unknown |');
+    expect(result).toContain('GEO/AEO and overall grades are withheld until outcome calibration');
   });
 
   it('covers competitors including failed crawls', () => {
@@ -86,7 +96,7 @@ describe('buildMarkdownReport', () => {
 
   it('renders the action plan as checkbox tasks with page sections', () => {
     expect(markdown).toContain('- [ ] **Add structured data** (High impact, This week, Structured Data)');
-    expect(markdown).toContain('#### Services (service, readiness 60/100)');
+    expect(markdown).toContain('#### Services (service, 1 observed issue)');
     expect(markdown).toContain('URL: https://example.com/services');
   });
 

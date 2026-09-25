@@ -7,6 +7,8 @@ import { ACCESS_COOKIE, accessToken, timingSafeEqualHex } from './lib/access.js'
 const PUBLIC_PATH_PATTERNS = [/^\/login$/, /^\/api\/login$/, /^\/r\//];
 
 export async function middleware(request) {
+  // Versioned agent routes perform their own mandatory bearer authentication.
+  if (request.nextUrl.pathname.startsWith('/api/v1/')) return NextResponse.next();
   const password = process.env.APP_ACCESS_PASSWORD;
   if (!password) return NextResponse.next();
 
