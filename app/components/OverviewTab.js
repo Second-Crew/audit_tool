@@ -5,9 +5,9 @@ import { hasLegacyOutcomeScores, LEGACY_SCORE_NOTICE } from '../../lib/audit/leg
 export default function OverviewTab({ report, primary, findings, onSelectSeverity }) {
   const topFindings = findings.slice(0, 5);
   const scoreCards = [
-    { label: 'Overall', value: report?.scores?.overall, caption: 'Awaiting outcome calibration' },
-    { label: 'GEO / AEO', value: report?.scores?.aeoGeo, caption: 'Awaiting answer observations' },
-    { label: 'AI Readiness', value: report?.scores?.aiReadiness, caption: 'Awaiting outcome calibration' },
+    { label: 'Overall', value: report?.scores?.overall, caption: 'Cross-channel grade unvalidated' },
+    { label: 'GEO / AEO', value: report?.scores?.aeoGeo, caption: 'No valid answer/citation panel' },
+    { label: 'AI Readiness', value: report?.scores?.aiReadiness, caption: 'Readiness scale unvalidated' },
     { label: 'Technical SEO', value: report?.scores?.seo, caption: 'Sampled page checks' },
     { label: 'Mobile', value: report?.scores?.mobile, caption: 'PageSpeed mobile' },
     { label: 'Security', value: report?.scores?.security, caption: 'Header baseline' },
@@ -19,7 +19,7 @@ export default function OverviewTab({ report, primary, findings, onSelectSeverit
       {primary?.siteType && <p className="text-sm text-slate-600">Website type: {{marketing:'Marketing / lead generation',corporate:'Corporate / informational',ecommerce:'Ecommerce store',auto:'Not specified'}[primary.siteType.value]}. {primary.siteType.ecommerce.status === 'needs_review' ? 'Possible ecommerce functionality found; confirm the audit setup to include its assessment.' : ''}</p>}
       {primary?.contentEvidence?.status === 'incomplete' && <div role="status" className="rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-950">Content assessment unavailable: {primary.contentEvidence.usablePages} of {primary.contentEvidence.pages} sampled pages had enough extractable text. {primary.contentEvidence.limitation} {primary?.crawl?.summary?.rendering?.attempted ? 'Browser rendering was attempted; review unresolved pages or rerun.' : 'Browser rendering is needed.'} Do not use content recommendations or an overall grade from this audit.</div>}
       {primary?.contentEvidence?.status === 'sufficient' && primary.contentEvidence.sparsePages > 0 && <div role="status" className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950">{primary.contentEvidence.sparsePages} of {primary.contentEvidence.pages} sampled pages had too little extractable content. Review them in Crawl Coverage; their missing content is not evidence that the site lacks answers or product facts.</div>}
-      {primary?.contentEvidence?.status === 'sufficient' && report?.scores?.overall == null && <div role="status" className="rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-950">Overall and GEO/AEO grades are withheld because this crawl did not measure search positions, AI answers, or citations. Review the sampled-page evidence below; outcome calibration requires a fixed query panel.</div>}
+      {primary?.contentEvidence?.status === 'sufficient' && report?.scores?.overall == null && <div role="status" className="rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-950">N/A means not measured, not a score of zero. This crawl checks sampled pages but does not measure search positions, AI answers, or citations. Overall and GEO/AEO grades need observed outcomes; an AI-readiness number also needs a validated scale. Review the page evidence below.</div>}
       <EvidencePanel result={report?.audit?.assessment} />
       <p className="text-sm text-slate-600">The SEO number covers sampled technical checks only. Other available numbers are diagnostics, not measured search or AI visibility.</p>
       <section className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-6">
