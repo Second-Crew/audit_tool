@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { scoreObservedVisibility } from '../lib/audit/observed-visibility.js';
 import panelObservations from '../docs/query-panel-observations.json';
+import panelQueries from '../docs/calibration-query-panel.json';
 
 describe('observed AI visibility', () => {
   it('withholds a score until the fixed panel has enough complete repeated observations', () => {
@@ -38,6 +39,17 @@ describe('observed AI visibility', () => {
     const recorded = panelObservations.observations.filter((row) => row.runId <= 2);
     expect(recorded).toHaveLength(20);
     expect(scoreObservedVisibility(recorded, 'secondcrew.com', { engine: 'chatgpt-search' })).toMatchObject({ status: 'not_assessed', score: null });
-    expect(scoreObservedVisibility(recorded, 'secondcrew.com', { engine: 'chatgpt-search', minRunsPerQuery: 2 })).toMatchObject({ status: 'observed', queryCount: 10, runCount: 20 });
+    expect(recorded.every((row) => row.valid === false && row.invalidReason)).toBe(true);
+    expect(scoreObservedVisibility(recorded, 'secondcrew.com', { engine: 'chatgpt-search', minRunsPerQuery: 2, queryIds: panelQueries.queries.map((query) => query.id) })).toMatchObject({ status: 'not_assessed', score: null, queryCount: 0 });
+  });
+
+  it('does not substitute unrelated prompts for a missing frozen-panel query', () => {
+    const expected = ['frozen-1', 'frozen-2'];
+    const rows = ['frozen-1', 'unrelated'].flatMap((queryId) => [1, 2, 3].map((runId) => ({
+      queryId, runId, engine: 'chatgpt-search', valid: true, answerShown: true, citedUrls: [],
+    })));
+    expect(scoreObservedVisibility(rows, 'secondcrew.com', { engine: 'chatgpt-search', queryIds: expected })).toMatchObject({
+      status: 'not_assessed', score: null, queryCount: 1, requiredQueries: 2,
+    });
   });
 });

@@ -315,5 +315,8 @@
         }
       ]
     }
-  ]
+  ],
+  "timeZone": "America/Los_Angeles",
+  "localDate": "2026-09-24",
+  "observationWindowUtc": "2026-09-25T06:00:00Z/2026-09-25T06:34:00Z"
 }
