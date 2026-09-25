@@ -5,16 +5,16 @@ import panelQueries from '../docs/calibration-query-panel.json';
 
 describe('observed AI visibility', () => {
   it('withholds a score until the fixed panel has enough complete repeated observations', () => {
-    const rows = [{ queryId: 'q1', runId: 'r1', engine: 'chatgpt-search', answerShown: true, citedUrls: ['https://example.com/a'] }];
+    const rows = [{ queryId: 'q1', runId: 'r1', engine: 'chatgpt-search', valid: true, answerShown: true, citedUrls: ['https://example.com/a'] }];
     expect(scoreObservedVisibility(rows, 'example.com', { engine: 'chatgpt-search', minQueries: 2, minRunsPerQuery: 2 })).toMatchObject({ status: 'not_assessed', score: null });
   });
 
   it('reports observed citations separately from answer triggers and brand mentions', () => {
     const rows = [
-      { queryId: 'q1', runId: 'r1', engine: 'chatgpt-search', answerShown: true, citedUrls: ['https://www.example.com/a'], brandMentioned: true },
-      { queryId: 'q1', runId: 'r2', engine: 'chatgpt-search', answerShown: true, citedUrls: ['https://other.example/a'], brandMentioned: true },
-      { queryId: 'q2', runId: 'r1', engine: 'chatgpt-search', answerShown: false, citedUrls: [] },
-      { queryId: 'q2', runId: 'r2', engine: 'chatgpt-search', answerShown: true, citedUrls: ['https://shop.example.com/p'], brandMentioned: false },
+      { queryId: 'q1', runId: 'r1', engine: 'chatgpt-search', valid: true, answerShown: true, citedUrls: ['https://www.example.com/a'], brandMentioned: true },
+      { queryId: 'q1', runId: 'r2', engine: 'chatgpt-search', valid: true, answerShown: true, citedUrls: ['https://other.example/a'], brandMentioned: true },
+      { queryId: 'q2', runId: 'r1', engine: 'chatgpt-search', valid: true, answerShown: false, citedUrls: [] },
+      { queryId: 'q2', runId: 'r2', engine: 'chatgpt-search', valid: true, answerShown: true, citedUrls: ['https://shop.example.com/p'], brandMentioned: false },
     ];
     expect(scoreObservedVisibility(rows, 'example.com', { engine: 'chatgpt-search', minQueries: 2, minRunsPerQuery: 2 })).toMatchObject({
       status: 'observed',
@@ -50,6 +50,13 @@ describe('observed AI visibility', () => {
     })));
     expect(scoreObservedVisibility(rows, 'secondcrew.com', { engine: 'chatgpt-search', queryIds: expected })).toMatchObject({
       status: 'not_assessed', score: null, queryCount: 1, requiredQueries: 2,
+    });
+  });
+
+  it('requires affirmative validation before a run can count', () => {
+    const unreviewed = { queryId: 'q1', runId: 1, engine: 'chatgpt-search', answerShown: true, citedUrls: ['https://secondcrew.com/'] };
+    expect(scoreObservedVisibility([unreviewed], 'secondcrew.com', { engine: 'chatgpt-search', queryIds: ['q1'], minRunsPerQuery: 1 })).toMatchObject({
+      status: 'not_assessed', score: null, queryCount: 0,
     });
   });
 });
