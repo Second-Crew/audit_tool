@@ -1,6 +1,6 @@
 {
   "panelVersion": "sf-sj-ecommerce-agency-v1",
-  "engine": "ChatGPT Search",
+  "engine": "chatgpt-search",
   "model": "GPT-5.6 Sol, Medium",
   "language": "en-US",
   "locationContext": "Signed-in browser in Sunnyvale, California",
@@ -32,8 +32,18 @@
       ],
       "targetDomainCited": false,
       "brandMentionedWithoutTargetDomainCitation": true,
-      "answerBrands": ["Second Crew", "WEBDOGS", "Nika Agency", "Baytech Digital", "Baunfire"],
-      "notes": "The answer cited a Clutch profile for Second Crew and showed its map listing. Neither is a secondcrew.com citation. All 14 citation destinations were opened and resolved in the browser."
+      "answerBrands": [
+        "Second Crew",
+        "WEBDOGS",
+        "Nika Agency",
+        "Baytech Digital",
+        "Baunfire"
+      ],
+      "notes": "The answer cited a Clutch profile for Second Crew and showed its map listing. Neither is a secondcrew.com citation. All 14 citation destinations were opened and resolved in the browser.",
+      "engine": "chatgpt-search",
+      "answerShown": true,
+      "brandMentioned": true,
+      "localDate": "2026-09-24"
     },
     {
       "queryId": "sf-web-design",
@@ -55,8 +65,18 @@
       ],
       "targetDomainCited": false,
       "brandMentionedWithoutTargetDomainCitation": false,
-      "answerBrands": ["Charly Agency", "Razorfrog Web Design", "Web Style Marketing", "Ecommerce Pro", "Startercode"],
-      "notes": "All seven citation destinations were opened. The cited Razorfrog retail/sales URL resolved to a Page Not Found page; this is a source-quality concern, not a missing citation."
+      "answerBrands": [
+        "Charly Agency",
+        "Razorfrog Web Design",
+        "Web Style Marketing",
+        "Ecommerce Pro",
+        "Startercode"
+      ],
+      "notes": "All seven citation destinations were opened. The cited Razorfrog retail/sales URL resolved to a Page Not Found page; this is a source-quality concern, not a missing citation.",
+      "engine": "chatgpt-search",
+      "answerShown": true,
+      "brandMentioned": false,
+      "localDate": "2026-09-24"
     },
     {
       "queryId": "sj-shopify",
@@ -73,8 +93,22 @@
       ],
       "targetDomainCited": false,
       "brandMentionedWithoutTargetDomainCitation": true,
-      "answerBrands": ["Second Crew", "Arctic Grey", "Fyresite", "Hashtag Systems", "Project 100", "JanBask Digital Design", "MW2 Consulting", "SPLIT Development", "Bryt Designs"],
-      "notes": "Second Crew appeared in the answer and map, with Clutch directory citations only. Both cited directory destinations were previously opened and resolved in the same collection session."
+      "answerBrands": [
+        "Second Crew",
+        "Arctic Grey",
+        "Fyresite",
+        "Hashtag Systems",
+        "Project 100",
+        "JanBask Digital Design",
+        "MW2 Consulting",
+        "SPLIT Development",
+        "Bryt Designs"
+      ],
+      "notes": "Second Crew appeared in the answer and map, with Clutch directory citations only. Both cited directory destinations were previously opened and resolved in the same collection session.",
+      "engine": "chatgpt-search",
+      "answerShown": true,
+      "brandMentioned": true,
+      "localDate": "2026-09-24"
     },
     {
       "queryId": "sf-shopify",
@@ -85,11 +119,26 @@
       "valid": true,
       "answerPresent": true,
       "permalink": "https://chatgpt.com/c/6ab60fbd-1f0c-83e8-b89d-430c5faaf967",
-      "citedUrls": ["https://clutch.co/developers/shopify/san-francisco?utm_source=chatgpt.com"],
+      "citedUrls": [
+        "https://clutch.co/developers/shopify/san-francisco?utm_source=chatgpt.com"
+      ],
       "targetDomainCited": false,
       "brandMentionedWithoutTargetDomainCitation": false,
-      "answerBrands": ["Ecommerce Pro", "Charly Agency", "Web Style Marketing", "Magneto IT Solutions", "Startercode", "SF Website Design", "Jumpyr", "#10 LLC"],
-      "notes": "The sole cited destination was opened and resolved. Map listings and uncited answer names are not own-domain citations."
+      "answerBrands": [
+        "Ecommerce Pro",
+        "Charly Agency",
+        "Web Style Marketing",
+        "Magneto IT Solutions",
+        "Startercode",
+        "SF Website Design",
+        "Jumpyr",
+        "#10 LLC"
+      ],
+      "notes": "The sole cited destination was opened and resolved. Map listings and uncited answer names are not own-domain citations.",
+      "engine": "chatgpt-search",
+      "answerShown": true,
+      "brandMentioned": false,
+      "localDate": "2026-09-24"
     },
     {
       "queryId": "sj-woocommerce",
@@ -113,8 +162,19 @@
       ],
       "targetDomainCited": false,
       "brandMentionedWithoutTargetDomainCitation": true,
-      "answerBrands": ["WEBDOGS", "Second Crew", "JanBask Digital Design", "1Digital Agency", "Orbit Media Studios", "CrestVox Studio"],
-      "notes": "All nine URLs were opened. The CrestVox destination presented a browser challenge; its content could not be verified. Second Crew was mentioned with a Clutch directory citation, not its own domain."
+      "answerBrands": [
+        "WEBDOGS",
+        "Second Crew",
+        "JanBask Digital Design",
+        "1Digital Agency",
+        "Orbit Media Studios",
+        "CrestVox Studio"
+      ],
+      "notes": "All nine URLs were opened. The CrestVox destination presented a browser challenge; its content could not be verified. Second Crew was mentioned with a Clutch directory citation, not its own domain.",
+      "engine": "chatgpt-search",
+      "answerShown": true,
+      "brandMentioned": true,
+      "localDate": "2026-09-24"
     },
     {
       "queryId": "sf-woocommerce",
@@ -135,8 +195,20 @@
       ],
       "targetDomainCited": false,
       "brandMentionedWithoutTargetDomainCitation": true,
-      "answerBrands": ["Razorfrog Web Design", "SFWP", "HelloAri Web Development", "Kegan Quimby", "Second Crew", "Digital Silk", "1Digital Agency"],
-      "notes": "All six cited URLs were opened and resolved. Second Crew appeared with Clutch and GoodFirms profile citations, not a secondcrew.com citation."
+      "answerBrands": [
+        "Razorfrog Web Design",
+        "SFWP",
+        "HelloAri Web Development",
+        "Kegan Quimby",
+        "Second Crew",
+        "Digital Silk",
+        "1Digital Agency"
+      ],
+      "notes": "All six cited URLs were opened and resolved. Second Crew appeared with Clutch and GoodFirms profile citations, not a secondcrew.com citation.",
+      "engine": "chatgpt-search",
+      "answerShown": true,
+      "brandMentioned": true,
+      "localDate": "2026-09-24"
     },
     {
       "queryId": "sj-redesign",
@@ -159,7 +231,11 @@
       ],
       "targetDomainCited": false,
       "brandMentionedWithoutTargetDomainCitation": true,
-      "notes": "Second Crew appeared in the map and answer text but had no cited target-domain URL. All eight cited destinations were opened and resolved."
+      "notes": "Second Crew appeared in the map and answer text but had no cited target-domain URL. All eight cited destinations were opened and resolved.",
+      "engine": "chatgpt-search",
+      "answerShown": true,
+      "brandMentioned": true,
+      "localDate": "2026-09-24"
     },
     {
       "queryId": "sf-redesign",
@@ -178,7 +254,11 @@
       ],
       "targetDomainCited": false,
       "brandMentionedWithoutTargetDomainCitation": false,
-      "notes": "All four cited destinations were opened and resolved."
+      "notes": "All four cited destinations were opened and resolved.",
+      "engine": "chatgpt-search",
+      "answerShown": true,
+      "brandMentioned": false,
+      "localDate": "2026-09-24"
     },
     {
       "queryId": "bay-shopify-migration",
@@ -199,7 +279,11 @@
       ],
       "targetDomainCited": false,
       "brandMentionedWithoutTargetDomainCitation": false,
-      "notes": "All six destinations were opened. Two Sleepless Media URLs redirected to current service and case-study pages; original cited URLs are retained above."
+      "notes": "All six destinations were opened. Two Sleepless Media URLs redirected to current service and case-study pages; original cited URLs are retained above.",
+      "engine": "chatgpt-search",
+      "answerShown": true,
+      "brandMentioned": false,
+      "localDate": "2026-09-24"
     },
     {
       "queryId": "bay-platform-choice",
@@ -222,7 +306,253 @@
       ],
       "targetDomainCited": false,
       "brandMentionedWithoutTargetDomainCitation": false,
-      "notes": "All eight destinations were opened. The CWW Group URL redirected to an ecommerce support page; the original cited URL is retained."
+      "notes": "All eight destinations were opened. The CWW Group URL redirected to an ecommerce support page; the original cited URL is retained.",
+      "engine": "chatgpt-search",
+      "answerShown": true,
+      "brandMentioned": false,
+      "localDate": "2026-09-24"
+    },
+    {
+      "queryId": "bay-platform-choice",
+      "runId": 2,
+      "observedAt": "2026-09-25T06:20:45Z",
+      "prompt": "I need a Bay Area ecommerce agency to help choose between Shopify and WooCommerce, then build the store. Who should I look at?",
+      "searchEnabled": true,
+      "valid": true,
+      "answerPresent": true,
+      "permalink": "https://chatgpt.com/c/6ab61291-078c-83e8-a198-d5e75d38a95f",
+      "citedUrls": [
+        "https://clutch.co/developers/shopify/san-jose?utm_source=chatgpt.com",
+        "https://www.goodfirms.co/company/second-crew?utm_source=chatgpt.com",
+        "https://www.vonnda.com/services/e-commerce/woocommerce/?utm_source=chatgpt.com",
+        "https://www.vonnda.com/services/shopify-agency-san-francisco-bay-area/?utm_source=chatgpt.com",
+        "https://clutch.co/developers/shopify/san-francisco?utm_source=chatgpt.com",
+        "https://siliconvalleywebsolution.com/ecommerce-website-developer-in-san-jose-ca/?utm_source=chatgpt.com",
+        "https://solutionarianmarketing.com/location/santa-clara-ca/ecommerce-web-design/?utm_source=chatgpt.com"
+      ],
+      "targetDomainCited": false,
+      "brandMentionedWithoutTargetDomainCitation": true,
+      "notes": "All cited destinations were opened and resolved in the collection browser.",
+      "engine": "chatgpt-search",
+      "answerShown": true,
+      "brandMentioned": true,
+      "localDate": "2026-09-24"
+    },
+    {
+      "queryId": "bay-shopify-migration",
+      "runId": 2,
+      "observedAt": "2026-09-25T06:22:11Z",
+      "prompt": "Which Bay Area agencies could help migrate an established online store to Shopify and redesign it?",
+      "searchEnabled": true,
+      "valid": true,
+      "answerPresent": true,
+      "permalink": "https://chatgpt.com/c/6ab612ee-ebe0-83e8-9054-f469006908d1",
+      "citedUrls": [
+        "https://arcticgrey.com/pages/migration-to-shopify?utm_source=chatgpt.com",
+        "https://www.shopify.com/partners/directory/partner/arcticgreyinc?utm_source=chatgpt.com",
+        "https://www.vonnda.com/services/shopify-agency-san-francisco-bay-area/?utm_source=chatgpt.com",
+        "https://www.ecommercepro.com/?utm_source=chatgpt.com",
+        "https://nr10.com/our-work/?utm_source=chatgpt.com",
+        "https://www.shopify.com/partners/directory/partner/presidiocreative?utm_source=chatgpt.com"
+      ],
+      "targetDomainCited": false,
+      "brandMentionedWithoutTargetDomainCitation": false,
+      "notes": "All cited destinations were opened and resolved in the collection browser.",
+      "engine": "chatgpt-search",
+      "answerShown": true,
+      "brandMentioned": false,
+      "localDate": "2026-09-24"
+    },
+    {
+      "queryId": "sf-redesign",
+      "runId": 2,
+      "observedAt": "2026-09-25T06:23:21Z",
+      "prompt": "I run an online store in San Francisco and want to improve product pages and checkout. Which web design agencies could help?",
+      "searchEnabled": true,
+      "valid": true,
+      "answerPresent": true,
+      "permalink": "https://chatgpt.com/c/6ab6133e-8888-83e8-9272-9430b04faae2",
+      "citedUrls": [
+        "https://www.conversion.is/services/shopify-cro-agency?utm_source=chatgpt.com",
+        "https://shoptechs.com/?utm_source=chatgpt.com"
+      ],
+      "targetDomainCited": false,
+      "brandMentionedWithoutTargetDomainCitation": false,
+      "notes": "All cited destinations were opened and resolved in the collection browser.",
+      "engine": "chatgpt-search",
+      "answerShown": true,
+      "brandMentioned": false,
+      "localDate": "2026-09-24"
+    },
+    {
+      "queryId": "sj-redesign",
+      "runId": 2,
+      "observedAt": "2026-09-25T06:24:22Z",
+      "prompt": "I run an ecommerce store near San Jose and need a redesign that makes products easier to find. Which local agencies could help?",
+      "searchEnabled": true,
+      "valid": true,
+      "answerPresent": true,
+      "permalink": "https://chatgpt.com/c/6ab61360-95b0-83e8-ba18-32783ebd94db",
+      "citedUrls": [
+        "https://arcticgrey.com/pages/case-study-geometry?utm_source=chatgpt.com",
+        "https://arcticgrey.com/pages/case-study-botany-farms?utm_source=chatgpt.com",
+        "https://clutch.co/developers/ecommerce/san-jose?utm_source=chatgpt.com",
+        "https://clutch.co/profile/second-crew?utm_source=chatgpt.com",
+        "https://webdogs.com/projects/?utm_source=chatgpt.com",
+        "https://webdogs.com/?utm_source=chatgpt.com",
+        "https://solutionarianmarketing.com/location/san-jose-ca/?utm_source=chatgpt.com",
+        "https://solutionarianmarketing.com/location/santa-clara-ca/ecommerce-web-design/?utm_source=chatgpt.com",
+        "https://www.donnamelger.design/case-studies/artisans-agency?utm_source=chatgpt.com"
+      ],
+      "targetDomainCited": false,
+      "brandMentionedWithoutTargetDomainCitation": true,
+      "notes": "All cited destinations were opened and resolved in the collection browser.",
+      "engine": "chatgpt-search",
+      "answerShown": true,
+      "brandMentioned": true,
+      "localDate": "2026-09-24"
+    },
+    {
+      "queryId": "sf-woocommerce",
+      "runId": 2,
+      "observedAt": "2026-09-25T06:25:25Z",
+      "prompt": "Which agencies can design and build a WooCommerce store for a business in San Francisco, California?",
+      "searchEnabled": true,
+      "valid": true,
+      "answerPresent": true,
+      "permalink": "https://chatgpt.com/c/6ab613ba-7ef8-83e8-8d7c-923e36b58084",
+      "citedUrls": [
+        "https://clutch.co/developers/woocommerce?page=8&utm_source=chatgpt.com",
+        "https://www.helloari.com/?utm_source=chatgpt.com",
+        "https://www.goodfirms.co/ecommerce-development-companies/woocommerce/san-francisco?utm_source=chatgpt.com",
+        "https://clutch.co/developers/wordpress/san-francisco?utm_source=chatgpt.com"
+      ],
+      "targetDomainCited": false,
+      "brandMentionedWithoutTargetDomainCitation": false,
+      "notes": "All cited destinations were opened and resolved in the collection browser.",
+      "engine": "chatgpt-search",
+      "answerShown": true,
+      "brandMentioned": false,
+      "localDate": "2026-09-24"
+    },
+    {
+      "queryId": "sj-woocommerce",
+      "runId": 2,
+      "observedAt": "2026-09-25T06:26:40Z",
+      "prompt": "Which agencies can design and build a WooCommerce store for a business in San Jose, California?",
+      "searchEnabled": true,
+      "valid": true,
+      "answerPresent": true,
+      "permalink": "https://chatgpt.com/c/6ab613f6-d2a0-83e8-9dea-122faa7b0309",
+      "citedUrls": [
+        "https://www.goodfirms.co/company/second-crew?utm_source=chatgpt.com",
+        "https://clutch.co/profile/second-crew?utm_source=chatgpt.com",
+        "https://webdogs.com/?utm_source=chatgpt.com",
+        "https://www.janbask.com/ecommerce-services?utm_source=chatgpt.com",
+        "https://www.janbaskdigitaldesign.com/?utm_source=chatgpt.com",
+        "https://www.baytechdigital.com/service/our-service/?utm_source=chatgpt.com",
+        "https://www.baytechdigital.com/contact-us/?utm_source=chatgpt.com",
+        "https://www.joingyde.com/hire/website-design/woocommerce?utm_source=chatgpt.com",
+        "https://clutch.co/profile/nika-agency?utm_source=chatgpt.com",
+        "https://www.goodfirms.co/ecommerce-development-companies/woocommerce/san-jose?utm_source=chatgpt.com"
+      ],
+      "targetDomainCited": false,
+      "brandMentionedWithoutTargetDomainCitation": true,
+      "notes": "All cited destinations were opened and resolved in the collection browser.",
+      "engine": "chatgpt-search",
+      "answerShown": true,
+      "brandMentioned": true,
+      "localDate": "2026-09-24"
+    },
+    {
+      "queryId": "sf-shopify",
+      "runId": 2,
+      "observedAt": "2026-09-25T06:27:46Z",
+      "prompt": "What are some Shopify website design agencies in San Francisco, California?",
+      "searchEnabled": true,
+      "valid": true,
+      "answerPresent": true,
+      "permalink": "https://chatgpt.com/c/6ab6144e-4298-83e8-b733-d12cafc4bd7e",
+      "citedUrls": [
+        "https://webstylemarketing.com/?utm_source=chatgpt.com",
+        "https://clutch.co/developers/shopify/san-francisco?utm_source=chatgpt.com",
+        "https://www.sleeplessmedia.com/pages/shopify-experts?utm_source=chatgpt.com"
+      ],
+      "targetDomainCited": false,
+      "brandMentionedWithoutTargetDomainCitation": false,
+      "notes": "All cited destinations were opened and resolved in the collection browser.",
+      "engine": "chatgpt-search",
+      "answerShown": true,
+      "brandMentioned": false,
+      "localDate": "2026-09-24"
+    },
+    {
+      "queryId": "sj-shopify",
+      "runId": 2,
+      "observedAt": "2026-09-25T06:28:37Z",
+      "prompt": "What are some Shopify website design agencies serving San Jose, California?",
+      "searchEnabled": true,
+      "valid": true,
+      "answerPresent": true,
+      "permalink": "https://chatgpt.com/c/6ab6147d-6cb0-83e8-a0cc-f4c1face20c9",
+      "citedUrls": [
+        "https://clutch.co/developers/shopify/san-jose?utm_source=chatgpt.com",
+        "https://clutch.co/developers/ecommerce/san-jose?utm_source=chatgpt.com",
+        "https://solomediagroup.com/pages/shopify-partners/sanjoseca?utm_source=chatgpt.com"
+      ],
+      "targetDomainCited": false,
+      "brandMentionedWithoutTargetDomainCitation": true,
+      "notes": "All cited destinations were opened and resolved in the collection browser.",
+      "engine": "chatgpt-search",
+      "answerShown": true,
+      "brandMentioned": true,
+      "localDate": "2026-09-24"
+    },
+    {
+      "queryId": "sf-web-design",
+      "runId": 2,
+      "observedAt": "2026-09-25T06:29:22Z",
+      "prompt": "Which web design agencies in San Francisco, California have experience with ecommerce websites?",
+      "searchEnabled": true,
+      "valid": true,
+      "answerPresent": true,
+      "permalink": "https://chatgpt.com/c/6ab614ac-98c8-83e8-b1e3-4289d991ec8c",
+      "citedUrls": [
+        "https://www.gilzor.com/insights/ecommerce-website-development-companies-sf-usa?utm_source=chatgpt.com",
+        "https://webstylemarketing.com/?utm_source=chatgpt.com",
+        "https://www.sleeplessmedia.com/pages/shopify-experts?utm_source=chatgpt.com",
+        "https://clutch.co/developers/shopify/san-francisco?utm_source=chatgpt.com",
+        "https://clutch.co/developers/ecommerce/san-francisco?utm_source=chatgpt.com"
+      ],
+      "targetDomainCited": false,
+      "brandMentionedWithoutTargetDomainCitation": false,
+      "notes": "All cited destinations were opened and resolved in the collection browser.",
+      "engine": "chatgpt-search",
+      "answerShown": true,
+      "brandMentioned": false,
+      "localDate": "2026-09-24"
+    },
+    {
+      "queryId": "sj-web-design",
+      "runId": 2,
+      "observedAt": "2026-09-25T06:29:59Z",
+      "prompt": "Which web design agencies in San Jose, California should a growing ecommerce brand consider?",
+      "searchEnabled": true,
+      "valid": true,
+      "answerPresent": true,
+      "permalink": "https://chatgpt.com/c/6ab614c8-a898-83e8-ada4-5599ffe0b7ee",
+      "citedUrls": [
+        "https://clutch.co/developers/shopify/san-jose?utm_source=chatgpt.com",
+        "https://clutch.co/developers/ecommerce/san-jose?utm_source=chatgpt.com"
+      ],
+      "targetDomainCited": false,
+      "brandMentionedWithoutTargetDomainCitation": true,
+      "notes": "All cited destinations were opened and resolved in the collection browser.",
+      "engine": "chatgpt-search",
+      "answerShown": true,
+      "brandMentioned": true,
+      "localDate": "2026-09-24"
     }
-  ]
+  ],
+  "timeZone": "America/Los_Angeles"
 }

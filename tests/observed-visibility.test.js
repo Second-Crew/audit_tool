@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { scoreObservedVisibility } from '../lib/audit/observed-visibility.js';
+import panelObservations from '../docs/query-panel-observations.json';
 
 describe('observed AI visibility', () => {
   it('withholds a score until the fixed panel has enough complete repeated observations', () => {
@@ -24,5 +25,19 @@ describe('observed AI visibility', () => {
       queryCount: 2,
       runCount: 4,
     });
+  });
+
+  it('excludes invalid runs and accepts the recorded panel format', () => {
+    const rows = [
+      { queryId: 'q1', runId: 'r1', engine: 'chatgpt-search', valid: true, answerShown: true, citedUrls: [] },
+      { queryId: 'q1', runId: 'r2', engine: 'chatgpt-search', valid: true, answerShown: true, citedUrls: [] },
+      { queryId: 'q1', runId: 'r3', engine: 'chatgpt-search', valid: false, answerShown: false, citedUrls: [] },
+    ];
+    expect(scoreObservedVisibility(rows, 'secondcrew.com', { engine: 'chatgpt-search', minQueries: 1, minRunsPerQuery: 3 })).toMatchObject({ status: 'not_assessed', score: null });
+
+    const recorded = panelObservations.observations.filter((row) => row.runId <= 2);
+    expect(recorded).toHaveLength(20);
+    expect(scoreObservedVisibility(recorded, 'secondcrew.com', { engine: 'chatgpt-search' })).toMatchObject({ status: 'not_assessed', score: null });
+    expect(scoreObservedVisibility(recorded, 'secondcrew.com', { engine: 'chatgpt-search', minRunsPerQuery: 2 })).toMatchObject({ status: 'observed', queryCount: 10, runCount: 20 });
   });
 });
