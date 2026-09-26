@@ -84,4 +84,14 @@ describe('prospect GEO/AEO observed visibility', () => {
     panel.observations[0].answerShown = false;
     expect(scoreProspectVisibility(panel, 'secondcrew.com', NOW)).toMatchObject({ status: 'not_assessed', score: null });
   });
+
+  it('requires timestamps with time zones and orders the observed window by instant', () => {
+    const panel = completePanel();
+    panel.observations[0].observedAt = '2026-09-25';
+    expect(scoreProspectVisibility(panel, 'secondcrew.com', NOW)).toMatchObject({ status: 'not_assessed', score: null });
+    panel.observations[0].observedAt = '2026-09-25T20:00:00+02:00';
+    expect(scoreProspectVisibility(panel, 'secondcrew.com', NOW)).toMatchObject({
+      status: 'observed', observedFrom: '2026-09-25T18:00:00.000Z', observedTo: '2026-09-26T18:00:00.000Z',
+    });
+  });
 });
