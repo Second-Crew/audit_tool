@@ -29,6 +29,7 @@ export default function Home() {
   const [websiteType, setWebsiteType] = useState('marketing');
   const [ecommerceFunctionality, setEcommerceFunctionality] = useState('no');
   const [competitorUrls, setCompetitorUrls] = useState('');
+  const [visibilityPanelText, setVisibilityPanelText] = useState('');
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState({ step: '', percent: 0 });
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
@@ -69,6 +70,11 @@ export default function Home() {
 
     let requestTimeout;
     try {
+      let visibilityPanel = null;
+      if (visibilityPanelText) {
+        try { visibilityPanel = JSON.parse(visibilityPanelText); }
+        catch { throw new Error('The observed AI panel file is not valid JSON.'); }
+      }
       const controller = new AbortController();
       requestTimeout = setTimeout(() => controller.abort(), 330000);
       const response = await fetch('/api/analyze', {
@@ -84,6 +90,7 @@ export default function Home() {
           maxPages: 250,
           maxDurationMs: 150000,
           maxCompetitorPages: 25,
+          visibilityPanel,
         }),
       });
 
@@ -151,6 +158,7 @@ export default function Home() {
     setUrl('');
     setCompanyName('');
     setCompetitorUrls('');
+    setVisibilityPanelText('');
     setSeverityFilter('all');
     setActiveTab('overview');
     setPlanUnlocked(false);
@@ -209,6 +217,13 @@ export default function Home() {
               onEcommerceFunctionalityChange={setEcommerceFunctionality}
               companyName={companyName}
               competitorUrls={competitorUrls}
+              visibilityPanelLoaded={Boolean(visibilityPanelText)}
+              onVisibilityPanelFile={async (file) => {
+                if (!file) return setVisibilityPanelText('');
+                if (file.size > 250000) { setVisibilityPanelText(''); return setError('The observed AI panel file must be under 250 KB.'); }
+                setVisibilityPanelText(await file.text());
+                setError('');
+              }}
               onUrlChange={setUrl}
               onCompanyNameChange={setCompanyName}
               onCompetitorUrlsChange={setCompetitorUrls}

@@ -42,3 +42,31 @@ describe('TypeSafe integration boundary', () => {
     expect(evaluateTypeSafe).not.toHaveBeenCalled();
   });
 });
+
+describe('observed visibility report integration', () => {
+  it('uses a validated two-engine panel in the UI and exports without leaking private evidence links', async () => {
+    const day = 86400000;
+    const queries = Array.from({ length: 10 }, (_, index) => ({ id: `q${index}`, prompt: `Which companies offer service ${index} nearby?` }));
+    const observations = ['chatgpt-search', 'google-ai-mode'].flatMap((engine) => queries.flatMap((query) => [1, 2, 3].map((runId) => ({
+      engine, queryId: query.id, prompt: query.prompt, runId,
+      observedAt: new Date(Date.now() - (runId === 3 ? day : 2 * day)).toISOString(),
+      valid: true, validationStatus: 'validated', isolationVerified: true, citationsVerified: true,
+      searchEnabled: true, answerShown: true, brandMentioned: false,
+      model: 'fixed model', locationContext: 'California desktop', personalizationState: 'off',
+      permalink: `https://evidence.example/private/${engine}/${query.id}/${runId}`,
+      citedUrls: runId === 1 ? ['https://example.com/'] : [],
+    }))));
+    const visibilityPanel = {
+      version: 'example-v1', frozenAt: new Date(Date.now() - 3 * day).toISOString(),
+      targetDomain: 'example.com', brand: 'Example Company', market: 'California', language: 'en-US',
+      queries, observations,
+    };
+    const { audit, compatibility } = await runAudit({ url: 'https://example.com/', visibilityPanel });
+    expect(compatibility.scores).toMatchObject({ aeoGeo: 33, overall: null, aiReadiness: null });
+    expect(compatibility.observedVisibility).toMatchObject({ status: 'observed', runCount: 60 });
+    expect(summarizeAuditForResponse(audit).observedVisibility.score).toBe(33);
+    expect(compatibility.html).toContain('Query-level citation counts');
+    expect(compatibility.markdown).toContain('| GEO/AEO observed visibility | 33 |');
+    expect(compatibility.html + compatibility.markdown).not.toContain('evidence.example/private');
+  });
+});

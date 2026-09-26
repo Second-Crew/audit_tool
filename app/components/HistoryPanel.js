@@ -119,7 +119,7 @@ function HistoryRow({ audit, onOpenAudit }) {
           <div className="break-all text-xs text-slate-500">{audit.domain}</div>
         </td>
         <td className="px-4 py-3"><ScoreBadge value={audit.scores?.overall} legacy={hasLegacyOutcomeScores(audit.scores)} /></td>
-        <td className="px-4 py-3"><ScoreBadge value={audit.scores?.aeoGeo} legacy={hasLegacyOutcomeScores(audit.scores)} /></td>
+        <td className="px-4 py-3"><ScoreBadge value={audit.scores?.aeoGeo} legacy={hasLegacyOutcomeScores(audit.scores)} observed={audit.scores?.methodologyVersion === 'evidence-v1' && audit.scores?.aeoGeo != null} /></td>
         <td className="px-4 py-3">
           {sends.length ? (
             <div className="space-y-1.5">
@@ -296,9 +296,9 @@ function StatCard({ label, value }) {
   );
 }
 
-function ScoreBadge({ value, legacy = false }) {
+function ScoreBadge({ value, legacy = false, observed = false }) {
   if (value == null) return <span className="text-slate-400">—</span>;
-  return <span className={`text-base font-semibold ${legacy ? 'text-amber-800' : getScoreTone(value).text}`} title={legacy ? 'Earlier uncalibrated grade; rerun before sharing' : undefined}>{legacy ? `Legacy ${value}` : value}</span>;
+  return <span className={`text-base font-semibold ${legacy ? 'text-amber-800' : observed ? 'text-cyan-800' : getScoreTone(value).text}`} title={legacy ? 'Earlier uncalibrated grade; rerun before sharing' : observed ? 'Observed fixed-panel own-domain citation rate' : undefined}>{legacy ? `Legacy ${value}` : value}</span>;
 }
 
 function formatDate(value) {

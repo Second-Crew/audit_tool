@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: { serverComponentsExternalPackages: ['playwright-core'] },
+  serverExternalPackages: ['playwright-core'],
+  outputFileTracingRoot: __dirname,
 }
 
 module.exports = nextConfig

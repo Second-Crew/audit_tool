@@ -12,7 +12,7 @@ const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{
 // team login gate and does not count as an open. ?format=markdown downloads
 // the LLM-ready Markdown version instead of the HTML report.
 export async function GET(request, { params }) {
-  const auditId = params.id;
+  const { id: auditId } = await params;
   if (!UUID_PATTERN.test(auditId)) {
     return new Response('Not found', { status: 404 });
   }

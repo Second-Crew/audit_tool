@@ -3,6 +3,8 @@ export default function AuditForm({
   url,
   companyName,
   competitorUrls,
+  visibilityPanelLoaded,
+  onVisibilityPanelFile,
   onUrlChange,
   onCompanyNameChange,
   onCompetitorUrlsChange,
@@ -71,6 +73,13 @@ export default function AuditForm({
             rows={3}
             className="w-full rounded-md border border-slate-300 bg-white px-4 py-3 text-slate-950 placeholder-slate-400 outline-none transition focus:border-cyan-500 focus:ring-4 focus:ring-cyan-100"
           />
+        </div>
+
+        <div>
+          <label className="mb-2 block text-sm font-medium text-slate-700" htmlFor="visibility-panel">Reviewed AI answer panel (optional JSON)</label>
+          <input id="visibility-panel" type="file" accept=".json,application/json" onChange={(event) => onVisibilityPanelFile(event.target.files?.[0])}
+            className="block w-full rounded-md border border-slate-300 bg-white px-4 py-3 text-sm text-slate-700" />
+          <p className="mt-2 text-xs text-slate-500">A GEO/AEO observed-visibility score requires 10 fixed unbranded queries and three validated runs per query across both ChatGPT Search and Google AI Mode, on at least two dates. {visibilityPanelLoaded ? 'Panel loaded; the server will validate it before crawling.' : 'Without this panel, GEO/AEO remains N/A.'}</p>
         </div>
 
         <button

@@ -4,9 +4,10 @@ import { hasLegacyOutcomeScores, LEGACY_SCORE_NOTICE } from '../../lib/audit/leg
 
 export default function OverviewTab({ report, primary, findings, onSelectSeverity }) {
   const topFindings = findings.slice(0, 5);
+  const observed = report?.observedVisibility?.status === 'observed';
   const scoreCards = [
     { label: 'Overall', value: report?.scores?.overall, caption: 'Cross-channel grade unvalidated' },
-    { label: 'GEO / AEO', value: report?.scores?.aeoGeo, caption: 'No valid answer/citation panel' },
+    { label: observed ? 'GEO/AEO observed visibility' : 'GEO / AEO', value: report?.scores?.aeoGeo, caption: observed ? 'Dated, fixed two-engine citation panel' : 'No valid answer/citation panel', observed },
     { label: 'AI Readiness', value: report?.scores?.aiReadiness, caption: 'Readiness scale unvalidated' },
     { label: 'Technical SEO', value: report?.scores?.seo, caption: 'Sampled page checks' },
     { label: 'Mobile', value: report?.scores?.mobile, caption: 'PageSpeed mobile' },
@@ -19,14 +20,19 @@ export default function OverviewTab({ report, primary, findings, onSelectSeverit
       {primary?.siteType && <p className="text-sm text-slate-600">Website type: {{marketing:'Marketing / lead generation',corporate:'Corporate / informational',ecommerce:'Ecommerce store',auto:'Not specified'}[primary.siteType.value]}. {primary.siteType.ecommerce.status === 'needs_review' ? 'Possible ecommerce functionality found; confirm the audit setup to include its assessment.' : ''}</p>}
       {primary?.contentEvidence?.status === 'incomplete' && <div role="status" className="rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-950">Content assessment unavailable: {primary.contentEvidence.usablePages} of {primary.contentEvidence.pages} sampled pages had enough extractable text. {primary.contentEvidence.limitation} {primary?.crawl?.summary?.rendering?.attempted ? 'Browser rendering was attempted; review unresolved pages or rerun.' : 'Browser rendering is needed.'} Do not use content recommendations or an overall grade from this audit.</div>}
       {primary?.contentEvidence?.status === 'sufficient' && primary.contentEvidence.sparsePages > 0 && <div role="status" className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950">{primary.contentEvidence.sparsePages} of {primary.contentEvidence.pages} sampled pages had too little extractable content. Review them in Crawl Coverage; their missing content is not evidence that the site lacks answers or product facts.</div>}
-      {primary?.contentEvidence?.status === 'sufficient' && report?.scores?.overall == null && <div role="status" className="rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-950">N/A means not measured, not a score of zero. This crawl checks sampled pages but does not measure search positions, AI answers, or citations. Overall and GEO/AEO grades need observed outcomes; an AI-readiness number also needs a validated scale. Review the page evidence below.</div>}
+      {primary?.contentEvidence?.status === 'sufficient' && report?.scores?.overall == null && <div role="status" className="rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-950">N/A means not measured, not a score of zero. This crawl checks sampled pages but does not measure search positions. {observed ? 'The GEO/AEO number uses the dated, fixed ChatGPT Search and Google AI Mode citation panel below.' : 'GEO/AEO needs observed AI answers and citations.'} An overall grade and AI-readiness scale remain unvalidated. Review the page evidence below.</div>}
       <EvidencePanel result={report?.audit?.assessment} />
-      <p className="text-sm text-slate-600">The SEO number covers sampled technical checks only. Other available numbers are diagnostics, not measured search or AI visibility.</p>
+      <p className="text-sm text-slate-600">The SEO number covers sampled technical checks only. {observed ? 'The GEO/AEO number measures own-domain citations on the stated panel, not future visibility.' : 'Other available numbers are diagnostics, not measured search or AI visibility.'}</p>
       <section className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-6">
         {scoreCards.map((card) => (
           <ScoreCard key={card.label} {...card} />
         ))}
       </section>
+
+      {observed && <section className="rounded-lg border border-cyan-200 bg-cyan-50 p-5 text-sm text-slate-800">
+        <h2 className="font-semibold text-slate-950">Observed AI answer visibility</h2>
+        <p className="mt-2">{report.observedVisibility.market} · {report.observedVisibility.observedFrom.slice(0, 10)} to {report.observedVisibility.observedTo.slice(0, 10)} · 10 unbranded queries × 3 runs × 2 engines. ChatGPT Search: {report.observedVisibility.engines['chatgpt-search'].score}/100; Google AI Mode: {report.observedVisibility.engines['google-ai-mode'].score}/100. Brand mentions and answer presence are separate from own-domain citations. Google AI Overviews are not included.</p>
+      </section>}
 
 
       <section className="grid grid-cols-1 gap-5 xl:grid-cols-[1.2fr_0.8fr]">
@@ -36,7 +42,7 @@ export default function OverviewTab({ report, primary, findings, onSelectSeverit
               <h2 className="text-xl font-semibold text-slate-950">Executive Summary</h2>
               <p className="mt-1 text-sm text-slate-500">Sampled evidence and measurement limits.</p>
             </div>
-            <StatusPill score={report?.scores?.aeoGeo} />
+            <StatusPill score={report?.scores?.aeoGeo} observed={observed} />
           </div>
           <p className="text-base leading-7 text-slate-700">{report.aiInsights?.executiveSummary}</p>
           <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-3">

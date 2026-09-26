@@ -1,5 +1,5 @@
-export function ScoreCard({ label, value, caption }) {
-  const tone = getScoreTone(value);
+export function ScoreCard({ label, value, caption, observed = false }) {
+  const tone = observed ? { text: 'text-cyan-800', bar: 'bg-cyan-600' } : getScoreTone(value);
 
   return (
     <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
@@ -13,11 +13,11 @@ export function ScoreCard({ label, value, caption }) {
   );
 }
 
-export function StatusPill({ score }) {
+export function StatusPill({ score, observed = false }) {
   const tone = getScoreTone(score);
-  const label = score == null ? 'Not assessed' : score >= 80 ? 'Strong' : score >= 60 ? 'Developing' : 'Needs Work';
+  const label = observed ? 'Observed panel' : score == null ? 'Not assessed' : score >= 80 ? 'Strong' : score >= 60 ? 'Developing' : 'Needs Work';
 
-  return <span className={`rounded-full px-3 py-1 text-xs font-semibold ${tone.pill}`}>{label}</span>;
+  return <span className={`rounded-full px-3 py-1 text-xs font-semibold ${observed ? 'bg-cyan-100 text-cyan-800' : tone.pill}`}>{label}</span>;
 }
 
 export function Metric({ label, value }) {

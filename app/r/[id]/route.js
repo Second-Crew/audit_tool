@@ -9,7 +9,7 @@ const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{
 // the send and records the open. Every visit counts, including the sender's
 // own preview opens.
 export async function GET(request, { params }) {
-  const sendId = params.id;
+  const { id: sendId } = await params;
   if (!UUID_PATTERN.test(sendId)) {
     return htmlMessage(404, 'Report not found', 'This report link is not valid.');
   }

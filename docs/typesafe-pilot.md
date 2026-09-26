@@ -1,6 +1,6 @@
 # TypeSafe content scoring pilot
 
-Add `TYPESAFE_API_KEY` to the project's Vercel **Preview** environment. Install with `npm ci` and deploy this branch to Preview. Node.js 20+ is required by the official SDK. No database migration is required: the assessment is saved in the existing report workspace JSON and survives reopening an audit.
+Add `TYPESAFE_API_KEY` to the project's Vercel **Preview** environment. Install with `npm ci` and deploy this branch to Preview. The repository requires Node.js 22.12+ to build and test. No database migration is required: the assessment is saved in the existing report workspace JSON and survives reopening an audit.
 
 The old content-scoring pilot is off by default in every environment. Explicit `TYPESAFE_AUDIT_MODE=shadow` is required for diagnostic use. Production defaults to off, even if a key is present. `TYPESAFE_AUDIT_MODE=off` disables it; `shadow` explicitly enables the pilot. It does not enable a production scoring replacement.
 

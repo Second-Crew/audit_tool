@@ -3,13 +3,17 @@ import { ACCESS_COOKIE, accessToken, timingSafeEqualHex } from './lib/access.js'
 
 // Gates the whole workspace behind APP_ACCESS_PASSWORD when it is set.
 // Prospect-facing report links (/r/<id>) and the login flow stay public.
-// Leaving the env var unset disables the gate entirely (local dev default).
+// Production fails closed if the password is missing; local/Preview can stay
+// ungated for development when their own deployment protection is in place.
 const PUBLIC_PATH_PATTERNS = [/^\/login$/, /^\/api\/login$/, /^\/r\//];
 
 export async function middleware(request) {
   // Versioned agent routes perform their own mandatory bearer authentication.
   if (request.nextUrl.pathname.startsWith('/api/v1/')) return NextResponse.next();
   const password = process.env.APP_ACCESS_PASSWORD;
+  if (!password && process.env.VERCEL_ENV === 'production') {
+    return new Response('Workspace access is not configured', { status: 503 });
+  }
   if (!password) return NextResponse.next();
 
   const { pathname } = request.nextUrl;

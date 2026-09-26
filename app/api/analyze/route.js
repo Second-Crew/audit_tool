@@ -3,6 +3,8 @@ import { NextResponse } from 'next/server';
 import { runAudit } from '../../../lib/audit/index.js';
 import { persistAudit } from '../../../lib/audit/persistence.js';
 import { summarizeAuditForResponse } from '../../../lib/audit/summarize.js';
+import { normalizeAuditUrl } from '../../../lib/audit/url.js';
+import { scoreProspectVisibility } from '../../../lib/audit/prospect-visibility.js';
 
 export const runtime = 'nodejs';
 // Requires a host that allows long-running functions (Vercel Pro or a server deploy).
@@ -27,6 +29,18 @@ export async function POST(request) {
   const validationError = validateBody(body);
   if (validationError) {
     return NextResponse.json({ error: validationError }, { status: 400 });
+  }
+
+  if (body.visibilityPanel) {
+    let assessment;
+    try {
+      assessment = scoreProspectVisibility(body.visibilityPanel, new URL(normalizeAuditUrl(body.url || body.domain)).hostname);
+    } catch {
+      return NextResponse.json({ error: 'The website URL or observed-visibility panel is invalid.' }, { status: 400 });
+    }
+    if (assessment.status !== 'observed') {
+      return NextResponse.json({ error: `Observed GEO/AEO score withheld: ${assessment.reason}` }, { status: 422 });
+    }
   }
 
   const clientKey = getClientKey(request);
@@ -70,6 +84,7 @@ export async function POST(request) {
             maxPages: body.maxPages || 250,
             maxDurationMs: body.maxDurationMs || 150000,
             maxCompetitorPages: body.maxCompetitorPages || 25,
+            visibilityPanel: body.visibilityPanel || null,
           },
           (event) => send({ type: 'progress', ...event })
         );
@@ -139,6 +154,11 @@ function validateBody(body) {
     }
   }
 
+  if (body.visibilityPanel != null &&
+      (typeof body.visibilityPanel !== 'object' || Array.isArray(body.visibilityPanel) || JSON.stringify(body.visibilityPanel).length > 250000)) {
+    return 'Observed-visibility panel must be a JSON object under 250 KB';
+  }
+
   return null;
 }
 
@@ -169,4 +189,3 @@ function isRateLimited(clientKey) {
 
   return false;
 }
-

@@ -85,7 +85,27 @@ describe('buildMarkdownReport', () => {
     expect(result).toContain('https://form.typeform.com/to/example');
     expect(result).toContain('| Overall | Not assessed |');
     expect(result).toContain('| Public phone or email details | unknown |');
-    expect(result).toContain('GEO/AEO and overall grades are withheld until outcome calibration');
+    expect(result).toContain('GEO/AEO visibility is withheld until complete query-level outcomes are measured');
+  });
+
+  it('labels a complete two-engine citation score as an observed panel result', () => {
+    const result = buildMarkdownReport({
+      ...fixture,
+      scores: { overall: null, aeoGeo: 50, aiReadiness: null, seo: 62 },
+      observedVisibility: {
+        status: 'observed', score: 50, market: 'Bay Area',
+        observedFrom: '2026-09-25T18:00:00Z', observedTo: '2026-09-26T18:00:00Z',
+        engines: {
+          'chatgpt-search': { score: 33, answerTriggerRate: 1, mentionRate: 0.4 },
+          'google-ai-mode': { score: 67, answerTriggerRate: 1, mentionRate: 0.5 },
+        },
+      },
+    });
+    expect(result).toContain('| GEO/AEO observed visibility | 50 |');
+    expect(result).toContain('| ChatGPT Search | 33/100 | 100% | 40% |');
+    expect(result).toContain('| Google AI Mode | 67/100 | 100% | 50% |');
+    expect(result).toContain('Google AI Overviews are tracked separately');
+    expect(result).not.toContain('GEO/AEO visibility is withheld until complete');
   });
 
   it('covers competitors including failed crawls', () => {
