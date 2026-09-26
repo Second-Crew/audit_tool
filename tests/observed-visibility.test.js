@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { scoreObservedVisibility } from '../lib/audit/observed-visibility.js';
 import panelObservations from '../docs/query-panel-observations.json';
+import panelReruns from '../docs/query-panel-reruns.json';
 import panelQueries from '../docs/calibration-query-panel.json';
 
 describe('observed AI visibility', () => {
@@ -57,6 +58,27 @@ describe('observed AI visibility', () => {
     const unreviewed = { queryId: 'q1', runId: 1, engine: 'chatgpt-search', answerShown: true, citedUrls: ['https://secondcrew.com/'] };
     expect(scoreObservedVisibility([unreviewed], 'secondcrew.com', { engine: 'chatgpt-search', queryIds: ['q1'], minRunsPerQuery: 1 })).toMatchObject({
       status: 'not_assessed', score: null, queryCount: 0,
+    });
+  });
+
+  it('scores only the 30 verified Second Crew reruns on the frozen queries', () => {
+    const expectedPrompts = new Map(panelQueries.queries.map(({ id, prompt }) => [id, prompt]));
+    const valid = panelReruns.observations.filter((row) => row.valid === true);
+    expect(panelReruns.validRunCount).toBe(30);
+    expect(valid).toHaveLength(30);
+    expect(new Set(valid.map((row) => row.permalink)).size).toBe(30);
+    for (const [queryId, prompt] of expectedPrompts) {
+      const runs = valid.filter((row) => row.queryId === queryId);
+      expect(runs).toHaveLength(3);
+      expect(runs.every((row) => row.prompt === prompt && row.searchEnabled === true && row.answerShown === true)).toBe(true);
+    }
+    expect(panelReruns.observations.filter((row) => row.valid === false).map((row) => row.queryId)).toEqual(['sf-web-design']);
+    expect(scoreObservedVisibility(panelReruns.observations, 'secondcrew.com', {
+      engine: 'chatgpt-search', queryIds: [...expectedPrompts.keys()],
+    })).toMatchObject({
+      status: 'observed', metric: 'fixed_panel_citation_rate', score: 0,
+      citationRate: 0, answerTriggerRate: 1, mentionRate: 0.4,
+      queryCount: 10, runCount: 30,
     });
   });
 });
