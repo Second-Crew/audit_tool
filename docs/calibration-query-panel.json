@@ -5,6 +5,7 @@
   "market": "San Francisco Bay Area, California, United States",
   "language": "en-US",
   "targetDomain": "secondcrew.com",
+  "brand": "Second Crew",
   "queries": [
     { "id": "sj-web-design", "intent": "broad agency discovery", "prompt": "Which web design agencies in San Jose, California should a growing ecommerce brand consider?", "seoQuery": "web design agency san jose ca ecommerce" },
     { "id": "sf-web-design", "intent": "broad agency discovery", "prompt": "Which web design agencies in San Francisco, California have experience with ecommerce websites?", "seoQuery": "web design agency san francisco ca ecommerce" },

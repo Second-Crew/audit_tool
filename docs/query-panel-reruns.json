@@ -39,7 +39,12 @@
         "Nika Agency"
       ],
       "collectionContext": "Signed-in California Chrome; account memory temporarily disabled; explicit Web search; fresh chat; search provenance showed websites and no prior chats or memory.",
-      "provenance": "Searched 13 websites; expanded reasoning showed no memory or prior-chat source."
+      "provenance": "Searched 13 websites; expanded reasoning showed no memory or prior-chat source.",
+      "locationContext": "Signed-in California Chrome browser",
+      "personalizationState": "off",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "verificationBasis": "Fresh signed-in Chrome chat with account memory disabled during collection; cited destinations opened in Chrome. Search provenance was reviewed when exposed; see calibration methodology."
     },
     {
       "queryId": "sf-web-design",
@@ -70,7 +75,12 @@
       "brandMentionedWithoutTargetDomainCitation": false,
       "collectionContext": "Signed-in California Chrome; account memory temporarily disabled; explicit Web search; fresh chat; search provenance reviewed for prior-chat or memory references.",
       "provenance": "Searched 22 websites; expanded reasoning showed no memory or prior-chat source.",
-      "completionObserved": true
+      "completionObserved": true,
+      "locationContext": "Signed-in California Chrome browser",
+      "personalizationState": "off",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "verificationBasis": "Fresh signed-in Chrome chat with account memory disabled during collection; cited destinations opened in Chrome. Search provenance was reviewed when exposed; see calibration methodology."
     },
     {
       "queryId": "sj-shopify",
@@ -95,7 +105,12 @@
       "collectionContext": "Signed-in California Chrome; account memory temporarily disabled; explicit Web search; fresh chat; search provenance reviewed for prior-chat or memory references.",
       "provenance": "Explicit Web search chip was active; no provenance panel was exposed; account memory was disabled.",
       "completionObserved": true,
-      "memoryProvenanceFound": false
+      "memoryProvenanceFound": false,
+      "locationContext": "Signed-in California Chrome browser",
+      "personalizationState": "off",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "verificationBasis": "Fresh signed-in Chrome chat with account memory disabled during collection; cited destinations opened in Chrome. Search provenance was reviewed when exposed; see calibration methodology."
     },
     {
       "queryId": "sf-shopify",
@@ -125,7 +140,12 @@
       "collectionContext": "Signed-in California Chrome; account memory temporarily disabled; explicit Web search; fresh chat; search provenance reviewed for prior-chat or memory references.",
       "provenance": "Explicit Web search chip was active; no provenance panel was exposed; account memory was disabled.",
       "completionObserved": true,
-      "memoryProvenanceFound": false
+      "memoryProvenanceFound": false,
+      "locationContext": "Signed-in California Chrome browser",
+      "personalizationState": "off",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "verificationBasis": "Fresh signed-in Chrome chat with account memory disabled during collection; cited destinations opened in Chrome. Search provenance was reviewed when exposed; see calibration methodology."
     },
     {
       "queryId": "sj-woocommerce",
@@ -156,7 +176,12 @@
       "collectionContext": "Signed-in California Chrome; account memory temporarily disabled; explicit Web search; fresh chat; search provenance reviewed for prior-chat or memory references.",
       "provenance": "Explicit Web search chip was active; no provenance panel was exposed; account memory was disabled.",
       "completionObserved": true,
-      "memoryProvenanceFound": false
+      "memoryProvenanceFound": false,
+      "locationContext": "Signed-in California Chrome browser",
+      "personalizationState": "off",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "verificationBasis": "Fresh signed-in Chrome chat with account memory disabled during collection; cited destinations opened in Chrome. Search provenance was reviewed when exposed; see calibration methodology."
     },
     {
       "queryId": "sf-woocommerce",
@@ -187,7 +212,12 @@
       "collectionContext": "Signed-in California Chrome; account memory temporarily disabled; explicit Web search; fresh chat; search provenance reviewed for prior-chat or memory references.",
       "provenance": "Searched 18 websites",
       "completionObserved": true,
-      "memoryProvenanceFound": false
+      "memoryProvenanceFound": false,
+      "locationContext": "Signed-in California Chrome browser",
+      "personalizationState": "off",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "verificationBasis": "Fresh signed-in Chrome chat with account memory disabled during collection; cited destinations opened in Chrome. Search provenance was reviewed when exposed; see calibration methodology."
     },
     {
       "queryId": "sj-redesign",
@@ -216,7 +246,12 @@
       "collectionContext": "Signed-in California Chrome; account memory temporarily disabled; explicit Web search; fresh chat; search provenance reviewed for prior-chat or memory references.",
       "provenance": "Searched 12 websites",
       "completionObserved": true,
-      "memoryProvenanceFound": false
+      "memoryProvenanceFound": false,
+      "locationContext": "Signed-in California Chrome browser",
+      "personalizationState": "off",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "verificationBasis": "Fresh signed-in Chrome chat with account memory disabled during collection; cited destinations opened in Chrome. Search provenance was reviewed when exposed; see calibration methodology."
     },
     {
       "queryId": "sf-redesign",
@@ -241,7 +276,12 @@
       "collectionContext": "Signed-in California Chrome; account memory temporarily disabled; explicit Web search; fresh chat; search provenance reviewed for prior-chat or memory references.",
       "provenance": "Searched 12 websites",
       "completionObserved": true,
-      "memoryProvenanceFound": false
+      "memoryProvenanceFound": false,
+      "locationContext": "Signed-in California Chrome browser",
+      "personalizationState": "off",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "verificationBasis": "Fresh signed-in Chrome chat with account memory disabled during collection; cited destinations opened in Chrome. Search provenance was reviewed when exposed; see calibration methodology."
     },
     {
       "queryId": "bay-shopify-migration",
@@ -272,7 +312,12 @@
       "collectionContext": "Signed-in California Chrome; account memory temporarily disabled; explicit Web search; fresh chat; search provenance reviewed for prior-chat or memory references.",
       "provenance": "Searched 17 websites",
       "completionObserved": true,
-      "memoryProvenanceFound": false
+      "memoryProvenanceFound": false,
+      "locationContext": "Signed-in California Chrome browser",
+      "personalizationState": "off",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "verificationBasis": "Fresh signed-in Chrome chat with account memory disabled during collection; cited destinations opened in Chrome. Search provenance was reviewed when exposed; see calibration methodology."
     },
     {
       "queryId": "bay-platform-choice",
@@ -302,7 +347,12 @@
       "brandMentionedWithoutTargetDomainCitation": false,
       "collectionContext": "Signed-in California Chrome; account memory temporarily disabled; explicit Web search; fresh chat.",
       "provenance": "Searched 19 websites",
-      "completionObserved": true
+      "completionObserved": true,
+      "locationContext": "Signed-in California Chrome browser",
+      "personalizationState": "off",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "verificationBasis": "Fresh signed-in Chrome chat with account memory disabled during collection; cited destinations opened in Chrome. Search provenance was reviewed when exposed; see calibration methodology."
     },
     {
       "queryId": "sf-woocommerce",
@@ -332,7 +382,12 @@
       "collectionContext": "Signed-in California Chrome; account memory temporarily disabled; explicit Web search; fresh chat.",
       "provenance": "Searched 15 websites",
       "memoryProvenanceFound": false,
-      "completionObserved": true
+      "completionObserved": true,
+      "locationContext": "Signed-in California Chrome browser",
+      "personalizationState": "off",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "verificationBasis": "Fresh signed-in Chrome chat with account memory disabled during collection; cited destinations opened in Chrome. Search provenance was reviewed when exposed; see calibration methodology."
     },
     {
       "queryId": "sj-redesign",
@@ -358,7 +413,12 @@
       "collectionContext": "Signed-in California Chrome; account memory temporarily disabled; explicit Web search; fresh chat.",
       "provenance": "Searched 9 websites",
       "memoryProvenanceFound": false,
-      "completionObserved": true
+      "completionObserved": true,
+      "locationContext": "Signed-in California Chrome browser",
+      "personalizationState": "off",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "verificationBasis": "Fresh signed-in Chrome chat with account memory disabled during collection; cited destinations opened in Chrome. Search provenance was reviewed when exposed; see calibration methodology."
     },
     {
       "queryId": "sf-redesign",
@@ -389,7 +449,12 @@
       "collectionContext": "Signed-in California Chrome; account memory temporarily disabled; explicit Web search; fresh chat.",
       "provenance": "Searched 16 websites",
       "memoryProvenanceFound": false,
-      "completionObserved": true
+      "completionObserved": true,
+      "locationContext": "Signed-in California Chrome browser",
+      "personalizationState": "off",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "verificationBasis": "Fresh signed-in Chrome chat with account memory disabled during collection; cited destinations opened in Chrome. Search provenance was reviewed when exposed; see calibration methodology."
     },
     {
       "queryId": "bay-shopify-migration",
@@ -416,7 +481,12 @@
       "collectionContext": "Signed-in California Chrome; account memory temporarily disabled; explicit Web search; fresh chat.",
       "provenance": "Explicit Web search chip was active; no provenance panel was exposed; account memory was disabled.",
       "memoryProvenanceFound": false,
-      "completionObserved": true
+      "completionObserved": true,
+      "locationContext": "Signed-in California Chrome browser",
+      "personalizationState": "off",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "verificationBasis": "Fresh signed-in Chrome chat with account memory disabled during collection; cited destinations opened in Chrome. Search provenance was reviewed when exposed; see calibration methodology."
     },
     {
       "queryId": "bay-platform-choice",
@@ -444,7 +514,12 @@
       "collectionContext": "Signed-in California Chrome; account memory temporarily disabled; explicit Web search; fresh chat.",
       "provenance": "Explicit Web search chip was active; no provenance panel was exposed; account memory was disabled.",
       "memoryProvenanceFound": false,
-      "completionObserved": true
+      "completionObserved": true,
+      "locationContext": "Signed-in California Chrome browser",
+      "personalizationState": "off",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "verificationBasis": "Fresh signed-in Chrome chat with account memory disabled during collection; cited destinations opened in Chrome. Search provenance was reviewed when exposed; see calibration methodology."
     },
     {
       "queryId": "sj-web-design",
@@ -469,7 +544,12 @@
       "collectionContext": "Signed-in California Chrome; account memory temporarily disabled; explicit Web search; fresh chat.",
       "provenance": "Searched 4 websites",
       "memoryProvenanceFound": false,
-      "completionObserved": true
+      "completionObserved": true,
+      "locationContext": "Signed-in California Chrome browser",
+      "personalizationState": "off",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "verificationBasis": "Fresh signed-in Chrome chat with account memory disabled during collection; cited destinations opened in Chrome. Search provenance was reviewed when exposed; see calibration methodology."
     },
     {
       "queryId": "sf-web-design",
@@ -523,7 +603,12 @@
       "collectionContext": "Signed-in California Chrome; account memory temporarily disabled; explicit Web search; fresh chat.",
       "provenance": "Searched 10 websites",
       "memoryProvenanceFound": false,
-      "completionObserved": true
+      "completionObserved": true,
+      "locationContext": "Signed-in California Chrome browser",
+      "personalizationState": "off",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "verificationBasis": "Fresh signed-in Chrome chat with account memory disabled during collection; cited destinations opened in Chrome. Search provenance was reviewed when exposed; see calibration methodology."
     },
     {
       "queryId": "sf-shopify",
@@ -548,7 +633,12 @@
       "collectionContext": "Signed-in California Chrome; account memory temporarily disabled; explicit Web search; fresh chat.",
       "provenance": "Explicit Web search chip was active; no provenance panel was exposed; account memory was disabled.",
       "memoryProvenanceFound": false,
-      "completionObserved": true
+      "completionObserved": true,
+      "locationContext": "Signed-in California Chrome browser",
+      "personalizationState": "off",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "verificationBasis": "Fresh signed-in Chrome chat with account memory disabled during collection; cited destinations opened in Chrome. Search provenance was reviewed when exposed; see calibration methodology."
     },
     {
       "queryId": "sj-woocommerce",
@@ -575,7 +665,12 @@
       "collectionContext": "Signed-in California Chrome; account memory temporarily disabled; explicit Web search; fresh chat.",
       "provenance": "Searched 11 websites",
       "memoryProvenanceFound": false,
-      "completionObserved": true
+      "completionObserved": true,
+      "locationContext": "Signed-in California Chrome browser",
+      "personalizationState": "off",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "verificationBasis": "Fresh signed-in Chrome chat with account memory disabled during collection; cited destinations opened in Chrome. Search provenance was reviewed when exposed; see calibration methodology."
     },
     {
       "queryId": "bay-shopify-migration",
@@ -605,7 +700,12 @@
       "collectionContext": "Signed-in California Chrome; account memory temporarily disabled; explicit Web search; fresh chat.",
       "provenance": "Searched 12 websites",
       "memoryProvenanceFound": false,
-      "completionObserved": true
+      "completionObserved": true,
+      "locationContext": "Signed-in California Chrome browser",
+      "personalizationState": "off",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "verificationBasis": "Fresh signed-in Chrome chat with account memory disabled during collection; cited destinations opened in Chrome. Search provenance was reviewed when exposed; see calibration methodology."
     },
     {
       "queryId": "bay-platform-choice",
@@ -632,7 +732,12 @@
       "collectionContext": "Signed-in California Chrome; account memory temporarily disabled; explicit Web search; fresh chat.",
       "provenance": "Searched 24 websites",
       "memoryProvenanceFound": false,
-      "completionObserved": true
+      "completionObserved": true,
+      "locationContext": "Signed-in California Chrome browser",
+      "personalizationState": "off",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "verificationBasis": "Fresh signed-in Chrome chat with account memory disabled during collection; cited destinations opened in Chrome. Search provenance was reviewed when exposed; see calibration methodology."
     },
     {
       "queryId": "sj-web-design",
@@ -661,7 +766,12 @@
       "collectionContext": "Signed-in California Chrome; account memory temporarily disabled; explicit Web search; fresh chat.",
       "provenance": "Searched 13 websites",
       "memoryProvenanceFound": false,
-      "completionObserved": true
+      "completionObserved": true,
+      "locationContext": "Signed-in California Chrome browser",
+      "personalizationState": "off",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "verificationBasis": "Fresh signed-in Chrome chat with account memory disabled during collection; cited destinations opened in Chrome. Search provenance was reviewed when exposed; see calibration methodology."
     },
     {
       "queryId": "sf-web-design",
@@ -691,7 +801,12 @@
       "collectionContext": "Signed-in California Chrome; account memory temporarily disabled; explicit Web search; fresh chat.",
       "provenance": "Explicit Web search chip was active; no provenance panel was exposed; account memory was disabled.",
       "memoryProvenanceFound": false,
-      "completionObserved": true
+      "completionObserved": true,
+      "locationContext": "Signed-in California Chrome browser",
+      "personalizationState": "off",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "verificationBasis": "Fresh signed-in Chrome chat with account memory disabled during collection; cited destinations opened in Chrome. Search provenance was reviewed when exposed; see calibration methodology."
     },
     {
       "queryId": "sj-shopify",
@@ -717,7 +832,12 @@
       "collectionContext": "Signed-in California Chrome; account memory temporarily disabled; explicit Web search; fresh chat.",
       "provenance": "Explicit Web search chip was active; no provenance panel was exposed; account memory was disabled.",
       "memoryProvenanceFound": false,
-      "completionObserved": true
+      "completionObserved": true,
+      "locationContext": "Signed-in California Chrome browser",
+      "personalizationState": "off",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "verificationBasis": "Fresh signed-in Chrome chat with account memory disabled during collection; cited destinations opened in Chrome. Search provenance was reviewed when exposed; see calibration methodology."
     },
     {
       "queryId": "sf-shopify",
@@ -744,7 +864,12 @@
       "collectionContext": "Signed-in California Chrome; account memory temporarily disabled; explicit Web search; fresh chat.",
       "provenance": "Explicit Web search chip was active; no provenance panel was exposed; account memory was disabled.",
       "memoryProvenanceFound": false,
-      "completionObserved": true
+      "completionObserved": true,
+      "locationContext": "Signed-in California Chrome browser",
+      "personalizationState": "off",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "verificationBasis": "Fresh signed-in Chrome chat with account memory disabled during collection; cited destinations opened in Chrome. Search provenance was reviewed when exposed; see calibration methodology."
     },
     {
       "queryId": "sj-woocommerce",
@@ -775,7 +900,12 @@
       "collectionContext": "Signed-in California Chrome; account memory temporarily disabled; explicit Web search; fresh chat.",
       "provenance": "Searched 11 websites",
       "memoryProvenanceFound": false,
-      "completionObserved": true
+      "completionObserved": true,
+      "locationContext": "Signed-in California Chrome browser",
+      "personalizationState": "off",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "verificationBasis": "Fresh signed-in Chrome chat with account memory disabled during collection; cited destinations opened in Chrome. Search provenance was reviewed when exposed; see calibration methodology."
     },
     {
       "queryId": "sf-woocommerce",
@@ -800,7 +930,12 @@
       "collectionContext": "Signed-in California Chrome; account memory temporarily disabled; explicit Web search; fresh chat.",
       "provenance": "Explicit Web search chip was active; no provenance panel was exposed; account memory was disabled.",
       "memoryProvenanceFound": false,
-      "completionObserved": true
+      "completionObserved": true,
+      "locationContext": "Signed-in California Chrome browser",
+      "personalizationState": "off",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "verificationBasis": "Fresh signed-in Chrome chat with account memory disabled during collection; cited destinations opened in Chrome. Search provenance was reviewed when exposed; see calibration methodology."
     },
     {
       "queryId": "sj-redesign",
@@ -824,7 +959,12 @@
       "collectionContext": "Signed-in California Chrome; account memory temporarily disabled; explicit Web search; fresh chat.",
       "provenance": "Searched 2 websites",
       "memoryProvenanceFound": false,
-      "completionObserved": true
+      "completionObserved": true,
+      "locationContext": "Signed-in California Chrome browser",
+      "personalizationState": "off",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "verificationBasis": "Fresh signed-in Chrome chat with account memory disabled during collection; cited destinations opened in Chrome. Search provenance was reviewed when exposed; see calibration methodology."
     },
     {
       "queryId": "sf-redesign",
@@ -849,7 +989,12 @@
       "collectionContext": "Signed-in California Chrome; account memory temporarily disabled; explicit Web search; fresh chat.",
       "provenance": "Searched 9 websites",
       "memoryProvenanceFound": false,
-      "completionObserved": true
+      "completionObserved": true,
+      "locationContext": "Signed-in California Chrome browser",
+      "personalizationState": "off",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "verificationBasis": "Fresh signed-in Chrome chat with account memory disabled during collection; cited destinations opened in Chrome. Search provenance was reviewed when exposed; see calibration methodology."
     },
     {
       "queryId": "sf-web-design",
@@ -876,9 +1021,15 @@
       "collectionContext": "Signed-in California Chrome; account memory temporarily disabled; explicit Web search; fresh chat.",
       "provenance": "Explicit Web search chip was active; no provenance panel was exposed; account memory was disabled.",
       "memoryProvenanceFound": false,
-      "completionObserved": true
+      "completionObserved": true,
+      "locationContext": "Signed-in California Chrome browser",
+      "personalizationState": "off",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "verificationBasis": "Fresh signed-in Chrome chat with account memory disabled during collection; cited destinations opened in Chrome. Search provenance was reviewed when exposed; see calibration methodology."
     }
   ],
   "validRunCount": 30,
-  "collectionStatus": "complete"
+  "collectionStatus": "complete",
+  "prospectPanelCompatibility": "The 30 validated single-date rows carry explicit per-run isolation and citation attestations. A later-date repeat per query and a complete Google AI Mode panel are still required before prospect scoring."
 }
