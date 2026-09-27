@@ -1,0 +1,82 @@
+{
+  "panelVersion": "sf-sj-ecommerce-agency-v1",
+  "engine": "chatgpt-search",
+  "collectionStatus": "later_date_partial_model_unconfirmed",
+  "observations": [
+    {
+      "queryId": "bay-platform-choice",
+      "runId": 6,
+      "observedAt": "2026-09-27T21:11:08.204Z",
+      "prompt": "I need a Bay Area ecommerce agency to help choose between Shopify and WooCommerce, then build the store. Who should I look at?",
+      "engine": "chatgpt-search",
+      "model": "ChatGPT Medium (underlying model not disclosed)",
+      "searchEnabled": true,
+      "valid": true,
+      "validationStatus": "validated_individual_run_not_scoring_cohort",
+      "answerShown": true,
+      "permalink": "https://chatgpt.com/c/6ab98663-6350-83e8-b071-1c91be90efaa",
+      "citedUrls": [
+        "https://www.vonnda.com/contact-us/?utm_source=chatgpt.com",
+        "https://www.vonnda.com/services/e-commerce/woocommerce/?utm_source=chatgpt.com",
+        "https://siliconvalleywebsolution.com/online-store-setup-services/?utm_source=chatgpt.com",
+        "https://siliconvalleywebsolution.com/ecommerce-website-developer-in-san-jose-ca/?utm_source=chatgpt.com",
+        "https://keganquimby.com/services/web-development/ecommerce-development/?utm_source=chatgpt.com",
+        "https://keganquimby.com/services/web-development/ecommerce-development/woocommerce-development/?utm_source=chatgpt.com",
+        "https://keganquimby.com/services/web-development/ecommerce-development/shopify-development/?utm_source=chatgpt.com"
+      ],
+      "targetDomainCited": false,
+      "brandMentioned": false,
+      "brandMentionedWithoutTargetDomainCitation": false,
+      "answerBrands": [
+        "Vonnda",
+        "Silicon Valley Web Solutions",
+        "Razorfrog Web Design",
+        "Kegan Quimby Web Design & Development"
+      ],
+      "locationContext": "Signed-in California Chrome browser",
+      "personalizationState": "off",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "verificationBasis": "Fresh signed-in Chrome chat with account memory disabled; explicit Web search; expanded search provenance showed websites and no memory or prior chat references; conversation reopened in a second tab; all seven cited destinations opened in the in-app browser.",
+      "collectionContext": "Account memory temporarily disabled under user approval. ChatGPT selector showed Medium; it did not disclose an exact underlying model version. The run is individually verified but cannot yet be combined with the 2026-09-26 rows labeled GPT-5.6 Sol, Medium without resolving model comparability."
+    },
+    {
+      "queryId": "bay-shopify-migration",
+      "runId": 6,
+      "observedAt": "2026-09-27T21:17:24.020Z",
+      "prompt": "Which Bay Area agencies could help migrate an established online store to Shopify and redesign it?",
+      "engine": "chatgpt-search",
+      "model": "ChatGPT Medium (underlying model not disclosed)",
+      "searchEnabled": true,
+      "valid": true,
+      "validationStatus": "validated_individual_run_not_scoring_cohort",
+      "answerShown": true,
+      "permalink": "https://chatgpt.com/c/6ab987e0-6938-83e8-862f-ba808622c4f4",
+      "citedUrls": [
+        "https://www.shopify.com/partners/directory/partner/presidiocreative?utm_source=chatgpt.com",
+        "https://www.shopify.com/partners/directory/partner/ecommercepro?utm_source=chatgpt.com",
+        "https://www.ecommercepro.com/?utm_source=chatgpt.com",
+        "https://www.vonnda.com/services/shopify-agency-san-francisco-bay-area/?utm_source=chatgpt.com",
+        "https://www.shopify.com/partners/directory/partner/arcticgreyinc?utm_source=chatgpt.com",
+        "https://www.shopify.com/partners/directory/partner/sleepless-media?utm_source=chatgpt.com"
+      ],
+      "targetDomainCited": false,
+      "brandMentioned": false,
+      "brandMentionedWithoutTargetDomainCitation": false,
+      "answerBrands": [
+        "Presidio",
+        "Ecommerce Pro",
+        "Vonnda",
+        "Arctic Grey",
+        "Sleepless Media",
+        "#10 LLC"
+      ],
+      "locationContext": "Signed-in California Chrome browser",
+      "personalizationState": "off",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "verificationBasis": "Fresh signed-in Chrome chat with account memory disabled; explicit Web search; expanded search provenance showed websites and no memory or prior chat references; conversation reopened in a second tab; all six cited destinations opened in the in-app browser.",
+      "collectionContext": "Account memory temporarily disabled under user approval. ChatGPT selector showed Medium; it did not disclose an exact underlying model version. The run is individually verified but cannot yet be combined with the 2026-09-26 rows labeled GPT-5.6 Sol, Medium without resolving model comparability."
+    }
+  ]
+}
