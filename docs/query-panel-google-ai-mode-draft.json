@@ -5,7 +5,7 @@
   "language": "en-US",
   "locationContext": "California desktop, en-US",
   "personalizationState": "off",
-  "collectionStatus": "draft_unscored",
+  "collectionStatus": "validated_partial_20_of_30",
   "collectionDateUtc": "2026-09-27",
   "shareLinksReopened": 20,
   "citedLinksMatchedSavedAnswers": 20,
@@ -30,13 +30,18 @@
         "https://www.baytechdigital.com/",
         "https://www.google.com/searchviewer/10?svid=CAwSHRIbCgNwdnESFENnMHZaeTh4TVdJM1pua3lNamgwGAo",
         "https://www.google.com/searchviewer/10?svid=CAwSHRIbCgNwdnESFENnMHZaeTh4TVdJMlkyc3pabmM1GAo",
-        "https://www.google.com/searchviewer/10?svid=CAwSHRIbCgNwdnESFENnMHZaeTh4TVdoNmJGOHdhemx6GAo"
+        "https://www.google.com/searchviewer/10?svid=CAwSHRIbCgNwdnESFENnMHZaeTh4TVdoNmJGOHdhemx6GAo",
+        "https://www.designrush.com/agency/ecommerce/california/san-jose"
       ],
-      "valid": false,
-      "validationStatus": "pending",
+      "valid": true,
+      "validationStatus": "validated",
       "isolationVerified": true,
-      "citationsVerified": false,
-      "invalidReason": "Citation destination review pending; excluded from scoring."
+      "citationsVerified": true,
+      "additionalVisibleUrlsAtReview": [
+        "https://www.designrush.com/agency/ecommerce/california/san-jose"
+      ],
+      "citationReviewedAt": "2026-09-27T01:09:28.525Z",
+      "citationReviewMethod": "Original answer links and reopened share-link visible links compared; each distinct destination opened. Google searchviewer URLs treated as Google place cards, not own-domain citations."
     },
     {
       "engine": "google-ai-mode",
@@ -54,13 +59,18 @@
       "citedUrls": [
         "https://www.google.com/searchviewer/10?svid=CAwSHRIbCgNwdnESFENnMHZaeTh4TVhGd2RHeHVkbVJuGAo",
         "https://www.google.com/searchviewer/10?svid=CAwSHRIbCgNwdnESFENnMHZaeTh4TVhaNGVtWnViVzR5GAo",
-        "https://www.google.com/searchviewer/10?svid=CAwSHRIbCgNwdnESFENnMHZaeTh4TVdkcWVHNW1NVzR6GAo"
+        "https://www.google.com/searchviewer/10?svid=CAwSHRIbCgNwdnESFENnMHZaeTh4TVdkcWVHNW1NVzR6GAo",
+        "https://www.conspireagency.com/blogs/markets/shopify-plus-agency-san-francisco-ca"
       ],
-      "valid": false,
-      "invalidReason": "Citation destination review pending; excluded from scoring.",
-      "validationStatus": "pending",
+      "valid": true,
+      "validationStatus": "validated",
       "isolationVerified": true,
-      "citationsVerified": false
+      "citationsVerified": true,
+      "additionalVisibleUrlsAtReview": [
+        "https://www.conspireagency.com/blogs/markets/shopify-plus-agency-san-francisco-ca"
+      ],
+      "citationReviewedAt": "2026-09-27T01:09:34.881Z",
+      "citationReviewMethod": "Original answer links and reopened share-link visible links compared; each distinct destination opened. Google searchviewer URLs treated as Google place cards, not own-domain citations."
     },
     {
       "engine": "google-ai-mode",
@@ -78,13 +88,18 @@
       "citedUrls": [
         "https://www.google.com/searchviewer/10?svid=CAwSHRIbCgNwdnESFENnMHZaeTh4TVhKMGNYZDRNVEY0GAo",
         "https://www.google.com/searchviewer/10?svid=CAwSHRIbCgNwdnESFENnMHZaeTh4TVhBMmEzRTNjSGN4GAo",
-        "https://www.google.com/searchviewer/10?svid=CAwSHRIbCgNwdnESFENnMHZaeTh4TVdJMlkyc3pabmM1GAo"
+        "https://www.google.com/searchviewer/10?svid=CAwSHRIbCgNwdnESFENnMHZaeTh4TVdJMlkyc3pabmM1GAo",
+        "https://realmwebdesign.com/pages/shopify-experts-san-jose-california"
       ],
-      "valid": false,
-      "invalidReason": "Citation destination review pending; excluded from scoring.",
-      "validationStatus": "pending",
+      "valid": true,
+      "validationStatus": "validated",
       "isolationVerified": true,
-      "citationsVerified": false
+      "citationsVerified": true,
+      "additionalVisibleUrlsAtReview": [
+        "https://realmwebdesign.com/pages/shopify-experts-san-jose-california"
+      ],
+      "citationReviewedAt": "2026-09-27T01:09:40.836Z",
+      "citationReviewMethod": "Original answer links and reopened share-link visible links compared; each distinct destination opened. Google searchviewer URLs treated as Google place cards, not own-domain citations."
     },
     {
       "engine": "google-ai-mode",
@@ -106,13 +121,18 @@
         "https://netalico.com/pages/shopify-plus-design-agency/san-francisco-ca",
         "https://www.conspireagency.com/blogs/markets/shopify-plus-agency-san-francisco-ca",
         "https://themanifest.com/web-development/shopify/companies/san-francisco",
-        "https://revenuebase.ai/companies/shopify-design-agencies/united-states/san-francisco"
+        "https://revenuebase.ai/companies/shopify-design-agencies/united-states/san-francisco",
+        "https://realmwebdesign.com/pages/shopify-experts-san-francisco"
       ],
-      "valid": false,
-      "invalidReason": "Citation destination review pending; excluded from scoring.",
-      "validationStatus": "pending",
+      "valid": true,
+      "validationStatus": "validated",
       "isolationVerified": true,
-      "citationsVerified": false
+      "citationsVerified": true,
+      "additionalVisibleUrlsAtReview": [
+        "https://realmwebdesign.com/pages/shopify-experts-san-francisco"
+      ],
+      "citationReviewedAt": "2026-09-27T01:09:49.207Z",
+      "citationReviewMethod": "Original answer links and reopened share-link visible links compared; each distinct destination opened. Google searchviewer URLs treated as Google place cards, not own-domain citations."
     },
     {
       "engine": "google-ai-mode",
@@ -130,13 +150,18 @@
       "citedUrls": [
         "https://solutionarianmarketing.com/location/san-jose-ca/",
         "https://www.webtonic.io/blog/best-shopify-ecommerce-development-agencies-san-jose",
-        "https://netlynxinc.com/woocommerce-web-design-in-california/"
+        "https://netlynxinc.com/woocommerce-web-design-in-california/",
+        "https://solutionarianmarketing.com/location/san-jose-ca/website-designer/"
       ],
-      "valid": false,
-      "invalidReason": "Citation destination review pending; excluded from scoring.",
-      "validationStatus": "pending",
+      "valid": true,
+      "validationStatus": "validated",
       "isolationVerified": true,
-      "citationsVerified": false
+      "citationsVerified": true,
+      "additionalVisibleUrlsAtReview": [
+        "https://solutionarianmarketing.com/location/san-jose-ca/website-designer/"
+      ],
+      "citationReviewedAt": "2026-09-27T01:09:56.524Z",
+      "citationReviewMethod": "Original answer links and reopened share-link visible links compared; each distinct destination opened. Google searchviewer URLs treated as Google place cards, not own-domain citations."
     },
     {
       "engine": "google-ai-mode",
@@ -159,13 +184,18 @@
         "https://smackhappy.com/",
         "https://www.google.com/searchviewer/10?svid=CAwSHRIbCgNwdnESFENnMHZaeTh4TVdZNGEyeGlOM0ppGAo",
         "https://www.google.com/searchviewer/10?svid=CAwSGxIZCgNwdnESEkNnc3ZaeTh4ZEdnd2JqTjVZZxgK",
-        "https://www.google.com/searchviewer/10?svid=CAwSGxIZCgNwdnESEkNnc3ZaeTh4ZEdRMk5XcDZhdxgK"
+        "https://www.google.com/searchviewer/10?svid=CAwSGxIZCgNwdnESEkNnc3ZaeTh4ZEdRMk5XcDZhdxgK",
+        "https://www.ayatas.com/woocommerce-development-san-francisco/"
       ],
-      "valid": false,
-      "invalidReason": "Citation destination review pending; excluded from scoring.",
-      "validationStatus": "pending",
+      "valid": true,
+      "validationStatus": "validated",
       "isolationVerified": true,
-      "citationsVerified": false
+      "citationsVerified": true,
+      "additionalVisibleUrlsAtReview": [
+        "https://www.ayatas.com/woocommerce-development-san-francisco/"
+      ],
+      "citationReviewedAt": "2026-09-27T01:10:02.262Z",
+      "citationReviewMethod": "Original answer links and reopened share-link visible links compared; each distinct destination opened. Google searchviewer URLs treated as Google place cards, not own-domain citations."
     },
     {
       "engine": "google-ai-mode",
@@ -185,13 +215,18 @@
         "https://www.builtinsf.com/articles/san-jose-web-design-development-agencies",
         "https://www.webtonic.io/blog/best-shopify-ecommerce-development-agencies-san-jose",
         "https://www.cleardigital.com/locations/web-design-san-jose-silicon-valley",
-        "https://m.yelp.com/search?find_desc=e-commerce+marketing&find_loc=San+Jose%2C+CA"
+        "https://m.yelp.com/search?find_desc=e-commerce+marketing&find_loc=San+Jose%2C+CA",
+        "https://www.webtonic.io/blog/best-web-design-ui-ux-agencies-san-jose"
       ],
-      "valid": false,
-      "invalidReason": "Citation destination review pending; excluded from scoring.",
-      "validationStatus": "pending",
+      "valid": true,
+      "validationStatus": "validated",
       "isolationVerified": true,
-      "citationsVerified": false
+      "citationsVerified": true,
+      "additionalVisibleUrlsAtReview": [
+        "https://www.webtonic.io/blog/best-web-design-ui-ux-agencies-san-jose"
+      ],
+      "citationReviewedAt": "2026-09-27T01:10:10.462Z",
+      "citationReviewMethod": "Original answer links and reopened share-link visible links compared; each distinct destination opened. Google searchviewer URLs treated as Google place cards, not own-domain citations."
     },
     {
       "engine": "google-ai-mode",
@@ -209,13 +244,18 @@
       "citedUrls": [
         "https://www.google.com/searchviewer/10?svid=CAwSHBIaCgNwdnESE0Nnd3ZaeTh4Y1RZM2MycGtZM1kYCg",
         "https://www.google.com/searchviewer/10?svid=CAwSHRIbCgNwdnESFENnMHZaeTh4TVhGd2RHeHVkbVJuGAo",
-        "https://www.google.com/searchviewer/10?svid=CAwSHRIbCgNwdnESFENnMHZaeTh4TVhscU5IWmpaSEI1GAo"
+        "https://www.google.com/searchviewer/10?svid=CAwSHRIbCgNwdnESFENnMHZaeTh4TVhscU5IWmpaSEI1GAo",
+        "https://www.lazarev.agency/articles/san-francisco-web-design-agencies"
       ],
-      "valid": false,
-      "invalidReason": "Citation destination review pending; excluded from scoring.",
-      "validationStatus": "pending",
+      "valid": true,
+      "validationStatus": "validated",
       "isolationVerified": true,
-      "citationsVerified": false
+      "citationsVerified": true,
+      "additionalVisibleUrlsAtReview": [
+        "https://www.lazarev.agency/articles/san-francisco-web-design-agencies"
+      ],
+      "citationReviewedAt": "2026-09-27T01:10:17.057Z",
+      "citationReviewMethod": "Original answer links and reopened share-link visible links compared; each distinct destination opened. Google searchviewer URLs treated as Google place cards, not own-domain citations."
     },
     {
       "engine": "google-ai-mode",
@@ -237,13 +277,18 @@
         "https://www.sdg.la/san-francisco-shopify-agency/",
         "https://www.mejix.com/shopify-plus-agency-san-francisco",
         "https://noirandblanco.com/us/shopify-agency-in-san-francisco/",
-        "https://7seamarketing.com/pages/shopify-development-san-francisco"
+        "https://7seamarketing.com/pages/shopify-development-san-francisco",
+        "https://siliconvalleywebsolution.com/shopify/"
       ],
-      "valid": false,
-      "invalidReason": "Citation destination review pending; excluded from scoring.",
-      "validationStatus": "pending",
+      "valid": true,
+      "validationStatus": "validated",
       "isolationVerified": true,
-      "citationsVerified": false
+      "citationsVerified": true,
+      "additionalVisibleUrlsAtReview": [
+        "https://siliconvalleywebsolution.com/shopify/"
+      ],
+      "citationReviewedAt": "2026-09-27T01:10:26.321Z",
+      "citationReviewMethod": "Original answer links and reopened share-link visible links compared; each distinct destination opened. Google searchviewer URLs treated as Google place cards, not own-domain citations."
     },
     {
       "engine": "google-ai-mode",
@@ -261,13 +306,20 @@
       "citedUrls": [
         "https://www.libautech.com/best-shopify-agencies/san-francisco",
         "https://www.ayatas.com/woocommerce-development-san-francisco/",
-        "https://www.gilzor.com/insights/ecommerce-website-development-companies-sf-usa"
+        "https://www.gilzor.com/insights/ecommerce-website-development-companies-sf-usa",
+        "https://bizdetail.com/ecommerce-web-designer/",
+        "https://www.vonnda.com/services/shopify-agency-san-francisco-bay-area/"
       ],
-      "valid": false,
-      "invalidReason": "Citation destination review pending; excluded from scoring.",
-      "validationStatus": "pending",
+      "valid": true,
+      "validationStatus": "validated",
       "isolationVerified": true,
-      "citationsVerified": false
+      "citationsVerified": true,
+      "additionalVisibleUrlsAtReview": [
+        "https://bizdetail.com/ecommerce-web-designer/",
+        "https://www.vonnda.com/services/shopify-agency-san-francisco-bay-area/"
+      ],
+      "citationReviewedAt": "2026-09-27T01:10:34.678Z",
+      "citationReviewMethod": "Original answer links and reopened share-link visible links compared; each distinct destination opened. Google searchviewer URLs treated as Google place cards, not own-domain citations."
     },
     {
       "engine": "google-ai-mode",
@@ -288,13 +340,20 @@
         "https://www.011bq.com/services/ecommerce-services/san-francisco/",
         "https://7seamarketing.com/pages/shopify-development-san-francisco",
         "https://netalico.com/pages/shopify-partners/san-francisco-ca",
-        "https://www.gilzor.com/insights/ecommerce-website-development-companies-sf-usa"
+        "https://www.gilzor.com/insights/ecommerce-website-development-companies-sf-usa",
+        "https://bizdetail.com/ecommerce-web-designer/",
+        "https://www.vonnda.com/services/shopify-agency-san-francisco-bay-area/"
       ],
-      "valid": false,
-      "invalidReason": "Citation destination review pending; excluded from scoring.",
-      "validationStatus": "pending",
+      "valid": true,
+      "validationStatus": "validated",
       "isolationVerified": true,
-      "citationsVerified": false
+      "citationsVerified": true,
+      "additionalVisibleUrlsAtReview": [
+        "https://bizdetail.com/ecommerce-web-designer/",
+        "https://www.vonnda.com/services/shopify-agency-san-francisco-bay-area/"
+      ],
+      "citationReviewedAt": "2026-09-27T01:10:49.152Z",
+      "citationReviewMethod": "Original answer links and reopened share-link visible links compared; each distinct destination opened. Google searchviewer URLs treated as Google place cards, not own-domain citations."
     },
     {
       "engine": "google-ai-mode",
@@ -317,13 +376,18 @@
         "https://www.sdg.la/san-francisco-shopify-agency/",
         "https://www.mejix.com/shopify-plus-agency-san-francisco",
         "https://www.webtonic.io/blog/best-shopify-ecommerce-development-agencies-san-francisco",
-        "https://7seamarketing.com/pages/shopify-development-san-francisco"
+        "https://7seamarketing.com/pages/shopify-development-san-francisco",
+        "https://siliconvalleywebsolution.com/shopify/"
       ],
-      "valid": false,
-      "invalidReason": "Citation destination review pending; excluded from scoring.",
-      "validationStatus": "pending",
+      "valid": true,
+      "validationStatus": "validated",
       "isolationVerified": true,
-      "citationsVerified": false
+      "citationsVerified": true,
+      "additionalVisibleUrlsAtReview": [
+        "https://siliconvalleywebsolution.com/shopify/"
+      ],
+      "citationReviewedAt": "2026-09-27T01:10:57.117Z",
+      "citationReviewMethod": "Original answer links and reopened share-link visible links compared; each distinct destination opened. Google searchviewer URLs treated as Google place cards, not own-domain citations."
     },
     {
       "engine": "google-ai-mode",
@@ -346,11 +410,12 @@
         "https://revenuebase.ai/companies/custom-web-design-agencies/united-states/san-francisco",
         "https://clutch.co/web-designers/san-francisco"
       ],
-      "valid": false,
-      "invalidReason": "Citation destination review pending; excluded from scoring.",
-      "validationStatus": "pending",
+      "valid": true,
+      "validationStatus": "validated",
       "isolationVerified": true,
-      "citationsVerified": false
+      "citationsVerified": true,
+      "citationReviewedAt": "2026-09-27T01:11:07.273Z",
+      "citationReviewMethod": "Original answer links and reopened share-link visible links compared; each distinct destination opened. Google searchviewer URLs treated as Google place cards, not own-domain citations."
     },
     {
       "engine": "google-ai-mode",
@@ -369,13 +434,18 @@
         "https://www.webtonic.io/blog/best-shopify-ecommerce-development-agencies-san-jose",
         "https://www.builtinsf.com/articles/san-jose-web-design-development-agencies",
         "https://netalico.com/pages/shopify-agency/san-jose-ca",
-        "https://m.yelp.com/search?find_desc=e-commerce+marketing&find_loc=San+Jose%2C+CA"
+        "https://m.yelp.com/search?find_desc=e-commerce+marketing&find_loc=San+Jose%2C+CA",
+        "https://www.webtonic.io/blog/best-web-design-ui-ux-agencies-san-jose"
       ],
-      "valid": false,
-      "invalidReason": "Citation destination review pending; excluded from scoring.",
-      "validationStatus": "pending",
+      "valid": true,
+      "validationStatus": "validated",
       "isolationVerified": true,
-      "citationsVerified": false
+      "citationsVerified": true,
+      "additionalVisibleUrlsAtReview": [
+        "https://www.webtonic.io/blog/best-web-design-ui-ux-agencies-san-jose"
+      ],
+      "citationReviewedAt": "2026-09-27T01:11:14.015Z",
+      "citationReviewMethod": "Original answer links and reopened share-link visible links compared; each distinct destination opened. Google searchviewer URLs treated as Google place cards, not own-domain citations."
     },
     {
       "engine": "google-ai-mode",
@@ -396,11 +466,12 @@
         "https://www.ayatas.com/woocommerce-development-san-francisco/",
         "https://www.abbacustechnologies.com/top-woocommerce-development-firms-in-san-francisco/"
       ],
-      "valid": false,
-      "invalidReason": "Citation destination review pending; excluded from scoring.",
-      "validationStatus": "pending",
+      "valid": true,
+      "validationStatus": "validated",
       "isolationVerified": true,
-      "citationsVerified": false
+      "citationsVerified": true,
+      "citationReviewedAt": "2026-09-27T01:11:21.832Z",
+      "citationReviewMethod": "Original answer links and reopened share-link visible links compared; each distinct destination opened. Google searchviewer URLs treated as Google place cards, not own-domain citations."
     },
     {
       "engine": "google-ai-mode",
@@ -417,13 +488,18 @@
       "permalink": "https://share.google/aimode/nrcyS0DHjnaFyebkv",
       "citedUrls": [
         "https://www.google.com/searchviewer/10?svid=CAwSHRIbCgNwdnESFENnMHZaeTh4TVdJMlkyc3pabmM1GAo",
-        "https://www.google.com/searchviewer/10?svid=CAwSGxIZCgNwdnESEkNnc3ZaeTh4ZEY5clozTTNPURgK"
+        "https://www.google.com/searchviewer/10?svid=CAwSGxIZCgNwdnESEkNnc3ZaeTh4ZEY5clozTTNPURgK",
+        "https://solutionarianmarketing.com/location/san-jose-ca/website-designer/"
       ],
-      "valid": false,
-      "invalidReason": "Citation destination review pending; excluded from scoring.",
-      "validationStatus": "pending",
+      "valid": true,
+      "validationStatus": "validated",
       "isolationVerified": true,
-      "citationsVerified": false
+      "citationsVerified": true,
+      "additionalVisibleUrlsAtReview": [
+        "https://solutionarianmarketing.com/location/san-jose-ca/website-designer/"
+      ],
+      "citationReviewedAt": "2026-09-27T01:11:27.946Z",
+      "citationReviewMethod": "Original answer links and reopened share-link visible links compared; each distinct destination opened. Google searchviewer URLs treated as Google place cards, not own-domain citations."
     },
     {
       "engine": "google-ai-mode",
@@ -444,13 +520,18 @@
         "https://netalico.com/pages/shopify-plus-design-agency/san-francisco-ca",
         "https://magecloud.agency/shopify-development-agency-san-francisco/",
         "https://www.conspireagency.com/blogs/markets/shopify-plus-agency-san-francisco-ca",
-        "https://netalico.com/pages/shopify-agency/san-francisco-ca"
+        "https://netalico.com/pages/shopify-agency/san-francisco-ca",
+        "https://realmwebdesign.com/pages/shopify-experts-san-francisco"
       ],
-      "valid": false,
-      "invalidReason": "Citation destination review pending; excluded from scoring.",
-      "validationStatus": "pending",
+      "valid": true,
+      "validationStatus": "validated",
       "isolationVerified": true,
-      "citationsVerified": false
+      "citationsVerified": true,
+      "additionalVisibleUrlsAtReview": [
+        "https://realmwebdesign.com/pages/shopify-experts-san-francisco"
+      ],
+      "citationReviewedAt": "2026-09-27T01:11:35.659Z",
+      "citationReviewMethod": "Original answer links and reopened share-link visible links compared; each distinct destination opened. Google searchviewer URLs treated as Google place cards, not own-domain citations."
     },
     {
       "engine": "google-ai-mode",
@@ -468,13 +549,18 @@
       "citedUrls": [
         "https://www.google.com/searchviewer/10?svid=CAwSHRIbCgNwdnESFENnMHZaeTh4TVhKMGNYZDRNVEY0GAo",
         "https://www.google.com/searchviewer/10?svid=CAwSHRIbCgNwdnESFENnMHZaeTh4TVhBMmEzRTNjSGN4GAo",
-        "https://www.google.com/searchviewer/10?svid=CAwSHRIbCgNwdnESFENnMHZaeTh4TVdJMlkyc3pabmM1GAo"
+        "https://www.google.com/searchviewer/10?svid=CAwSHRIbCgNwdnESFENnMHZaeTh4TVdJMlkyc3pabmM1GAo",
+        "https://realmwebdesign.com/pages/shopify-experts-san-jose-california"
       ],
-      "valid": false,
-      "invalidReason": "Citation destination review pending; excluded from scoring.",
-      "validationStatus": "pending",
+      "valid": true,
+      "validationStatus": "validated",
       "isolationVerified": true,
-      "citationsVerified": false
+      "citationsVerified": true,
+      "additionalVisibleUrlsAtReview": [
+        "https://realmwebdesign.com/pages/shopify-experts-san-jose-california"
+      ],
+      "citationReviewedAt": "2026-09-27T01:11:43.289Z",
+      "citationReviewMethod": "Original answer links and reopened share-link visible links compared; each distinct destination opened. Google searchviewer URLs treated as Google place cards, not own-domain citations."
     },
     {
       "engine": "google-ai-mode",
@@ -492,13 +578,18 @@
       "citedUrls": [
         "https://www.google.com/searchviewer/10?svid=CAwSHBIaCgNwdnESE0Nnd3ZaeTh4Y1RZM2MycGtZM1kYCg",
         "https://www.google.com/searchviewer/10?svid=CAwSGxIZCgNwdnESEkNnc3ZaeTh4ZEdZMllqaHJiZxgK",
-        "https://www.google.com/searchviewer/10?svid=CAwSHRIbCgNwdnESFENnMHZaeTh4TVdkcWVHNW1NVzR6GAo"
+        "https://www.google.com/searchviewer/10?svid=CAwSHRIbCgNwdnESFENnMHZaeTh4TVdkcWVHNW1NVzR6GAo",
+        "https://www.conspireagency.com/blogs/markets/shopify-plus-agency-san-francisco-ca"
       ],
-      "valid": false,
-      "invalidReason": "Citation destination review pending; excluded from scoring.",
-      "validationStatus": "pending",
+      "valid": true,
+      "validationStatus": "validated",
       "isolationVerified": true,
-      "citationsVerified": false
+      "citationsVerified": true,
+      "additionalVisibleUrlsAtReview": [
+        "https://www.conspireagency.com/blogs/markets/shopify-plus-agency-san-francisco-ca"
+      ],
+      "citationReviewedAt": "2026-09-27T01:11:52.251Z",
+      "citationReviewMethod": "Original answer links and reopened share-link visible links compared; each distinct destination opened. Google searchviewer URLs treated as Google place cards, not own-domain citations."
     },
     {
       "engine": "google-ai-mode",
@@ -520,13 +611,20 @@
         "https://gosupersites.com/",
         "https://www.jivesmedia.com/digital-marketing-agency-in-san-jose-ca",
         "https://www.reddit.com/r/AppBusiness/comments/1qq9tj0/i_analyzed_50_web_dev_agencies_in_california_here/",
-        "https://www.google.com/searchviewer/10?svid=CAwSHRIbCgNwdnESFENnMHZaeTh4TVdJM1pua3lNamgwGAo"
+        "https://www.google.com/searchviewer/10?svid=CAwSHRIbCgNwdnESFENnMHZaeTh4TVdJM1pua3lNamgwGAo",
+        "https://www.google.com/searchviewer/10?svid=CAwSHRIbCgNwdnESFENnMHZaeTh4TVhSa2NtSmpjRGg0GAo"
       ],
-      "valid": false,
-      "invalidReason": "Citation destination review pending; excluded from scoring.",
-      "validationStatus": "pending",
+      "valid": true,
+      "validationStatus": "validated",
       "isolationVerified": true,
-      "citationsVerified": false
+      "citationsVerified": true,
+      "additionalVisibleUrlsAtReview": [
+        "https://www.google.com/searchviewer/10?svid=CAwSHRIbCgNwdnESFENnMHZaeTh4TVhSa2NtSmpjRGg0GAo"
+      ],
+      "citationReviewedAt": "2026-09-27T01:11:59.947Z",
+      "citationReviewMethod": "Original answer links and reopened share-link visible links compared; each distinct destination opened. Google searchviewer URLs treated as Google place cards, not own-domain citations."
     }
-  ]
+  ],
+  "validRunCount": 20,
+  "destinationReview": "All distinct original and newly visible URLs opened in Chrome, in-app browser, or web fetch; Google place-card URLs are not direct website citations."
 }
