@@ -37,6 +37,15 @@ describe('observed panel assembly', () => {
 
   it('refuses an incomplete later-date panel', () => {
     const { frozen, chatgpt, google } = fixture();
-    expect(() => assembleObservedPanel(frozen, chatgpt, google.filter((row) => row.runId !== 'q1-google-ai-mode-4' && row.runId !== 'q1-google-ai-mode-5'), NOW)).toThrow(/q1 needs two valid .* and one valid later-date run/);
+    expect(() => assembleObservedPanel(frozen, chatgpt, google.filter((row) => row.runId !== 'q1-google-ai-mode-4' && row.runId !== 'q1-google-ai-mode-5'), NOW)).toThrow(/q1 needs one or two valid .* and enough valid later-date runs/);
+  });
+
+  it('uses two later-date runs when only one baseline run was valid', () => {
+    const { frozen, chatgpt, google } = fixture();
+    const withoutSecondBaseline = chatgpt.filter((row) => row.runId !== 'q1-chatgpt-search-2' && row.runId !== 'q1-chatgpt-search-3');
+    const { panel } = assembleObservedPanel(frozen, withoutSecondBaseline, google, NOW);
+    expect(panel.observations.filter((row) => row.queryId === 'q1' && row.engine === 'chatgpt-search').map((row) => row.runId)).toEqual([
+      'q1-chatgpt-search-1', 'q1-chatgpt-search-4', 'q1-chatgpt-search-5',
+    ]);
   });
 });

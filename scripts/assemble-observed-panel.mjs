@@ -23,11 +23,11 @@ export function selectObservedCohort(rows, queries, engine) {
       .filter((row) => row.queryId === query.id)
       .sort((a, b) => Date.parse(a.observedAt) - Date.parse(b.observedAt) || String(a.runId).localeCompare(String(b.runId)));
     const baseline = candidates.filter((row) => utcDate(row) === baselineDate).slice(0, 2);
-    const later = candidates.find((row) => utcDate(row) > baselineDate);
-    if (baseline.length !== 2 || !later) {
-      throw new Error(`${engine}: ${query.id} needs two valid ${baselineDate} runs and one valid later-date run`);
+    const later = candidates.filter((row) => utcDate(row) > baselineDate).slice(0, RUNS_PER_QUERY - baseline.length);
+    if (!baseline.length || later.length !== RUNS_PER_QUERY - baseline.length) {
+      throw new Error(`${engine}: ${query.id} needs one or two valid ${baselineDate} runs and enough valid later-date runs for three total`);
     }
-    selected.push(...baseline, later);
+    selected.push(...baseline, ...later);
   }
   if (selected.length !== queries.length * RUNS_PER_QUERY) throw new Error(`${engine}: incomplete cohort`);
   return { baselineDate, selected };
@@ -51,7 +51,7 @@ export function assembleObservedPanel(frozen, chatgptRows, googleRows, now = Dat
     language: frozen.language,
     queries,
     observations: VISIBILITY_ENGINES.flatMap((engine) => cohorts[engine].selected),
-    selectionRule: 'Earliest two valid runs on each engine baseline UTC date, then earliest valid later-date run per query; outcomes do not affect selection.',
+    selectionRule: 'Earliest one or two valid runs on each engine baseline UTC date, then earliest valid later-date runs to make three per query; outcomes do not affect selection.',
     baselineDates: Object.fromEntries(VISIBILITY_ENGINES.map((engine) => [engine, cohorts[engine].baselineDate])),
   };
   const assessment = scoreProspectVisibility(panel, frozen.targetDomain, now);
