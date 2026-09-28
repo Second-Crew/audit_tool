@@ -5,10 +5,10 @@
   "language": "en-US",
   "locationContext": "California desktop, en-US",
   "personalizationState": "off",
-  "collectionStatus": "validated_partial_20_of_30",
+  "collectionStatus": "validated_partial_26_of_30",
   "collectionDateUtc": "2026-09-27",
-  "shareLinksReopened": 20,
-  "citedLinksMatchedSavedAnswers": 20,
+  "shareLinksReopened": 26,
+  "citedLinksMatchedSavedAnswers": 26,
   "observations": [
     {
       "engine": "google-ai-mode",
@@ -623,8 +623,186 @@
       ],
       "citationReviewedAt": "2026-09-27T01:11:59.947Z",
       "citationReviewMethod": "Original answer links and reopened share-link visible links compared; each distinct destination opened. Google searchviewer URLs treated as Google place cards, not own-domain citations."
+    },
+    {
+      "engine": "google-ai-mode",
+      "queryId": "sj-web-design",
+      "prompt": "Which web design agencies in San Jose, California should a growing ecommerce brand consider?",
+      "runId": "sj-web-design-google-3",
+      "observedAt": "2026-09-28T18:44:09.502Z",
+      "model": "AI Mode Fast",
+      "locationContext": "California desktop, en-US",
+      "personalizationState": "off",
+      "searchEnabled": true,
+      "answerShown": true,
+      "brandMentioned": true,
+      "permalink": "https://share.google/aimode/o6MMrvGFp0vt7oQRP",
+      "citedUrls": [
+        "https://www.google.com/searchviewer/10?svid=CAwSGxIZCgNwdnESEkNnc3ZaeTh4ZEY5clozTTNPURgK",
+        "https://www.google.com/searchviewer/10?svid=CAwSGxIZCgNwdnESEkNnc3ZaeTh4ZEc1emN6UnlPQRgK",
+        "https://www.google.com/searchviewer/10?svid=CAwSHRIbCgNwdnESFENnMHZaeTh4TVdJM1pua3lNamgwGAo",
+        "https://www.designrush.com/agency/ecommerce/california/san-jose"
+      ],
+      "valid": true,
+      "validationStatus": "validated",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "additionalVisibleUrlsAtReview": [
+        "https://www.designrush.com/agency/ecommerce/california/san-jose"
+      ],
+      "citationReviewedAt": "2026-09-28T18:45:38Z",
+      "citationReviewMethod": "Original answer source cards and reopened share-link sources compared; all four distinct destinations opened. The Second Crew source card opened a Google place viewer with a Website link, not a direct secondcrew.com citation."
+    },
+    {
+      "engine": "google-ai-mode",
+      "queryId": "bay-platform-choice",
+      "prompt": "I need a Bay Area ecommerce agency to help choose between Shopify and WooCommerce, then build the store. Who should I look at?",
+      "runId": "bay-platform-choice-google-3",
+      "observedAt": "2026-09-28T18:46:17.309Z",
+      "model": "AI Mode Fast",
+      "locationContext": "California desktop, en-US",
+      "personalizationState": "off",
+      "searchEnabled": true,
+      "answerShown": true,
+      "brandMentioned": false,
+      "permalink": "https://share.google/aimode/JvAIYG0GxCTuWkdTY",
+      "citedUrls": [
+        "https://libautech.com/best-shopify-agencies/san-francisco",
+        "https://bizdetail.com/ecommerce-web-designer/",
+        "https://clutch.co/developers/shopify/san-francisco",
+        "https://conspireagency.com/blogs/markets/shopify-plus-agency-san-francisco-ca",
+        "https://ayatas.com/woocommerce-development-san-francisco/",
+        "https://mgroupweb.com/shopify-expert-san-francisco/",
+        "https://7seamarketing.com/pages/shopify-development-san-francisco",
+        "https://netalico.com/pages/shopify-partners/san-francisco-ca"
+      ],
+      "valid": true,
+      "validationStatus": "validated",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "additionalVisibleUrlsAtReview": [],
+      "citationReviewedAt": "2026-09-28T18:51:14.916802Z",
+      "citationReviewMethod": "Original answer and reopened share-link visible sources compared; all distinct destinations opened. No direct secondcrew.com citation."
+    },
+    {
+      "engine": "google-ai-mode",
+      "queryId": "sf-web-design",
+      "prompt": "Which web design agencies in San Francisco, California have experience with ecommerce websites?",
+      "runId": "sf-web-design-google-3",
+      "observedAt": "2026-09-28T18:51:40.455Z",
+      "model": "AI Mode Fast",
+      "locationContext": "California desktop, en-US",
+      "personalizationState": "off",
+      "searchEnabled": true,
+      "answerShown": true,
+      "brandMentioned": false,
+      "permalink": "https://share.google/aimode/3nqEn7aonnr0bkG9x",
+      "citedUrls": [
+        "https://conspireagency.com/blogs/markets/shopify-plus-agency-san-francisco-ca",
+        "https://digitalagencynetwork.com/agencies/san-francisco/ecommerce/",
+        "https://magecloud.agency/shopify-development-agency-san-francisco/",
+        "https://onilab.com/"
+      ],
+      "valid": true,
+      "validationStatus": "validated",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "additionalVisibleUrlsAtReview": [],
+      "citationReviewedAt": "2026-09-28T18:52:58.590929Z",
+      "citationReviewMethod": "Original answer and reopened share-link visible citations compared; distinct destination pages opened. Google map cards were treated separately from source citations."
+    },
+    {
+      "engine": "google-ai-mode",
+      "queryId": "sj-shopify",
+      "prompt": "What are some Shopify website design agencies serving San Jose, California?",
+      "runId": "sj-shopify-google-3",
+      "observedAt": "2026-09-28T18:53:25.016Z",
+      "model": "AI Mode Fast",
+      "locationContext": "California desktop, en-US",
+      "personalizationState": "off",
+      "searchEnabled": true,
+      "answerShown": true,
+      "brandMentioned": true,
+      "permalink": "https://share.google/aimode/FiQuLmZCH1EKxlIdP",
+      "citedUrls": [
+        "https://clutch.co/developers/shopify/san-jose",
+        "https://revenuebase.ai/companies/shopify-design-agencies/united-states/san-jose",
+        "https://kleverish.com/shopify-development-agency-san-jose.html",
+        "https://realmwebdesign.com/pages/shopify-experts-san-jose-california"
+      ],
+      "valid": true,
+      "validationStatus": "validated",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "additionalVisibleUrlsAtReview": [
+        "https://realmwebdesign.com/pages/shopify-experts-san-jose-california"
+      ],
+      "citationReviewedAt": "2026-09-28T18:55:01.537889Z",
+      "citationReviewMethod": "Original answer and reopened share-link visible source URLs compared; each distinct destination opened. Second Crew appeared as a Google map place card and brand mention, not a direct secondcrew.com citation."
+    },
+    {
+      "engine": "google-ai-mode",
+      "queryId": "sf-shopify",
+      "prompt": "What are some Shopify website design agencies in San Francisco, California?",
+      "runId": "sf-shopify-google-3",
+      "observedAt": "2026-09-28T18:55:22.641Z",
+      "model": "AI Mode Fast",
+      "locationContext": "California desktop, en-US",
+      "personalizationState": "off",
+      "searchEnabled": true,
+      "answerShown": true,
+      "brandMentioned": false,
+      "permalink": "https://share.google/aimode/vBH4xKbM5GLcquNs2",
+      "citedUrls": [
+        "https://libautech.com/best-shopify-agencies/san-francisco",
+        "https://sdg.la/san-francisco-shopify-agency/",
+        "https://netalico.com/pages/shopify-plus-design-agency/san-francisco-ca",
+        "https://themanifest.com/web-development/shopify/companies/san-francisco",
+        "https://eseospace.com/blog/best-shopify-agencies-in-san-francisco/",
+        "https://netalico.com/pages/shopify-agency/san-francisco-ca",
+        "https://realmwebdesign.com/pages/shopify-experts-san-francisco"
+      ],
+      "valid": true,
+      "validationStatus": "validated",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "additionalVisibleUrlsAtReview": [
+        "https://realmwebdesign.com/pages/shopify-experts-san-francisco"
+      ],
+      "citationReviewedAt": "2026-09-28T18:57:37.546566Z",
+      "citationReviewMethod": "Original answer and reopened share-link visible source URLs compared; distinct destination pages opened."
+    },
+    {
+      "engine": "google-ai-mode",
+      "queryId": "sj-woocommerce",
+      "prompt": "Which agencies can design and build a WooCommerce store for a business in San Jose, California?",
+      "runId": "sj-woocommerce-google-3",
+      "observedAt": "2026-09-28T18:58:26.626Z",
+      "model": "AI Mode Fast",
+      "locationContext": "California desktop, en-US",
+      "personalizationState": "off",
+      "searchEnabled": true,
+      "answerShown": true,
+      "brandMentioned": true,
+      "permalink": "https://share.google/aimode/nBM54qUKLZp0Wewzk",
+      "citedUrls": [
+        "https://builtinsf.com/articles/san-jose-web-design-development-agencies",
+        "https://ayatas.com/wordpress-developer-san-jose/",
+        "https://sanjosewordpressdevelopers.com/",
+        "https://myproject100.com/website-design-agency-in-san-jose/",
+        "https://solutionarianmarketing.com/location/san-jose-ca/website-designer/"
+      ],
+      "valid": true,
+      "validationStatus": "validated",
+      "isolationVerified": true,
+      "citationsVerified": true,
+      "additionalVisibleUrlsAtReview": [
+        "https://solutionarianmarketing.com/location/san-jose-ca/website-designer/"
+      ],
+      "citationReviewedAt": "2026-09-28T19:01:53.510054Z",
+      "citationReviewMethod": "Original answer and reopened share-link source URLs compared; each distinct destination opened. Second Crew appeared in a Google place result without a direct secondcrew.com source citation."
     }
   ],
-  "validRunCount": 20,
+  "validRunCount": 26,
   "destinationReview": "All distinct original and newly visible URLs opened in Chrome, in-app browser, or web fetch; Google place-card URLs are not direct website citations."
 }
