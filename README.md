@@ -48,7 +48,7 @@ The app still runs without Supabase env vars; persistence is skipped in local/de
 
 ## Agent workflow integration (Preview)
 
-The versioned agent API and persistent worker are documented in [docs/agent-api.md](docs/agent-api.md), with an [OpenAPI contract](docs/agent-openapi.json). Apply the separate SQL migration and configure the worker before enabling the API. Authentication uses scoped machine credentials; dashboard cookies do not grant access. Evidence assessments distinguish unknown from failed checks and default to no automatic outreach until benchmark approval. This build does not claim calibrated GEO/AEO accuracy or observed AI-search visibility.
+The versioned agent API and persistent worker are documented in [docs/agent-api.md](docs/agent-api.md), with an [OpenAPI contract](docs/agent-openapi.json). Apply the separate SQL migration and configure the worker before enabling the API. Authentication uses scoped machine credentials; dashboard cookies do not grant access. Evidence assessments distinguish unknown from failed checks and default to no automatic outreach until benchmark approval. A complete reviewed panel can report dated observed AI-search citation frequency; this build does not claim predictive GEO/AEO accuracy.
 
 ### JavaScript-rendered pages
 
