@@ -1,4 +1,5 @@
 import { getSupabaseConfig, supabaseRequest } from '../../../lib/supabase.js';
+import { labelLegacyHtml } from '../../../lib/audit/legacy.js';
 
 export const runtime = 'nodejs';
 
@@ -8,7 +9,7 @@ const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{
 // the send and records the open. Every visit counts, including the sender's
 // own preview opens.
 export async function GET(request, { params }) {
-  const sendId = params.id;
+  const { id: sendId } = await params;
   if (!UUID_PATTERN.test(sendId)) {
     return htmlMessage(404, 'Report not found', 'This report link is not valid.');
   }
@@ -30,15 +31,16 @@ export async function GET(request, { params }) {
 
     const audits = await supabaseRequest(
       config,
-      `/audits?id=eq.${auditId}&select=report`,
+      `/audits?id=eq.${auditId}&select=report,scores`,
       { method: 'GET' }
     );
-    const html = Array.isArray(audits) ? audits[0]?.report?.html : null;
+    const row = Array.isArray(audits) ? audits[0] : null;
+    const html = row?.report?.html;
     if (!html) {
       return htmlMessage(404, 'Report not found', 'The report for this link is no longer available.');
     }
 
-    return new Response(html, {
+    return new Response(labelLegacyHtml(html, row.scores), {
       status: 200,
       headers: {
         'Content-Type': 'text/html; charset=utf-8',
@@ -47,7 +49,7 @@ export async function GET(request, { params }) {
       },
     });
   } catch (error) {
-    console.error('Report link error:', error);
+    console.error('Prospect report could not be loaded');
     return htmlMessage(500, 'Something went wrong', 'The report could not be loaded. Please try again.');
   }
 }

@@ -23,9 +23,9 @@ function CategoryPanel({ category }) {
         <div className="flex items-center justify-between gap-4">
           <div>
             <h3 className="text-lg font-semibold text-slate-950">{category.name}</h3>
-            <p className="mt-1 text-sm text-slate-500">{category.points}/{category.maxPoints} points</p>
+            <p className="mt-1 text-sm text-slate-500">{category.score == null ? category.reason || 'Not enough measurements to score' : `${category.points}/${category.maxPoints} points`}</p>
           </div>
-          <div className={`text-3xl font-semibold ${getScoreTone(category.score).text}`}>{category.score}</div>
+          <div className={`text-3xl font-semibold ${getScoreTone(category.score).text}`}>{category.score == null ? 'N/A' : category.score}</div>
         </div>
       </summary>
       <div className="mt-5 overflow-hidden rounded-md border border-slate-200">

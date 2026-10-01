@@ -1,0 +1,322 @@
+{
+  "panelVersion": "sf-sj-ecommerce-agency-v1",
+  "observedDate": "2026-09-25",
+  "searchSurface": "Google All / Web results",
+  "context": "Signed-in Chrome desktop browser; Sunnyvale, California device location; hl=en, gl=us, pws=0, num=20",
+  "method": "Positions count organic web-result links only. Ads, local packs, directories, and publisher articles are distinguished. URLs omit transient Google tracking parameters where present. One-session observations are not stable ranking labels.",
+  "observations": [
+    {
+      "queryId": "sj-web-design",
+      "query": "web design agency san jose ca ecommerce",
+      "searchUrl": "https://www.google.com/search?q=web%20design%20agency%20san%20jose%20ca%20ecommerce&hl=en&gl=us&pws=0&num=20",
+      "topOrganic": [
+        {
+          "position": 1,
+          "title": "Jives Media",
+          "url": "https://www.jivesmedia.com/web-design-agency-in-san-jose-ca/",
+          "type": "agency-site"
+        },
+        {
+          "position": 2,
+          "title": "Web Tonic Shopify agency article",
+          "url": "https://www.webtonic.io/blog/best-shopify-ecommerce-development-agencies-san-jose",
+          "type": "publisher-article"
+        },
+        {
+          "position": 3,
+          "title": "Baunfire",
+          "url": "https://www.baunfire.com/",
+          "type": "agency-site"
+        },
+        {
+          "position": 4,
+          "title": "Built In SF agency article",
+          "url": "https://www.builtinsf.com/articles/san-jose-web-design-development-agencies",
+          "type": "publisher-article"
+        }
+      ]
+    },
+    {
+      "queryId": "sf-web-design",
+      "query": "web design agency san francisco ca ecommerce",
+      "searchUrl": "https://www.google.com/search?q=web%20design%20agency%20san%20francisco%20ca%20ecommerce&hl=en&gl=us&pws=0&num=20",
+      "topOrganic": [
+        {
+          "position": 1,
+          "title": "RevenueBase directory",
+          "url": "https://revenuebase.ai/companies/ecommerce-web-designers/united-states/san-francisco",
+          "type": "directory"
+        },
+        {
+          "position": 2,
+          "title": "Thrive Internet Marketing Agency",
+          "url": "https://thriveagency.com/san-francisco-web-design-company/",
+          "type": "agency-site"
+        },
+        {
+          "position": 3,
+          "title": "Lazarev agency comparison",
+          "url": "https://www.lazarev.agency/articles/san-francisco-web-design-agencies",
+          "type": "publisher-article"
+        },
+        {
+          "position": 4,
+          "title": "Enormac Digital",
+          "url": "https://www.enormacdigital.com/expertise/ecommerce/",
+          "type": "agency-site"
+        }
+      ]
+    },
+    {
+      "queryId": "sj-shopify",
+      "query": "shopify web design agency san jose ca",
+      "searchUrl": "https://www.google.com/search?q=shopify%20web%20design%20agency%20san%20jose%20ca&hl=en&gl=us&pws=0&num=20",
+      "topOrganic": [
+        {
+          "position": 1,
+          "title": "Web Tonic",
+          "url": "https://www.webtonic.io/locations/san-jose-shopify-design",
+          "type": "agency-site"
+        },
+        {
+          "position": 2,
+          "title": "RevenueBase directory",
+          "url": "https://revenuebase.ai/companies/shopify-design-agencies/united-states/san-jose",
+          "type": "directory"
+        },
+        {
+          "position": 3,
+          "title": "Netalico",
+          "url": "https://netalico.com/pages/shopify-agency/san-jose-ca",
+          "type": "agency-site"
+        },
+        {
+          "position": 4,
+          "title": "Shopify Plus Designers",
+          "url": "https://shopifyplusdesigners.com/shopify-agency-san-jose",
+          "type": "agency-site"
+        }
+      ]
+    },
+    {
+      "queryId": "sf-shopify",
+      "query": "shopify web design agency san francisco ca",
+      "searchUrl": "https://www.google.com/search?q=shopify%20web%20design%20agency%20san%20francisco%20ca&hl=en&gl=us&pws=0&num=20",
+      "topOrganic": [
+        {
+          "position": 1,
+          "title": "Sleepless Media",
+          "url": "https://www.sleeplessmedia.com/pages/shopify-experts",
+          "type": "agency-site"
+        },
+        {
+          "position": 2,
+          "title": "RevenueBase directory",
+          "url": "https://revenuebase.ai/companies/shopify-design-agencies/united-states/san-francisco",
+          "type": "directory"
+        },
+        {
+          "position": 3,
+          "title": "Ecommerce Pro",
+          "url": "https://www.ecommercepro.com/pages/shopify-web-designers-in-san-francisco",
+          "type": "agency-site"
+        },
+        {
+          "position": 4,
+          "title": "Brandography",
+          "url": "https://brandography.com/shopify-website-development/",
+          "type": "agency-site"
+        }
+      ]
+    },
+    {
+      "queryId": "sj-woocommerce",
+      "query": "woocommerce web design agency san jose ca",
+      "searchUrl": "https://www.google.com/search?q=woocommerce%20web%20design%20agency%20san%20jose%20ca&hl=en&gl=us&pws=0&num=20",
+      "topOrganic": [
+        {
+          "position": 1,
+          "title": "LeadOrigin",
+          "url": "https://leadorigin.com/woocommerce-website-services-san-jose/",
+          "type": "agency-site"
+        },
+        {
+          "position": 2,
+          "title": "Silicon Valley Web Solution",
+          "url": "https://siliconvalleywebsolution.com/wordpress-support-services-in-the-bay-area/",
+          "type": "agency-site"
+        },
+        {
+          "position": 3,
+          "title": "GoodFirms directory",
+          "url": "https://www.goodfirms.co/ecommerce-development-companies/woocommerce/san-jose",
+          "type": "directory"
+        },
+        {
+          "position": 4,
+          "title": "Built In SF agency article",
+          "url": "https://www.builtinsf.com/articles/san-jose-web-design-development-agencies",
+          "type": "publisher-article"
+        }
+      ]
+    },
+    {
+      "queryId": "sf-woocommerce",
+      "query": "woocommerce web design agency san francisco ca",
+      "searchUrl": "https://www.google.com/search?q=woocommerce%20web%20design%20agency%20san%20francisco%20ca&hl=en&gl=us&pws=0&num=20",
+      "topOrganic": [
+        {
+          "position": 1,
+          "title": "Ayatas",
+          "url": "https://www.ayatas.com/woocommerce-development-san-francisco/",
+          "type": "agency-site"
+        },
+        {
+          "position": 2,
+          "title": "MageCloud Agency",
+          "url": "https://magecloud.agency/wordpress-woocommerce-development-agency-san-francisco/",
+          "type": "agency-site"
+        },
+        {
+          "position": 3,
+          "title": "Ikonic Dev",
+          "url": "https://ikonicdev.com/san-francisco-ca/woocommerce-development/",
+          "type": "agency-site"
+        },
+        {
+          "position": 4,
+          "title": "Web Tonic",
+          "url": "https://www.webtonic.io/locations/san-francisco-wordpress-design",
+          "type": "agency-site"
+        }
+      ]
+    },
+    {
+      "queryId": "sj-redesign",
+      "query": "ecommerce store redesign agency san jose ca",
+      "searchUrl": "https://www.google.com/search?q=ecommerce%20store%20redesign%20agency%20san%20jose%20ca&hl=en&gl=us&pws=0&num=20",
+      "topOrganic": [
+        {
+          "position": 1,
+          "title": "Web Tonic Shopify agency article",
+          "url": "https://www.webtonic.io/blog/best-shopify-ecommerce-development-agencies-san-jose",
+          "type": "publisher-article"
+        },
+        {
+          "position": 2,
+          "title": "Solutionarian",
+          "url": "https://solutionarianmarketing.com/location/san-jose-ca/ecommerce-web-design/",
+          "type": "agency-site"
+        },
+        {
+          "position": 3,
+          "title": "Netalico",
+          "url": "https://netalico.com/pages/shopify-agency/san-jose-ca",
+          "type": "agency-site"
+        },
+        {
+          "position": 4,
+          "title": "Forix Commerce",
+          "url": "https://forixcommerce.com/sanjose/",
+          "type": "agency-site"
+        }
+      ]
+    },
+    {
+      "queryId": "sf-redesign",
+      "query": "ecommerce website redesign agency san francisco ca",
+      "searchUrl": "https://www.google.com/search?q=ecommerce%20website%20redesign%20agency%20san%20francisco%20ca&hl=en&gl=us&pws=0&num=20",
+      "topOrganic": [
+        {
+          "position": 1,
+          "title": "Transformed Design",
+          "url": "https://transformeddesign.com/e-commerce-website-design-san-francisco",
+          "type": "agency-site"
+        },
+        {
+          "position": 2,
+          "title": "Enormac Digital",
+          "url": "https://www.enormacdigital.com/expertise/ecommerce/",
+          "type": "agency-site"
+        },
+        {
+          "position": 3,
+          "title": "Thrive Internet Marketing Agency",
+          "url": "https://thriveagency.com/san-francisco-web-design-company/",
+          "type": "agency-site"
+        },
+        {
+          "position": 4,
+          "title": "Digital Agency Network directory",
+          "url": "https://digitalagencynetwork.com/agencies/san-francisco/ecommerce/",
+          "type": "directory"
+        }
+      ]
+    },
+    {
+      "queryId": "bay-shopify-migration",
+      "query": "bay area shopify migration web design agency",
+      "searchUrl": "https://www.google.com/search?q=bay%20area%20shopify%20migration%20web%20design%20agency&hl=en&gl=us&pws=0&num=20",
+      "topOrganic": [
+        {
+          "position": 1,
+          "title": "SDG",
+          "url": "https://www.sdg.la/san-francisco-shopify-agency/",
+          "type": "agency-site"
+        },
+        {
+          "position": 2,
+          "title": "Solo Media Group",
+          "url": "https://solomediagroup.com/pages/shopify-partners/sanfranciscoca",
+          "type": "agency-site"
+        },
+        {
+          "position": 3,
+          "title": "Netalico",
+          "url": "https://netalico.com/pages/shopify-plus-design-agency/san-francisco-ca",
+          "type": "agency-site"
+        },
+        {
+          "position": 4,
+          "title": "EseoSpace agency article",
+          "url": "https://eseospace.com/blog/best-shopify-agencies-in-san-francisco/",
+          "type": "publisher-article"
+        }
+      ]
+    },
+    {
+      "queryId": "bay-platform-choice",
+      "query": "bay area shopify woocommerce ecommerce agency",
+      "searchUrl": "https://www.google.com/search?q=bay%20area%20shopify%20woocommerce%20ecommerce%20agency&hl=en&gl=us&pws=0&num=20",
+      "topOrganic": [
+        {
+          "position": 1,
+          "title": "Vonnda",
+          "url": "https://www.vonnda.com/services/shopify-agency-san-francisco-bay-area/",
+          "type": "agency-site"
+        },
+        {
+          "position": 2,
+          "title": "LibauTech agency article",
+          "url": "https://www.libautech.com/best-shopify-agencies/san-francisco",
+          "type": "publisher-article"
+        },
+        {
+          "position": 3,
+          "title": "BizDetail",
+          "url": "https://bizdetail.com/ecommerce-web-designer/",
+          "type": "agency-site"
+        },
+        {
+          "position": 4,
+          "title": "Silicon Valley Web Solution",
+          "url": "https://siliconvalleywebsolution.com/online-store-setup-services/",
+          "type": "agency-site"
+        }
+      ]
+    }
+  ],
+  "timeZone": "America/Los_Angeles",
+  "localDate": "2026-09-24",
+  "observationWindowUtc": "2026-09-25T06:00:00Z/2026-09-25T06:34:00Z"
+}

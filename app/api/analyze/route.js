@@ -1,19 +1,15 @@
+import { WEBSITE_TYPES, COMMERCE_MODES } from '../../../lib/audit/site-type.js';
 import { NextResponse } from 'next/server';
 import { runAudit } from '../../../lib/audit/index.js';
 import { persistAudit } from '../../../lib/audit/persistence.js';
 import { summarizeAuditForResponse } from '../../../lib/audit/summarize.js';
+import { normalizeAuditUrl } from '../../../lib/audit/url.js';
+import { scoreProspectVisibility } from '../../../lib/audit/prospect-visibility.js';
+import { reserveDashboardAudit } from '../../../lib/dashboard-admission.js';
 
 export const runtime = 'nodejs';
 // Requires a host that allows long-running functions (Vercel Pro or a server deploy).
 export const maxDuration = 300;
-
-const RATE_LIMIT = { windowMs: 10 * 60 * 1000, maxRequests: 5 };
-const MAX_CONCURRENT_AUDITS = 2;
-
-// Per-instance state: enough to stop accidental hammering from a single client,
-// not a substitute for edge/WAF rate limiting on a public deployment.
-const requestLog = new Map();
-let runningAudits = 0;
 
 export async function POST(request) {
   let body;
@@ -28,22 +24,25 @@ export async function POST(request) {
     return NextResponse.json({ error: validationError }, { status: 400 });
   }
 
-  const clientKey = getClientKey(request);
-  if (isRateLimited(clientKey)) {
-    return NextResponse.json(
-      { error: 'Too many audits from this address. Try again in a few minutes.' },
-      { status: 429 }
-    );
+  if (body.visibilityPanel) {
+    let assessment;
+    try {
+      assessment = scoreProspectVisibility(body.visibilityPanel, new URL(normalizeAuditUrl(body.url || body.domain)).hostname);
+    } catch {
+      return NextResponse.json({ error: 'The website URL or observed-visibility panel is invalid.' }, { status: 400 });
+    }
+    if (assessment.status !== 'observed') {
+      return NextResponse.json({ error: `Observed GEO/AEO score withheld: ${assessment.reason}` }, { status: 422 });
+    }
   }
 
-  if (runningAudits >= MAX_CONCURRENT_AUDITS) {
+  const admission = await reserveDashboardAudit(request);
+  if (!admission.allowed) {
     return NextResponse.json(
-      { error: 'The audit service is busy. Try again in a couple of minutes.' },
-      { status: 503 }
+      { error: admission.error },
+      { status: admission.status, headers: { 'Retry-After': String(admission.retryAfter) } }
     );
   }
-
-  runningAudits += 1;
   const encoder = new TextEncoder();
 
   const stream = new ReadableStream({
@@ -61,12 +60,15 @@ export async function POST(request) {
           {
             url: body.url || body.domain,
             companyName: body.companyName || '',
+            websiteType: body.websiteType || 'auto',
+            ecommerceFunctionality: body.ecommerceFunctionality || 'auto',
             industry: body.industry || '',
             city: body.city || '',
             competitors: body.competitors || body.competitorUrls || [],
             maxPages: body.maxPages || 250,
             maxDurationMs: body.maxDurationMs || 150000,
             maxCompetitorPages: body.maxCompetitorPages || 25,
+            visibilityPanel: body.visibilityPanel || null,
           },
           (event) => send({ type: 'progress', ...event })
         );
@@ -86,7 +88,7 @@ export async function POST(request) {
         console.error('Analysis error:', error);
         send({ type: 'error', error: error.message || 'Failed to analyze website' });
       } finally {
-        runningAudits -= 1;
+        await admission.release();
         try {
           controller.close();
         } catch {
@@ -106,6 +108,7 @@ export async function POST(request) {
 }
 
 function validateBody(body) {
+  if (body && (!WEBSITE_TYPES.includes(body.websiteType || 'auto') || !COMMERCE_MODES.includes(body.ecommerceFunctionality || 'auto'))) return 'Invalid website type or ecommerce setting';
   if (!body || typeof body !== 'object') return 'A JSON body is required';
 
   const url = body.url || body.domain;
@@ -135,34 +138,10 @@ function validateBody(body) {
     }
   }
 
+  if (body.visibilityPanel != null &&
+      (typeof body.visibilityPanel !== 'object' || Array.isArray(body.visibilityPanel) || JSON.stringify(body.visibilityPanel).length > 250000)) {
+    return 'Observed-visibility panel must be a JSON object under 250 KB';
+  }
+
   return null;
 }
-
-function getClientKey(request) {
-  const forwarded = request.headers.get('x-forwarded-for');
-  return (forwarded ? forwarded.split(',')[0].trim() : '') || request.headers.get('x-real-ip') || 'local';
-}
-
-function isRateLimited(clientKey) {
-  const now = Date.now();
-  const windowStart = now - RATE_LIMIT.windowMs;
-  const timestamps = (requestLog.get(clientKey) || []).filter((time) => time > windowStart);
-
-  if (timestamps.length >= RATE_LIMIT.maxRequests) {
-    requestLog.set(clientKey, timestamps);
-    return true;
-  }
-
-  timestamps.push(now);
-  requestLog.set(clientKey, timestamps);
-
-  // Keep the log from growing unbounded on long-lived servers.
-  if (requestLog.size > 1000) {
-    for (const [key, values] of requestLog) {
-      if (!values.some((time) => time > windowStart)) requestLog.delete(key);
-    }
-  }
-
-  return false;
-}
-

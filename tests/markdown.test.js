@@ -49,7 +49,6 @@ const fixture = {
         url: 'https://example.com/services',
         title: 'Services',
         contentType: 'service',
-        readiness: 60,
         tasks: [{ id: 'p1', title: 'Add FAQ blocks', detail: 'Add 3-5 Q&As.', impact: 'Medium', effort: 'Standard fix', source: 'AEO', evidence: 'No FAQ detected' }],
       },
     ],
@@ -72,10 +71,45 @@ describe('buildMarkdownReport', () => {
     expect(markdown).toContain('**Recommendation:** Add JSON-LD for Organization and Service types.');
   });
 
-  it('lists only non-passed checks and escapes pipes in table cells', () => {
+  it('preserves positive evidence as well as gaps and escapes pipes in table cells', () => {
     expect(markdown).toContain('llms.txt exists | failed (0/8)');
-    expect(markdown).not.toContain('Sitemap exists | passed');
+    expect(markdown).toContain('Sitemap exists | passed (14/14) | 40 URLs');
     expect(markdown).toContain('llms.txt missing \\| pipe test');
+  });
+
+  it('preserves a form-only contact route and unknown measurements for future agents', () => {
+    const result = buildMarkdownReport({scores:{overall:null},categoryDetails:{entity:{name:'Entity Trust',score:100,checks:[
+      {label:'Public contact route or details observed',status:'passed',score:14,maxScore:14,evidence:'https://form.typeform.com/to/example'},
+      {label:'Public phone or email details',status:'unknown',score:null,maxScore:16,evidence:'A linked form was observed'},
+    ]}}});
+    expect(result).toContain('https://form.typeform.com/to/example');
+    expect(result).toContain('| Overall | Not assessed |');
+    expect(result).toContain('| Public phone or email details | unknown |');
+    expect(result).toContain('GEO/AEO visibility is withheld until complete query-level outcomes are measured');
+  });
+
+  it('labels a complete two-engine citation score as an observed panel result', () => {
+    const result = buildMarkdownReport({
+      ...fixture,
+      scores: { overall: null, aeoGeo: 50, aiReadiness: null, seo: 62 },
+      observedVisibility: {
+        status: 'observed', score: 50, market: 'Bay Area',
+        observedFrom: '2026-09-25T18:00:00Z', observedTo: '2026-09-26T18:00:00Z',
+        engines: {
+          'chatgpt-search': { score: 33, answerTriggerRate: 1, mentionRate: 0.4 },
+          'google-ai-mode': { score: 67, answerTriggerRate: 1, mentionRate: 0.5 },
+        },
+        queryBreakdown: Array.from({ length: 10 }, (_, index) => ({ prompt: `Unbranded query ${index + 1}`, engines: {
+          'chatgpt-search': { citations: 1, answers: 3, mentions: index < 4 ? 3 : 0, runs: 3 },
+          'google-ai-mode': { citations: 2, answers: 3, mentions: index < 5 ? 3 : 0, runs: 3 },
+        } })),
+      },
+    });
+    expect(result).toContain('| GEO/AEO observed visibility | 50 |');
+    expect(result).toContain('| ChatGPT Search | 10/30 | 33/100 | 30/30 | 12/30 |');
+    expect(result).toContain('| Google AI Mode | 20/30 | 67/100 | 30/30 | 15/30 |');
+    expect(result).toContain('Google AI Overviews are tracked separately');
+    expect(result).not.toContain('GEO/AEO visibility is withheld until complete');
   });
 
   it('covers competitors including failed crawls', () => {
@@ -86,7 +120,7 @@ describe('buildMarkdownReport', () => {
 
   it('renders the action plan as checkbox tasks with page sections', () => {
     expect(markdown).toContain('- [ ] **Add structured data** (High impact, This week, Structured Data)');
-    expect(markdown).toContain('#### Services (service, readiness 60/100)');
+    expect(markdown).toContain('#### Services (service, 1 observed issue)');
     expect(markdown).toContain('URL: https://example.com/services');
   });
 
