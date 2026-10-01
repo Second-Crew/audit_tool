@@ -63,6 +63,7 @@ function buildFallbackWorkspace(row) {
     createdAt: row.created_at,
     elapsedMs: null,
     input: { url: row.requested_url },
+    observedVisibility: row.report?.observed_visibility || null,
     primary: {
       domain: row.domain,
       startUrl: row.requested_url,

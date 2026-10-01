@@ -99,11 +99,15 @@ describe('buildMarkdownReport', () => {
           'chatgpt-search': { score: 33, answerTriggerRate: 1, mentionRate: 0.4 },
           'google-ai-mode': { score: 67, answerTriggerRate: 1, mentionRate: 0.5 },
         },
+        queryBreakdown: Array.from({ length: 10 }, (_, index) => ({ prompt: `Unbranded query ${index + 1}`, engines: {
+          'chatgpt-search': { citations: 1, answers: 3, mentions: index < 4 ? 3 : 0, runs: 3 },
+          'google-ai-mode': { citations: 2, answers: 3, mentions: index < 5 ? 3 : 0, runs: 3 },
+        } })),
       },
     });
     expect(result).toContain('| GEO/AEO observed visibility | 50 |');
-    expect(result).toContain('| ChatGPT Search | 33/100 | 100% | 40% |');
-    expect(result).toContain('| Google AI Mode | 67/100 | 100% | 50% |');
+    expect(result).toContain('| ChatGPT Search | 10/30 | 33/100 | 30/30 | 12/30 |');
+    expect(result).toContain('| Google AI Mode | 20/30 | 67/100 | 30/30 | 15/30 |');
     expect(result).toContain('Google AI Overviews are tracked separately');
     expect(result).not.toContain('GEO/AEO visibility is withheld until complete');
   });

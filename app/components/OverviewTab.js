@@ -1,6 +1,7 @@
 import EvidencePanel from './EvidencePanel.js';
 import { Metric, ScoreCard, SeverityBadge, SignalPanel, StatusPill, formatScore, getScoreTone } from './ui.js';
 import { hasLegacyOutcomeScores, LEGACY_SCORE_NOTICE } from '../../lib/audit/legacy.js';
+import { visibilityEngineRows } from '../../lib/audit/visibility-display.js';
 
 export default function OverviewTab({ report, primary, findings, onSelectSeverity }) {
   const topFindings = findings.slice(0, 5);
@@ -32,6 +33,14 @@ export default function OverviewTab({ report, primary, findings, onSelectSeverit
       {observed && <section className="rounded-lg border border-cyan-200 bg-cyan-50 p-5 text-sm text-slate-800">
         <h2 className="font-semibold text-slate-950">Observed AI answer visibility</h2>
         <p className="mt-2">{report.observedVisibility.market} · {report.observedVisibility.observedFrom.slice(0, 10)} to {report.observedVisibility.observedTo.slice(0, 10)} · 10 unbranded queries × 3 runs × 2 engines. ChatGPT Search: {report.observedVisibility.engines['chatgpt-search'].score}/100; Google AI Mode: {report.observedVisibility.engines['google-ai-mode'].score}/100. Brand mentions and answer presence are separate from own-domain citations. Google AI Overviews are not included.</p>
+        <div className="mt-3 overflow-x-auto">
+          <table className="w-full text-left">
+            <thead><tr><th scope="col">Engine</th><th scope="col">Own-domain citations</th><th scope="col">Answer presence</th><th scope="col">Brand mentions</th></tr></thead>
+            <tbody>{visibilityEngineRows(report.observedVisibility).map(row => <tr key={row.key}>
+              <th scope="row" className="py-2 font-medium">{row.label}</th><td>{row.citations}</td><td>{row.answers}</td><td>{row.mentions}</td>
+            </tr>)}</tbody>
+          </table>
+        </div>
       </section>}
 
 

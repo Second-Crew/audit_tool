@@ -65,10 +65,10 @@ export async function GET(request, { params }) {
   }
 }
 
-// Audits saved before Markdown export existed have no stored markdown; build
-// it from the stored evidence (everything except the page-by-page plan, since
-// per-page data is not persisted).
+// Reconstruct missing Markdown from saved evidence, including the panel
+// aggregates and per-page workspace when available. Never expose the raw panel.
 function buildStoredMarkdown(row) {
+  const primary = row.report?.workspace?.primary || { pages: [] };
   const aiInsights = {
     executiveSummary: row.report?.executive_summary,
     roadmap: row.report?.roadmap || [],
@@ -81,11 +81,14 @@ function buildStoredMarkdown(row) {
     startUrl: row.requested_url,
     createdAt: row.created_at,
     pageCount: row.crawl_summary?.crawledPages ?? null,
+    siteType: primary.siteType,
+    contentEvidence: primary.contentEvidence,
+    observedVisibility: row.report?.observed_visibility || row.report?.workspace?.observedVisibility || null,
     scores: row.scores || {},
     findings: row.findings || [],
     categoryDetails: row.category_details || {},
     competitorComparison: row.competitors || [],
     aiInsights,
-    actionPlan: buildActionPlan({ aiInsights, scores: row.scores || {} }, { pages: [] }, row.category_details || {}, row.findings || []),
+    actionPlan: buildActionPlan({ aiInsights, scores: row.scores || {} }, primary, row.category_details || {}, row.findings || []),
   });
 }
