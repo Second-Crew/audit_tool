@@ -5,18 +5,11 @@ import { persistAudit } from '../../../lib/audit/persistence.js';
 import { summarizeAuditForResponse } from '../../../lib/audit/summarize.js';
 import { normalizeAuditUrl } from '../../../lib/audit/url.js';
 import { scoreProspectVisibility } from '../../../lib/audit/prospect-visibility.js';
+import { reserveDashboardAudit } from '../../../lib/dashboard-admission.js';
 
 export const runtime = 'nodejs';
 // Requires a host that allows long-running functions (Vercel Pro or a server deploy).
 export const maxDuration = 300;
-
-const RATE_LIMIT = { windowMs: 10 * 60 * 1000, maxRequests: 5 };
-const MAX_CONCURRENT_AUDITS = 2;
-
-// Per-instance state: enough to stop accidental hammering from a single client,
-// not a substitute for edge/WAF rate limiting on a public deployment.
-const requestLog = new Map();
-let runningAudits = 0;
 
 export async function POST(request) {
   let body;
@@ -43,22 +36,13 @@ export async function POST(request) {
     }
   }
 
-  const clientKey = getClientKey(request);
-  if (isRateLimited(clientKey)) {
+  const admission = await reserveDashboardAudit(request);
+  if (!admission.allowed) {
     return NextResponse.json(
-      { error: 'Too many audits from this address. Try again in a few minutes.' },
-      { status: 429 }
+      { error: admission.error },
+      { status: admission.status, headers: { 'Retry-After': String(admission.retryAfter) } }
     );
   }
-
-  if (runningAudits >= MAX_CONCURRENT_AUDITS) {
-    return NextResponse.json(
-      { error: 'The audit service is busy. Try again in a couple of minutes.' },
-      { status: 503 }
-    );
-  }
-
-  runningAudits += 1;
   const encoder = new TextEncoder();
 
   const stream = new ReadableStream({
@@ -104,7 +88,7 @@ export async function POST(request) {
         console.error('Analysis error:', error);
         send({ type: 'error', error: error.message || 'Failed to analyze website' });
       } finally {
-        runningAudits -= 1;
+        await admission.release();
         try {
           controller.close();
         } catch {
@@ -160,32 +144,4 @@ function validateBody(body) {
   }
 
   return null;
-}
-
-function getClientKey(request) {
-  const forwarded = request.headers.get('x-forwarded-for');
-  return (forwarded ? forwarded.split(',')[0].trim() : '') || request.headers.get('x-real-ip') || 'local';
-}
-
-function isRateLimited(clientKey) {
-  const now = Date.now();
-  const windowStart = now - RATE_LIMIT.windowMs;
-  const timestamps = (requestLog.get(clientKey) || []).filter((time) => time > windowStart);
-
-  if (timestamps.length >= RATE_LIMIT.maxRequests) {
-    requestLog.set(clientKey, timestamps);
-    return true;
-  }
-
-  timestamps.push(now);
-  requestLog.set(clientKey, timestamps);
-
-  // Keep the log from growing unbounded on long-lived servers.
-  if (requestLog.size > 1000) {
-    for (const [key, values] of requestLog) {
-      if (!values.some((time) => time > windowStart)) requestLog.delete(key);
-    }
-  }
-
-  return false;
 }

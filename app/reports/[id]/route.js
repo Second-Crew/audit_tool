@@ -60,7 +60,7 @@ export async function GET(request, { params }) {
       },
     });
   } catch (error) {
-    console.error('Stored report error:', error);
+    console.error('Stored report could not be loaded');
     return new Response('The report could not be loaded', { status: 500 });
   }
 }

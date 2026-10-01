@@ -49,7 +49,7 @@ export async function GET(request, { params }) {
       },
     });
   } catch (error) {
-    console.error('Report link error:', error);
+    console.error('Prospect report could not be loaded');
     return htmlMessage(500, 'Something went wrong', 'The report could not be loaded. Please try again.');
   }
 }

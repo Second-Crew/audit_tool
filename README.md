@@ -45,6 +45,11 @@ Leave `AUDIT_GENERATED_NARRATIVE_ENABLED=false` for normal client reports. If Ge
 
 The app still runs without Supabase env vars; persistence is skipped in local/dev mode.
 
+Production dashboard audits require the separate shared admission migration and
+`DASHBOARD_SHARED_LIMITS_ENABLED=true`; they fail closed without working shared
+controls. See [manual release gates](docs/production-release.md) for the held
+activation, access, retention, renderer and smoke checks.
+
 
 ## Agent workflow integration (Preview)
 

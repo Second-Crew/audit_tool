@@ -270,6 +270,13 @@ export default function Home() {
                   </button>
                 </div>
               </div>
+              {report.persistence?.status === 'saved' ? (
+                <p className="mt-3 text-sm text-slate-500 print:hidden">Saved in history.</p>
+              ) : report.persistence && (
+                <p role="alert" className="mt-3 rounded-md border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950 print:hidden">
+                  This report is not saved in history. Download HTML or Markdown now to keep a copy, then retry the audit later.
+                </p>
+              )}
             </div>
           </header>
 

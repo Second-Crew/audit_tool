@@ -50,8 +50,8 @@ export async function GET(request, { params }) {
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error('Load stored audit error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error('Stored audit could not be loaded');
+    return NextResponse.json({ error: 'The saved audit could not be loaded. Try again later.' }, { status: 500 });
   }
 }
 

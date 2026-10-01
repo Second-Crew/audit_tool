@@ -56,3 +56,7 @@ create index if not exists report_sends_domain_idx on public.report_sends (domai
 create index if not exists report_sends_email_idx on public.report_sends (prospect_email);
 
 alter table public.report_sends enable row level security;
+
+-- Explicit grants also cover projects with permissive default table grants.
+revoke all on public.clients, public.audits, public.report_sends from public, anon, authenticated;
+grant select, insert, update, delete on public.clients, public.audits, public.report_sends to service_role;
