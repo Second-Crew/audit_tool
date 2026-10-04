@@ -86,6 +86,7 @@ describe('completed panel saved-report regression (mock storage, synthetic crawl
     expect(JSON.stringify(data)).not.toContain('"observations"');
     const html = await exportReport({ nextUrl: new URL(`https://audit.example/reports/${id}`) }, { params: { id } });
     const text = await html.text();
+    expect(text).toMatch(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3} UTC/);
     expect(text).toContain('<td>ChatGPT Search</td><td>0/30</td><td>0/100</td><td>30/30</td><td>12/30</td>');
     expect(text).toContain('<td>Google AI Mode</td><td>2/30</td><td>7/100</td><td>30/30</td><td>8/30</td>');
     checkPrivateBoundary(text);

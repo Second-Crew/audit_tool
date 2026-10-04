@@ -16,12 +16,19 @@ from pg_policies where schemaname = 'public' and tablename in
   ('clients','audits','report_sends','dashboard_audit_attempts','dashboard_audit_leases');
 
 select p.oid::regprocedure as function_name, p.prosecdef as security_definer, p.proconfig,
+  pg_get_function_result(p.oid) as result_type, p.proargnames as argument_names,
   has_function_privilege('anon', p.oid, 'execute') as anon_execute,
   has_function_privilege('authenticated', p.oid, 'execute') as authenticated_execute,
   has_function_privilege('service_role', p.oid, 'execute') as server_execute
 from pg_proc p join pg_namespace n on n.oid = p.pronamespace
 where n.nspname = 'public' and p.proname in
   ('record_report_open','reserve_dashboard_audit','release_dashboard_audit');
+
+-- Restricted administrator evidence: inspect the existing tracked-link body
+-- before replacing it. Never execute it against a real send as an access test.
+select p.oid::regprocedure as function_name, pg_get_functiondef(p.oid) as definition
+from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+where n.nspname = 'public' and p.proname = 'record_report_open';
 
 select count(*) as saved_audits, min(created_at) as oldest_audit, max(created_at) as newest_audit,
   count(*) filter (where report ? 'observed_panel' and report->'observed_panel' <> 'null'::jsonb) as raw_panel_records

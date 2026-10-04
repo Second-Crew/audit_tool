@@ -60,6 +60,7 @@ describe('buildMarkdownReport', () => {
 
   it('includes header, LLM instructions, and the scores table', () => {
     expect(markdown).toContain('# GEO/AEO Diagnostic Report — Example Co');
+    expect(markdown).toContain('**Audit date (UTC):** 2026-07-06');
     expect(markdown).toContain('How to use this document');
     expect(markdown).toContain('| Overall | 55 |');
     expect(markdown).toContain('| GEO/AEO readiness | 48 |');
@@ -86,6 +87,26 @@ describe('buildMarkdownReport', () => {
     expect(result).toContain('| Overall | Not assessed |');
     expect(result).toContain('| Public phone or email details | unknown |');
     expect(result).toContain('GEO/AEO visibility is withheld until complete query-level outcomes are measured');
+  });
+
+  it('shows observation evidence without inventing point fractions, while preserving measured zero', () => {
+    const result = buildMarkdownReport({ categoryDetails: { evidence: {
+      name: 'Observed evidence', score: null, checks: [
+        { label: 'Schema observed', status: 'not_observed', score: null, maxScore: 0, evidence: 'No schema nodes' },
+        { label: 'Process observed', status: 'observed', score: null, maxScore: 0, evidence: 'Process text' },
+        { label: 'Missing measurement', status: 'unknown', score: null, maxScore: 10, evidence: 'Unavailable' },
+        { label: 'Unscored check', status: 'passed', evidence: 'Reviewed' },
+        { label: 'Zero-weight check', status: 'passed', score: 0, maxScore: 0, evidence: 'Reviewed' },
+        { label: 'Measured missing header', status: 'failed', score: 0, maxScore: 15, evidence: 'Header missing' },
+      ],
+    } } });
+    expect(result).toContain('| Schema observed | not_observed | No schema nodes |');
+    expect(result).toContain('| Process observed | observed | Process text |');
+    expect(result).toContain('| Missing measurement | unknown | Unavailable |');
+    expect(result).toContain('| Unscored check | passed | Reviewed |');
+    expect(result).toContain('| Zero-weight check | passed | Reviewed |');
+    expect(result).toContain('| Measured missing header | failed (0/15) | Header missing |');
+    expect(result).not.toMatch(/null\/|undefined\/|\(0\/0\)/);
   });
 
   it('labels a complete two-engine citation score as an observed panel result', () => {
