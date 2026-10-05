@@ -10,6 +10,7 @@ vi.mock('../lib/audit/llm.js', () => ({ generateAuditNarrative: vi.fn() }));
 vi.mock('../lib/audit/typesafe.js', () => ({ evaluateTypeSafe: vi.fn().mockResolvedValue({ status: 'skipped' }) }));
 vi.mock('../lib/supabase.js', () => ({ getSupabaseConfig: () => ({}), supabaseRequest: vi.fn() }));
 import { crawlSite } from '../lib/audit/crawler.js';
+import { getPageSpeedBundle } from '../lib/audit/pagespeed.js';
 import { runAudit } from '../lib/audit/index.js';
 import { persistAudit } from '../lib/audit/persistence.js';
 import { supabaseRequest } from '../lib/supabase.js';
@@ -24,6 +25,8 @@ const id = '11000000-0000-0000-0000-000000000001';
 let stored;
 
 beforeEach(() => {
+  getPageSpeedBundle.mockResolvedValue({ scores: {mobile:58,desktop:91}, metrics: {}, available: true,
+    diagnostics: {desktop:{status:'available',reason:null,attempts:1},mobile:{status:'available',reason:null,attempts:1}} });
   vi.spyOn(Date, 'now').mockReturnValue(Date.parse('2026-10-01T22:00:00Z'));
   crawlSite.mockResolvedValue({
     domain: 'secondcrew.com', startUrl: 'https://secondcrew.com/', origin: 'https://secondcrew.com',
@@ -106,5 +109,31 @@ describe('completed panel saved-report regression (mock storage, synthetic crawl
     const rows = visibilityEngineRows({ engines: assessment.engines });
     expect(rows.map(row => row.citations)).toEqual(['Not available', 'Not available']);
     expect(rows.map(row => row.answers)).toEqual(['Not available', 'Not available']);
+  });
+  it('preserves desktop results and safe failure status through storage and both export paths', async () => {
+    getPageSpeedBundle.mockResolvedValue({scores:{mobile:58,desktop:null},metrics:{},available:true,
+      diagnostics:{desktop:{status:'unavailable',reason:'request_timeout',attempts:2},mobile:{status:'available',reason:null,attempts:1}}});
+    await saveFixture();
+    const data=await (await reopen({}, {params:{id}})).json();
+    expect(data.audit.pageSpeed.diagnostics.desktop.reason).toBe('request_timeout');
+    expect(data.pageSpeedDiagnostics.desktop.reason).toBe('request_timeout');
+    const html=await (await exportReport({nextUrl:new URL(`https://audit.example/reports/${id}`)},{params:{id}})).text();
+    expect(html).toContain('Desktop: Measurement unavailable');
+    expect(html).toContain('Google PageSpeed did not finish within the request deadline.');
+    expect(await markdown()).toContain('**Desktop:** Measurement unavailable. Google PageSpeed did not finish within the request deadline.');
+    delete stored.report.markdown;
+    expect(await markdown()).toContain('Google PageSpeed did not finish within the request deadline.');
+    delete stored.report.workspace;
+    expect(await markdown()).toContain('No usable Google PageSpeed measurement was saved for this run.');
+  });
+  it('keeps the Google desktop score through save, reopen and export without a recrawl', async()=>{
+    await saveFixture();
+    const data=await (await reopen({}, {params:{id}})).json();
+    expect(data.scores.desktop).toBe(91);
+    expect(data.audit.pageSpeed.scores.desktop).toBe(91);
+    expect(await markdown()).toContain('| Desktop PageSpeed | 91 |');
+    expect(await markdown()).toContain('**Desktop:** 91/100.');
+    delete stored.report.markdown;
+    expect(await markdown()).toContain('**Desktop:** 91/100.');
   });
 });

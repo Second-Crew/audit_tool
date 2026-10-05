@@ -2,6 +2,7 @@ import EvidencePanel from './EvidencePanel.js';
 import { Metric, ScoreCard, SeverityBadge, SignalPanel, StatusPill, formatScore, getScoreTone } from './ui.js';
 import { hasLegacyOutcomeScores, LEGACY_SCORE_NOTICE } from '../../lib/audit/legacy.js';
 import { visibilityEngineRows } from '../../lib/audit/visibility-display.js';
+import { pageSpeedStatusText } from '../../lib/audit/pagespeed-status.js';
 
 export default function OverviewTab({ report, primary, findings, onSelectSeverity }) {
   const topFindings = findings.slice(0, 5);
@@ -11,7 +12,11 @@ export default function OverviewTab({ report, primary, findings, onSelectSeverit
     { label: observed ? 'GEO/AEO observed visibility' : 'GEO / AEO', value: report?.scores?.aeoGeo, caption: observed ? 'Dated, fixed two-engine citation panel' : 'No valid answer/citation panel', observed },
     { label: 'AI Readiness', value: report?.scores?.aiReadiness, caption: 'Readiness scale unvalidated' },
     { label: 'Technical SEO', value: report?.scores?.seo, caption: 'Sampled page checks' },
-    { label: 'Mobile', value: report?.scores?.mobile, caption: 'PageSpeed mobile' },
+    ...['mobile', 'desktop'].map(device => ({
+      label: device === 'mobile' ? 'Mobile' : 'Desktop',
+      value: report?.scores?.[device],
+      caption: pageSpeedStatusText(report?.pageSpeedDiagnostics?.[device], report?.scores?.[device]),
+    })),
     { label: 'Security', value: report?.scores?.security, caption: 'Header baseline' },
   ];
 
@@ -24,7 +29,7 @@ export default function OverviewTab({ report, primary, findings, onSelectSeverit
       {primary?.contentEvidence?.status === 'sufficient' && report?.scores?.overall == null && <div role="status" className="rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-950">N/A means not measured, not a score of zero. This crawl checks sampled pages but does not measure search positions. {observed ? 'The GEO/AEO number uses the dated, fixed ChatGPT Search and Google AI Mode citation panel below.' : 'GEO/AEO needs observed AI answers and citations.'} An overall grade and AI-readiness scale remain unvalidated. Review the page evidence below.</div>}
       <EvidencePanel result={report?.audit?.assessment} />
       <p className="text-sm text-slate-600">The SEO number covers sampled technical checks only. {observed ? 'The GEO/AEO number measures own-domain citations on the stated panel, not future visibility.' : 'Other available numbers are diagnostics, not measured search or AI visibility.'}</p>
-      <section className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-6">
+      <section className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
         {scoreCards.map((card) => (
           <ScoreCard key={card.label} {...card} />
         ))}

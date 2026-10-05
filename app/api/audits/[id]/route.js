@@ -43,6 +43,7 @@ export async function GET(request, { params }) {
       llm: report.llm || { status: 'skipped' },
       html: report.html || '',
       markdown: report.markdown || null,
+      pageSpeedDiagnostics: report.workspace?.pageSpeed?.diagnostics || {},
       audit: report.workspace || buildFallbackWorkspace(row),
       persistence: { enabled: true, status: 'saved', clientId: row.client_id, auditId: row.id },
       companyName: row.client?.company_name || row.domain,

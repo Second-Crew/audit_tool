@@ -23,6 +23,12 @@ This is a release plan for an internal, human-reviewed dashboard. It does not ap
 - [ ] Browser blocks prevent further inspection of the stored HTML read-failure response: Chrome returned `ERR_BLOCKED_BY_CLIENT` on the isolated report reload during denied-read testing. No retry, alternate transport or bypass followed. Healthy HTML/export checks completed before that block. Reopen/export outage responses, app-level unauthenticated denial behind Vercel SSO, and safe missing/invalid IDs still need hosted evidence. Anonymous HTTP checks reached Vercel SSO (302), not the app gate.
 - [ ] Remaining hosted operational evidence: distinct-instance routing, real terminated-instance recovery (fixture expiry is verified), renderer failure/abstention. Retention decision/implementation, Production renderer/migrations/settings and approved deployment smoke remain held. Production readiness is not established.
 
+## Desktop PageSpeed recovery — October 5
+
+Repeated desktop N/A was investigated against the existing Google API with the Preview credential. The old request timed out at 45 seconds while mobile completed in about 13 seconds. A corrected live request returned mobile 54/100 and desktop 41/100; desktop took about 87 seconds. These are new Lighthouse lab measurements of the requested URL, not replacements for the original stored report or whole-site performance grades.
+
+The first request now has 120 seconds, with at most one retry inside a 150-second total budget alongside the crawl. Desktop requests only the consumed performance category; mobile retains its other categories. Transient Lighthouse errors and missing/invalid results are handled explicitly, measured zero is preserved, and private provider error text is discarded. The dashboard now includes Desktop; per-device safe status is saved and preserved through reopening, HTML, Markdown and missing-Markdown reconstruction. The full 203-test suite passed; after the final timeout-margin adjustment, all 12 affected tests and the final build passed. Hosted verification of the updated revision remains pending.
+
 ## Shared dashboard controls
 
 `supabase/dashboard-admission.sql` creates separate request-attempt and lease tables. A PostgreSQL advisory transaction lock makes the five-attempts-per-ten-minutes address limit and two-active-audits limit atomic across instances. Busy attempts count toward the address limit. Preview, Production and local scopes are separate; all branch Previews sharing one database share Preview capacity. This control is independent of the agent API.

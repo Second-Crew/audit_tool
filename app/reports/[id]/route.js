@@ -85,6 +85,7 @@ function buildStoredMarkdown(row) {
     contentEvidence: primary.contentEvidence,
     observedVisibility: row.report?.observed_visibility || row.report?.workspace?.observedVisibility || null,
     scores: row.scores || {},
+    pageSpeedDiagnostics: row.report?.workspace?.pageSpeed?.diagnostics || {},
     findings: row.findings || [],
     categoryDetails: row.category_details || {},
     competitorComparison: row.competitors || [],
