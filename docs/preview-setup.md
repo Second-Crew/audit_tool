@@ -2,6 +2,12 @@
 
 This runbook configures only branch `codex/typesafe-audit-scoring`. The current shared database, Production variables/deployment, deletion, generated narrative, optional agent API and prospect contact remain held. Use the reviewed code from draft PR #1.
 
+## Recorded execution — October 5, 2026
+
+The owner created `secondcrew-audit-tool-preview`, project `jwpnszxyciknxcjkcjyt`, on the Free plan in East US (Ohio), `us-east-2`. Its empty database received the four reviewed SQL files below. Branch-only Vercel overrides now use this project and enable shared controls. Production project `siyfqskgnfhizeeshyuu` and its configuration/deployment remain unchanged; other branches may still inherit shared values.
+
+Actual panel audit/save/history/reopen/HTML/downloaded Markdown, hosted RPC concurrency/rate/counting, actual busy and expired-lease admission, insertion failure with usable exports, unavailable admission, safe history read failure and client disconnect all passed. Failure definitions/grants were restored and disposable fixtures removed; the single successful Second Crew report is retained. Read the [release checklist](production-release.md) for exact evidence and incomplete hosted checks. A READY Preview is not approval for Production or retention deletion.
+
 ## Target and approval
 
 Create a separate, empty project named `secondcrew-audit-tool-preview` in the Second Crew organization, preferably the same West US region as the existing project. Confirm the plan/charge before creation; do not upgrade or add paid compute without a spending approval. If the provider requires a new database password, the owner completes that credential step. Never copy existing report rows, contact records or raw observation panels into the new project.
