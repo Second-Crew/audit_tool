@@ -116,6 +116,13 @@ describe('descriptive supporting features', () => {
     expect(schema.evidence.map(e => e.facts).join(' ')).toContain('Detected only');
     expect(JSON.stringify(schema)).not.toContain('SECRET_BAD_JSON');
   });
+  it('does not call unextracted rendered entity text a schema inconsistency', () => {
+    const s=signals({html:'<script type="application/ld+json">{"@type":"Organization","name":"Example"}</script><script src="/app.js"></script><main>Loading</main>'});
+    const schema=assessSupportingFeatures(s)[1];
+    expect(schema.status).toBe('Needs human review');
+    expect(schema.issues).toEqual([]);
+    expect(schema.evidence[0].facts).toContain('could not be verified from incomplete text');
+  });
   it('checks llms structure and existing sampled links without making consumption claims', () => {
     const s = signals({ input: { companyName: 'Example' }, errors: [{ url: 'https://example.com/broken', status: 404 }], llms: { found: true, status: 200, body: '# Example\n\n> We build websites for businesses.\n\n## Services\n- [Home](https://example.com/)\n- [Broken](https://example.com/broken)\n- [Other](https://example.com/unsampled)' } });
     const f = assessSupportingFeatures(s)[2];

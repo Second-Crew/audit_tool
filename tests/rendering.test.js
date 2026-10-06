@@ -97,6 +97,33 @@ describe('rendered content evidence',()=>{
     expect(c.pages[1].html).toBe(sparse);
   } finally {clock.mockRestore();}
  });
+ it('abstains after a provider rate limit instead of retrying every sampled page',async()=>{
+  const c=crawl();
+  c.pages=Array.from({length:56},(_,i)=>({...c.pages[0],url:`https://agency.example/page-${i}`}));
+  const renderer=vi.fn(async()=>{throw Error('browser_rate_limited');});
+  await renderSparsePages(c,{renderer});
+  expect(renderer.mock.calls.length).toBeLessThanOrEqual(2);
+  expect(c.summary.rendering).toMatchObject({succeeded:0,abstentionReason:'browser_rate_limited',retryAttempts:0});
+  expect(c.summary.rendering.failed+c.summary.rendering.skipped).toBe(56);
+  expect(scoreSite(extractSiteSignals(c)).aiTechnicalReadiness).toMatchObject({status:'Provisional',counts:{unknown:56}});
+ });
+ it('returns unknown evidence if a renderer promise never settles and ignores late results',async()=>{
+  vi.useFakeTimers();
+  const c=crawl();
+  let resolveRender;
+  const renderer=()=>new Promise(resolve=>{resolveRender=resolve;});
+  try {
+    const run=renderSparsePages(c,{renderer,deadlineMs:Date.now()+20});
+    await vi.advanceTimersByTimeAsync(20);
+    await run;
+    expect(c.summary.rendering).toMatchObject({failed:1,timeBudgetExceeded:true,abstentionReason:'render_time_budget_exhausted'});
+    resolveRender({html:rendered});
+    await Promise.resolve();
+    expect(c.pages[0].rendered).toBeUndefined();
+    expect(c.pages[0].html).toBe(sparse);
+    expect(scoreSite(extractSiteSignals(c)).aiTechnicalReadiness.status).toBe('Provisional');
+  } finally {vi.useRealTimers();}
+ });
  it('limits browser requests to the site and its subdomains',()=>{expect(isAllowedRenderHost('https://api.agency.example/content','https://agency.example')).toBe(true);expect(isAllowedRenderHost('https://agency.example.evil.test/script','https://agency.example')).toBe(false);expect(isAllowedRenderHost('http://127.0.0.1/private','https://agency.example')).toBe(false);});
  it('redacts browser endpoint credentials from operational errors',()=>{const endpoint='wss://production-sfo.browserless.io/chromium/playwright?token=private-token-123';const error=Error(`connect to ${endpoint} failed: token=private-token-123`);const sanitized=sanitizeConnectionError(error,endpoint);expect(sanitized).not.toContain('private-token-123');expect(sanitized).not.toContain('browserless.io');expect(sanitized).toContain('failed');});
  it('normalizes pasted WebSocket URLs and rejects invalid endpoint shapes',()=>{const url='wss://production-sfo.browserless.io/chromium/playwright?token=real-token';expect(normalizeBrowserEndpoint(`  "${url}"\n`)).toBe(url);expect(()=>normalizeBrowserEndpoint('RENDER_BROWSER_WS_ENDPOINT='+url)).toThrow('browser_endpoint_invalid');expect(()=>normalizeBrowserEndpoint('wss://production-sfo.browserless.io?token=real-token')).toThrow('browser_endpoint_invalid');expect(()=>normalizeBrowserEndpoint('wss://production-sfo.browserless.io/chromium/playwright?token=YOUR_TOKEN')).toThrow('browser_auth_failed');});
