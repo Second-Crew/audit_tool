@@ -6,7 +6,7 @@ This document distinguishes **observable site checks** from **measured discovery
 
 ## Current readiness direction — October 5
 
-The owner selected the [AI Technical Readiness checklist plan](./ai-readiness-checklist.md), including explicit FAQ, chatbot, structured-data and llms.txt assessment, after considering the predictive alternative. The new number describes sampled technical-check completion with coverage and evidence; it will not predict citations. Supporting features remain visible with quality findings and review needs, without automatic presence points. This plan supersedes the predictive-study direction. The application implements the versioned equal-weight checklist; Preview verification is pending. Existing reports preserve their original N/A. The [predictive validation plan](./predictive-ai-readiness.md) is retained only as an optional future study.
+The owner selected the [AI Technical Readiness checklist plan](./ai-readiness-checklist.md), including explicit FAQ, chatbot, structured-data and llms.txt assessment, after considering the predictive alternative. The new number describes sampled technical-check completion with coverage and evidence; it will not predict citations. Supporting features remain visible with quality findings and review needs, without automatic presence points. This plan supersedes the predictive-study direction. The application implements the versioned equal-weight checklist; the [real Preview workflow](./checklist-preview-verification.md) passed and Production operational gates remain held. Existing reports preserve their original N/A. The [predictive validation plan](./predictive-ai-readiness.md) is retained only as an optional future study.
 
 ## Public calibration sample
 
