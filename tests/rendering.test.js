@@ -1,4 +1,4 @@
-import {describe,it,expect} from 'vitest';
+import {describe,it,expect,vi} from 'vitest';
 import {parseRobotsTxt} from '../lib/audit/robots.js';
 import {renderSparsePages,isAllowedRenderHost,needsRendering,sanitizeConnectionError,normalizeBrowserEndpoint,waitForContentHtml} from '../lib/audit/render.js';
 import {extractSiteSignals} from '../lib/audit/extractors.js';
@@ -82,6 +82,21 @@ describe('rendered content evidence',()=>{
  });
  it('rejects related-post lists as article evidence',async()=>{const c=crawl();c.pages[0].url='https://agency.example/blog/article';const shortArticle='<main><h2>OTHER NEWS</h2><p>Another article about design strategy and related content.</p><p>More recommendations and recent posts.</p></main>';await renderSparsePages(c,{renderer:async()=>({html:shortArticle})});expect(c.summary.rendering.failed).toBe(1);expect(extractSiteSignals(c).contentEvidence.status).toBe('incomplete');});
  it('keeps failed rendering incomplete without leaking provider errors',async()=>{const c=crawl();await renderSparsePages(c,{renderer:async()=>{throw Error('wss://browser.example/playwright?token=secret failed')}});expect(c.pages[0].html).toBe(sparse);expect(c.summary.rendering).toMatchObject({failed:1,failureReasons:{render_browser_error:1}});expect(JSON.stringify(c.summary)).not.toContain('secret');expect(extractSiteSignals(c).contentEvidence.status).toBe('incomplete');});
+ it('stops rendering at the request budget and leaves remaining checks unknown', async()=>{
+  const c=crawl();
+  c.pages=[...c.pages, {...c.pages[0],url:'https://agency.example/web-design'}];
+  let now=1000;
+  const clock=vi.spyOn(Date,'now').mockImplementation(()=>now);
+  const renderer=vi.fn(async()=>{now=2001;return {html:rendered};});
+  try {
+    await renderSparsePages(c,{renderer,deadlineMs:2000});
+    expect(renderer).toHaveBeenCalledOnce();
+    expect(c.summary.rendering).toMatchObject({attempted:1,succeeded:1,skipped:1,timeBudgetExceeded:true});
+    const result=scoreSite(extractSiteSignals(c)).aiTechnicalReadiness;
+    expect(result).toMatchObject({status:'Provisional',counts:{unknown:1},possibleRange:{min:92,max:100}});
+    expect(c.pages[1].html).toBe(sparse);
+  } finally {clock.mockRestore();}
+ });
  it('limits browser requests to the site and its subdomains',()=>{expect(isAllowedRenderHost('https://api.agency.example/content','https://agency.example')).toBe(true);expect(isAllowedRenderHost('https://agency.example.evil.test/script','https://agency.example')).toBe(false);expect(isAllowedRenderHost('http://127.0.0.1/private','https://agency.example')).toBe(false);});
  it('redacts browser endpoint credentials from operational errors',()=>{const endpoint='wss://production-sfo.browserless.io/chromium/playwright?token=private-token-123';const error=Error(`connect to ${endpoint} failed: token=private-token-123`);const sanitized=sanitizeConnectionError(error,endpoint);expect(sanitized).not.toContain('private-token-123');expect(sanitized).not.toContain('browserless.io');expect(sanitized).toContain('failed');});
  it('normalizes pasted WebSocket URLs and rejects invalid endpoint shapes',()=>{const url='wss://production-sfo.browserless.io/chromium/playwright?token=real-token';expect(normalizeBrowserEndpoint(`  "${url}"\n`)).toBe(url);expect(()=>normalizeBrowserEndpoint('RENDER_BROWSER_WS_ENDPOINT='+url)).toThrow('browser_endpoint_invalid');expect(()=>normalizeBrowserEndpoint('wss://production-sfo.browserless.io?token=real-token')).toThrow('browser_endpoint_invalid');expect(()=>normalizeBrowserEndpoint('wss://production-sfo.browserless.io/chromium/playwright?token=YOUR_TOKEN')).toThrow('browser_auth_failed');});

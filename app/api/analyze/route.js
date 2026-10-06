@@ -12,6 +12,7 @@ export const runtime = 'nodejs';
 export const maxDuration = 300;
 
 export async function POST(request) {
+  const requestStartedAt = Date.now();
   let body;
   try {
     body = await request.json();
@@ -65,6 +66,9 @@ export async function POST(request) {
             industry: body.industry || '',
             city: body.city || '',
             competitors: body.competitors || body.competitorUrls || [],
+            // Reserve one minute for extraction, exports and bounded storage.
+            // Keep the independent PageSpeed device budgets unchanged.
+            deadlineMs: requestStartedAt + 240000,
             maxPages: body.maxPages || 250,
             maxDurationMs: body.maxDurationMs || 150000,
             maxCompetitorPages: body.maxCompetitorPages || 25,
