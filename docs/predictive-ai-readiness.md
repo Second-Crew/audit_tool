@@ -1,6 +1,6 @@
 # Predictive AI-citation readiness: validation plan
 
-The owner selected a predictive citation score on October 5, 2026. This supersedes the proposed technical-checklist replacement. This document defines the work required; it does not certify a model or activate numeric predictions. The current application still withholds the AI Readiness number.
+**Superseded as the active direction on October 5, 2026.** The owner subsequently selected the [AI Technical Readiness checklist](./ai-readiness-checklist.md), including FAQ, chatbot, schema and llms.txt assessment. The predictive study below is retained as a future option only; it is not required for the descriptive checklist and no model has been activated.
 
 ## What the number will mean
 

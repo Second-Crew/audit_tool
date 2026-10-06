@@ -48,7 +48,8 @@ export async function GET(request, { params }) {
       });
     }
 
-    const html = row.report?.html;
+    const checklist = row.report?.ai_technical_readiness || row.report?.workspace?.aiTechnicalReadiness;
+    const html = row.report?.html || (checklist ? buildFallbackHtml(buildStoredMarkdown(row)) : null);
     if (!html) return new Response('Report not found', { status: 404 });
 
     return new Response(labelLegacyHtml(html, row.scores), {
@@ -84,6 +85,7 @@ function buildStoredMarkdown(row) {
     siteType: primary.siteType,
     contentEvidence: primary.contentEvidence,
     observedVisibility: row.report?.observed_visibility || row.report?.workspace?.observedVisibility || null,
+    aiTechnicalReadiness: row.report?.ai_technical_readiness || row.report?.workspace?.aiTechnicalReadiness || null,
     scores: row.scores || {},
     pageSpeedDiagnostics: row.report?.workspace?.pageSpeed?.diagnostics || {},
     findings: row.findings || [],
@@ -92,4 +94,10 @@ function buildStoredMarkdown(row) {
     aiInsights,
     actionPlan: buildActionPlan({ aiInsights, scores: row.scores || {} }, primary, row.category_details || {}, row.findings || []),
   });
+}
+
+// Reconstruct only from saved measurements; no recrawl or retrospective scoring.
+function buildFallbackHtml(markdown) {
+  const escaped = markdown.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Saved audit evidence</title></head><body><main style="max-width:1100px;margin:32px auto;padding:16px"><p>Reconstructed from saved audit evidence; original HTML export unavailable.</p><pre style="white-space:pre-wrap;overflow-wrap:anywhere;font:14px/1.6 Arial,sans-serif">${escaped}</pre></main></body></html>`;
 }

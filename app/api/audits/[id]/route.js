@@ -29,6 +29,7 @@ export async function GET(request, { params }) {
 
     const report = row.report || {};
     const data = {
+      aiTechnicalReadiness: report.ai_technical_readiness || report.workspace?.aiTechnicalReadiness || null,
       scores: row.scores || {},
       observedVisibility: report.observed_visibility || null,
       aiInsights: {
@@ -65,6 +66,7 @@ function buildFallbackWorkspace(row) {
     elapsedMs: null,
     input: { url: row.requested_url },
     observedVisibility: row.report?.observed_visibility || null,
+    aiTechnicalReadiness: row.report?.ai_technical_readiness || null,
     primary: {
       domain: row.domain,
       startUrl: row.requested_url,

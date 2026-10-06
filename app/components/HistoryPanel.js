@@ -84,6 +84,7 @@ export default function HistoryPanel({ onOpenAudit }) {
                 <th className="px-4 py-3 font-semibold">Prospect</th>
                 <th className="px-4 py-3 font-semibold">Overall</th>
                 <th className="px-4 py-3 font-semibold">GEO/AEO</th>
+                <th className="px-4 py-3 font-semibold">AI Technical Readiness</th>
                 <th className="px-4 py-3 font-semibold">Status</th>
                 <th className="px-4 py-3 font-semibold">Actions</th>
               </tr>
@@ -120,6 +121,10 @@ function HistoryRow({ audit, onOpenAudit }) {
         </td>
         <td className="px-4 py-3"><ScoreBadge value={audit.scores?.overall} legacy={hasLegacyOutcomeScores(audit.scores)} /></td>
         <td className="px-4 py-3"><ScoreBadge value={audit.scores?.aeoGeo} legacy={hasLegacyOutcomeScores(audit.scores)} observed={audit.scores?.methodologyVersion === 'evidence-v1' && audit.scores?.aeoGeo != null} /></td>
+        <td className="px-4 py-3">
+          <ScoreBadge value={audit.scores?.aiReadiness} legacy={hasLegacyOutcomeScores(audit.scores)} />
+          {audit.scores?.aiReadinessVersion && <div className="mt-1 text-xs text-slate-500">{audit.scores.aiReadinessStatus} · {Math.round((audit.scores.aiReadinessCoverage || 0) * 100)}% coverage{audit.scores.aiReadinessRange ? ` · ${audit.scores.aiReadinessRange.min}–${audit.scores.aiReadinessRange.max} possible` : ''}</div>}
+        </td>
         <td className="px-4 py-3">
           {sends.length ? (
             <div className="space-y-1.5">
@@ -183,7 +188,7 @@ function HistoryRow({ audit, onOpenAudit }) {
       </tr>
       {sendOpen && (
         <tr className="border-t border-slate-100 bg-slate-50">
-          <td colSpan={6} className="px-4 py-4">
+          <td colSpan={7} className="px-4 py-4">
             <RowSendForm audit={audit} onCreated={(send) => setExtraSends((previous) => [...previous, send])} />
           </td>
         </tr>

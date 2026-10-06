@@ -85,7 +85,8 @@ describe('JSON-LD aggregation', () => {
     expect(signals.schema.count).toBe(1);
     expect(signals.schema.invalidCount).toBe(1);
     expect(signals.schema.invalidBlocks[0].url).toBe('https://example.com');
-    expect(signals.schema.invalidBlocks[0].sample).toContain('this is not valid json');
+    expect(signals.schema.invalidBlocks[0].sample).toBeUndefined();
+    expect(signals.schema.invalidBlocks[0].message).toBe('Invalid JSON-LD syntax');
   });
 
   it('records per-page schema counts used by the action plan', () => {

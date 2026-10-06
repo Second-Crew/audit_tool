@@ -66,7 +66,10 @@ function checkMarkdown(text) {
   expect(text).toContain('Ten queries, three runs per query and engine');
   expect(text).toContain('not a ranking prediction');
   expect(text).toContain('| Overall | Not assessed |');
-  expect(text).toContain('| AI readiness | Not assessed |');
+  expect(text).toContain('| AI Technical Readiness | 100 |');
+  expect(text).toContain('6 passed, 0 failed, 0 unknown; coverage 6/6');
+  expect(text).toContain('ai-technical-checklist-v1');
+  for (const feature of ['FAQs / answer content', 'Structured data / schema', 'llms.txt', 'Chatbots / assistants']) expect(text).toContain(feature);
   for (const query of panel.queries) expect(text).toContain(query.prompt);
   checkPrivateBoundary(text);
 }
@@ -83,7 +86,9 @@ describe('completed panel saved-report regression (mock storage, synthetic crawl
     expect(stored.report.observed_visibility).toEqual(assessment);
     const response = await reopen({}, { params: { id } });
     const data = await response.json();
-    expect(data.scores).toMatchObject({ aeoGeo: 3, overall: null, aiReadiness: null });
+    expect(data.scores).toMatchObject({ aeoGeo: 3, overall: null, aiReadiness: 100 });
+    expect(data.aiTechnicalReadiness).toEqual(stored.report.ai_technical_readiness);
+    expect(data.audit.aiTechnicalReadiness).toEqual(data.aiTechnicalReadiness);
     expect(data.observedVisibility).toEqual(assessment);
     expect(data.audit.observedVisibility).toEqual(assessment);
     expect(JSON.stringify(data)).not.toContain('"observations"');
@@ -92,6 +97,8 @@ describe('completed panel saved-report regression (mock storage, synthetic crawl
     expect(text).toMatch(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3} UTC/);
     expect(text).toContain('<td>ChatGPT Search</td><td>0/30</td><td>0/100</td><td>30/30</td><td>12/30</td>');
     expect(text).toContain('<td>Google AI Mode</td><td>2/30</td><td>7/100</td><td>30/30</td><td>8/30</td>');
+    expect(text).toContain('6 passed, 0 failed, 0 unknown; coverage 6/6');
+    expect(text).not.toContain('AI-readiness scale remain unavailable');
     checkPrivateBoundary(text);
     checkMarkdown(await markdown());
   });
@@ -104,6 +111,37 @@ describe('completed panel saved-report regression (mock storage, synthetic crawl
     const data = await (await reopen({}, { params: { id } })).json();
     expect(data.audit.observedVisibility).toEqual(assessment);
     expect(JSON.stringify(data)).not.toContain('"observations"');
+  });
+  it('reconstructs missing HTML and Markdown from the saved checklist without workspace or recrawl', async () => {
+    await saveFixture();
+    const original = stored.report.ai_technical_readiness;
+    delete stored.report.html;
+    delete stored.report.markdown;
+    delete stored.report.workspace;
+    const response = await exportReport({ nextUrl: new URL(`https://audit.example/reports/${id}`) }, { params: { id } });
+    expect(response.status).toBe(200);
+    const html = await response.text();
+    expect(html).toContain('6 passed, 0 failed, 0 unknown; coverage 6/6');
+    expect(html).toContain('AI Technical Readiness');
+    checkPrivateBoundary(html);
+    const data = await (await reopen({}, { params: { id } })).json();
+    expect(data.aiTechnicalReadiness).toEqual(original);
+    expect(data.audit.aiTechnicalReadiness).toEqual(original);
+    expect(crawlSite).toHaveBeenCalledTimes(1);
+  });
+  it('keeps historical evidence-v1 reports unscored instead of applying the new checklist', async () => {
+    await saveFixture();
+    delete stored.report.ai_technical_readiness;
+    delete stored.report.workspace.aiTechnicalReadiness;
+    delete stored.report.markdown;
+    stored.scores.aiReadiness = null;
+    delete stored.scores.aiReadinessVersion;
+    const data = await (await reopen({}, { params: { id } })).json();
+    expect(data.aiTechnicalReadiness).toBeNull();
+    expect(data.scores.aiReadiness).toBeNull();
+    const text = await markdown();
+    expect(text).toContain('| AI readiness | Not assessed |');
+    expect(text).not.toContain('ai-technical-checklist-v1');
   });
   it('does not turn missing aggregate counts into measured zeros', () => {
     const rows = visibilityEngineRows({ engines: assessment.engines });

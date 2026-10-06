@@ -36,9 +36,12 @@ describe('TypeSafe integration boundary', () => {
     expect(pilot.audit.primary.scoring.findings).toEqual(baseline.audit.primary.scoring.findings);
   });
 
-  it('refuses website grades or semantic calls when the primary crawl fails', async () => {
-    crawlSite.mockResolvedValue({ ...crawl, pages: [], errors: [{ status: 503 }] });
-    await expect(runAudit({ url: 'https://example.com' })).rejects.toThrow('No website scores were calculated');
+  it('reports unavailable checklist evidence without semantic calls when the primary crawl fails', async () => {
+    crawlSite.mockResolvedValue({ ...crawl, pages: [], errors: [{ url: 'https://example.com/', status: 0 }], auxiliary: { ...crawl.auxiliary, robots: { status: 503, body: '' } } });
+    const { compatibility } = await runAudit({ url: 'https://example.com' });
+    expect(compatibility.aiTechnicalReadiness).toMatchObject({ status: 'Could not assess', score: null, counts: { unknown: 6 } });
+    expect(compatibility.scores).toMatchObject({ overall: null, seo: null, aiReadiness: null });
+    expect(compatibility.html).toContain('Could not assess');
     expect(evaluateTypeSafe).not.toHaveBeenCalled();
   });
 });
@@ -62,7 +65,7 @@ describe('observed visibility report integration', () => {
       queries, observations,
     };
     const { audit, compatibility } = await runAudit({ url: 'https://example.com/', visibilityPanel });
-    expect(compatibility.scores).toMatchObject({ aeoGeo: 33, overall: null, aiReadiness: null });
+    expect(compatibility.scores).toMatchObject({ aeoGeo: 33, overall: null, aiReadiness: 83 });
     expect(compatibility.observedVisibility).toMatchObject({ status: 'observed', runCount: 60 });
     expect(summarizeAuditForResponse(audit).observedVisibility.score).toBe(33);
     expect(compatibility.html).toContain('Query-level citation counts');
