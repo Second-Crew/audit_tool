@@ -14,7 +14,8 @@ beforeEach(() => {
 afterEach(() => vi.unstubAllEnvs());
 
 describe('shared dashboard admission', () => {
-  it('fails closed in production before activation and on absent configuration', async () => {
+  it.each(['production', 'preview'])('fails closed in %s before activation and on absent configuration', async environment => {
+    vi.stubEnv('VERCEL_ENV', environment);
     vi.stubEnv('DASHBOARD_SHARED_LIMITS_ENABLED', 'false');
     expect(await reserveDashboardAudit(request())).toMatchObject({ allowed: false, status: 503 });
     vi.stubEnv('DASHBOARD_SHARED_LIMITS_ENABLED', 'true');
