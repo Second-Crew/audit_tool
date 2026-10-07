@@ -138,3 +138,13 @@ describe('rendered content evidence',()=>{
   expect(c.summary.rendering).toMatchObject({abstentionReason:reason,retryAttempts:0,succeeded:0});
   expect(scoreSite(extractSiteSignals(c)).aiTechnicalReadiness).toMatchObject({status:'Provisional',counts:{unknown:56}});
  });
+
+it('keeps a sparse thank-you confirmation in coverage without invalidating usable business pages', () => {
+ const c=crawl(); c.pages=[{...c.pages[0],html:rendered},{...c.pages[0],url:'https://agency.example/thank-you',html:sparse}];
+ const signals=extractSiteSignals(c);
+ expect(signals.contentEvidence).toMatchObject({status:'incomplete',coverage:0.5,criticalSparseUrls:[]});
+ c.pages.push(...Array.from({length:8},(_,i)=>({...c.pages[0],url:`https://agency.example/blog/article-${i}`,html:rendered})));
+ const result=extractSiteSignals(c);
+ expect(result.contentEvidence).toMatchObject({status:'sufficient',sparsePages:1,criticalSparseUrls:[]});
+ expect(scoreSite(result).aiTechnicalReadiness.counts.unknown).toBe(1);
+});

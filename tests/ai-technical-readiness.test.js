@@ -102,8 +102,8 @@ describe('descriptive supporting features', () => {
     const s = signals({ html: `<main><h1>Product</h1><h2>Want to grow?</h2><p>${text}</p><h2>Empty question?</h2><p></p><h2 hidden>Hidden?</h2><p hidden>${text}</p></main>` });
     expect(s.content.faqPages).toHaveLength(0);
     const faq = assessSupportingFeatures(s)[0];
-    expect(faq).toMatchObject({ presence: 'Observed', status: 'Needs improvement' });
-    expect(faq.evidence).toHaveLength(2);
+    expect(faq).toMatchObject({ presence: 'Observed', status: 'Needs human review' });
+    expect(faq.evidence).toHaveLength(1);
     const actual = signals({ html: `<main><h1>FAQs</h1><details><summary>How do you help?</summary><p>${text}</p></details></main>` });
     expect(actual.content.faqPages).toHaveLength(1);
     expect(assessSupportingFeatures(actual)[0].status).toBe('Needs human review');
@@ -112,7 +112,9 @@ describe('descriptive supporting features', () => {
     const s = signals({ html: `<script type="application/ld+json">SECRET_BAD_JSON</script><script type="application/ld+json">{"@type":"Service","name":"Wrong entity","url":"not-a-url"}</script><main itemscope itemtype="https://schema.org/Service" typeof="Service"><p>${text}</p></main>` });
     const schema = assessSupportingFeatures(s)[1];
     expect(schema.status).toBe('Needs improvement');
-    expect(schema.issues.join(' ')).toMatch(/Invalid JSON-LD.*Entity name.*Invalid entity URL/);
+    expect(schema.issues.join(' ')).toContain('Invalid JSON-LD');
+    expect(schema.issues.join(' ')).toContain('Entity name');
+    expect(schema.issues.join(' ')).toContain('Invalid entity URL');
     expect(schema.evidence.map(e => e.facts).join(' ')).toContain('Detected only');
     expect(JSON.stringify(schema)).not.toContain('SECRET_BAD_JSON');
   });
@@ -149,4 +151,19 @@ describe('descriptive supporting features', () => {
       expect(scoreAiTechnicalReadiness(s).score).toBe(100);
     }
   });
+});
+
+it('keeps a question-shaped CTA out of missing-answer defects while detecting nested FAQ answers', () => {
+  const s=signals({html:`<main><h1>Product</h1><section class="faq"><h2>Frequently asked questions</h2><div><div><h3>How does it work?</h3></div><div><p>${text}</p></div></div><div><h3>What is missing?</h3><p></p></div></section><section><h2>Ready for fast inference?</h2><a href="/contact">Get Started</a></section></main>`});
+  const faq=assessSupportingFeatures(s)[0];
+  expect(faq.evidence).toHaveLength(2);
+  expect(faq.evidence.some(e=>e.substantive && e.facts.includes(text))).toBe(true);
+  expect(faq.evidence.some(e=>e.facts.includes('Ready for'))).toBe(false);
+  expect(faq.status).toBe('Needs improvement');
+  expect(faq.issues).toHaveLength(1);
+});
+it('requires human review for a visible-name mismatch alone rather than claiming a schema defect', () => {
+  const s=signals({html:`<script type="application/ld+json">{"@type":"Organization","name":"Logo-only organization"}</script><main><p>${text}</p></main>`});
+  expect(assessSupportingFeatures(s)[1]).toMatchObject({status:'Needs human review',presence:'Observed'});
+  expect(assessSupportingFeatures(s)[1].issues.join(' ')).toContain('verify visible consistency');
 });
