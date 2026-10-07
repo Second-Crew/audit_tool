@@ -167,3 +167,17 @@ it('requires human review for a visible-name mismatch alone rather than claiming
   expect(assessSupportingFeatures(s)[1]).toMatchObject({status:'Needs human review',presence:'Observed'});
   expect(assessSupportingFeatures(s)[1].issues.join(' ')).toContain('verify visible consistency');
 });
+
+it('does not confuse FAQ controls mentioning Chat Completions with a chatbot', () => {
+ const s=signals({html:`<main><h1>API documentation</h1><p>${text}</p><button aria-label="Expand/collapse How does the Messages API differ from Chat Completions?">API question</button></main>`});
+ expect(assessSupportingFeatures(s)[3]).toMatchObject({presence:'Not observed',status:'Not observed'});
+ const actual=signals({html:`<main><p>${text}</p><button aria-label="Open the chat window">Support</button></main>`});
+ expect(assessSupportingFeatures(actual)[3]).toMatchObject({presence:'Visible control observed',status:'Needs human review'});
+});
+it('requires review when snippet exclusions elsewhere on an answer page do not establish an excluded answer', () => {
+ const s=signals({html:`<main><h1>Answers</h1><h2>How does it work?</h2><p>${text}</p><div data-nosnippet>Unrelated private sidebar.</div></main>`});
+ const faq=assessSupportingFeatures(s)[0];
+ expect(faq.status).toBe('Needs human review');
+ expect(faq.issues.join(' ')).toContain('verify whether they affect the answers');
+ expect(faq.recommendedFixes.join(' ')).not.toContain('Provide accessible substantive answers');
+});
