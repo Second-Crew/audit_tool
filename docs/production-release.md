@@ -43,6 +43,14 @@ The final updated suite passes **238 tests across 35 files** and the build passe
 
 Hosted storage outage bodies remain blocked by Chrome. Actual terminated-instance recovery remains unverified after the Mac locked before lease results; a historical logs request returned HTTP 400. Independent-deployment admission is established, but no same-deployment autoscaling/instance-routing claim is made. Retention decision/implementation, renderer production capacity, monitoring, Production setup/approval and smoke remain held.
 
+## SambaNova and resumed checks — October 7
+
+[Final observed verification](sambanova-preview-verification.md): report `4cbaeb50-699c-4e4a-bc21-88a7ca55c39b` passed the full save/history/reopen/served HTML/actual HTML and Markdown download flow on `c4a830a`. It completed in 129 seconds with 250 crawled pages: 98/100 Provisional, 1,469 passed/25 failed/12 unknown checks across 251 requested/sample records. Technical SEO is 74, mobile 30 and desktop 62. GEO/AEO and overall remain unassessed; Second Crew observations were not reused.
+
+Real site evidence prompted confirmation-page, CTA/FAQ-wrapper, entity-consistency review, chatbot-control and partial-snippet-review corrections. Final validation passes **243 tests across 35 files** and the optimized build. Recovered SQL records prove two orphan leases remained until natural expiry and were cleaned on the next real admission, with zero active leases after completed reports. No guaranteed automatic resumption or captured platform fatal-exit log is claimed. Safe reopening outage HTTP 500 and SELECT restoration passed on a new report through the normal workspace UI. Stored HTML outage body remains blocked by Chrome; the distinct final report's healthy served HTML and downloads passed.
+
+Retention decision/implementation, stored-export outage bodies, authenticated private missing/invalid IDs, same-deployment instance routing, Production renderer capacity/configuration, monitoring, reviewed Production migrations/settings, activation approval and smoke remain held. Production readiness is not established.
+
 ## Shared dashboard controls
 
 `supabase/dashboard-admission.sql` creates separate request-attempt and lease tables. A PostgreSQL advisory transaction lock makes the five-attempts-per-ten-minutes address limit and two-active-audits limit atomic across instances. Busy attempts count toward the address limit. Preview, Production and local scopes are separate; all branch Previews sharing one database share Preview capacity. This control is independent of the agent API.

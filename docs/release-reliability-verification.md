@@ -17,7 +17,7 @@ Five sequential competitor crawls could consume up to five minutes before render
 
 Hosted Preview now fails closed when shared admission is missing, matching Production. Local development retains its local limiter. This prevents an inherited/missing flag from silently allowing hosted per-process admission.
 
-## Unverified recovery and access cases
+## Recovery and access observations (follow-up below)
 
 The storage-read outage fixture was applied only to isolated Preview. Chrome blocked the reopening request at `/api/audits/41000000-0000-4000-8000-000000000006` with ERR_BLOCKED_BY_CLIENT. Original service-role SELECT was restored and verified true. No alternate transport or retry of that blocked route followed. Safe outage bodies for reopen/exports remain unverified in hosting; local regressions pass.
 
@@ -26,3 +26,7 @@ A disposable checkout outside the main repository added a Preview-only process e
 Temporary fixture deployments remain protected by the existing workspace/platform gates and are never Production candidates. The process-exit patch is absent from the main branch and PR. The normal branch alias must remain on a verified normal Git build.
 
 Retention is still undecided and deletion disabled. Production migrations/settings, renderer capacity, monitoring/alerts, activation approval and post-release smoke remain held. A passing Preview alone does not establish production readiness.
+
+## October 7 follow-up
+
+The resumed [SambaNova verification](sambanova-preview-verification.md) recovered both actual orphan lease records, observed their natural expiry, and verified their cleanup on the next real admission plus release to zero after completion. It also verified safe HTTP 500 reopening through the normal UI on a new report and restoration of SELECT. Platform fatal-exit logs and automatic audit resumption are not claimed. Stored HTML outage inspection still hit Chrome's block and its body remains unverified; old blocked paths were not retried. The final updated suite passes 243 tests across 35 files and the build passes. Earlier unavailable observations above describe that session, not the current lease-recovery state. Production and retention remain held.
