@@ -89,8 +89,8 @@ export async function POST(request) {
           },
         });
       } catch (error) {
-        console.error('Analysis error:', error);
-        send({ type: 'error', error: error.message || 'Failed to analyze website' });
+        console.error('Website analysis could not be completed');
+        send({ type: 'error', error: 'The audit could not be completed. Try again later.' });
       } finally {
         await admission.release();
         try {

@@ -33,3 +33,17 @@ describe('analyze admission lifecycle', () => {
     log.mockRestore();
   });
 });
+
+ it('keeps unexpected provider credentials and private details out of stream errors and logs', async () => {
+    const release = vi.fn();
+    reserveDashboardAudit.mockResolvedValue({ allowed: true, release });
+    runAudit.mockRejectedValue(new Error('private panel token=SECRET_SENTINEL'));
+    const log = vi.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      const response = await POST(request());
+      const body = await response.text();
+      expect(body).toContain('The audit could not be completed. Try again later.');
+      expect(body + JSON.stringify(log.mock.calls)).not.toContain('SECRET_SENTINEL');
+      expect(release).toHaveBeenCalledOnce();
+    } finally { log.mockRestore(); }
+  });

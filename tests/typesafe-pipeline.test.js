@@ -73,3 +73,23 @@ describe('observed visibility report integration', () => {
     expect(compatibility.html + compatibility.markdown).not.toContain('evidence.example/private');
   });
 });
+
+ it('stops starting competitor crawls when the shared audit deadline is exhausted', async () => {
+    let now = 1000;
+    const clock = vi.spyOn(Date, 'now').mockImplementation(() => now);
+    const calls = [];
+    crawlSite.mockImplementation(async (url, limits) => {
+      calls.push({ url, limits });
+      if (url.includes('competitor-one')) now = 2000;
+      return structuredClone(crawl);
+    });
+    evaluateTypeSafe.mockResolvedValue({ status: 'skipped' });
+    try {
+      const { audit } = await runAudit({ url: 'https://example.com/', deadlineMs: 2000,
+        competitors: ['https://competitor-one.example/', 'https://competitor-two.example/'] });
+      expect(calls.map(c => c.url)).not.toContain('https://competitor-two.example/');
+      expect(calls.every(c => c.limits.deadlineMs === 2000)).toBe(true);
+      expect(audit.competitors[1].error).toContain('audit time budget exhausted');
+      expect(audit.primary.scoring.aiTechnicalReadiness).toBeDefined();
+    } finally { clock.mockRestore(); }
+  });
