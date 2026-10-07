@@ -47,8 +47,8 @@ export async function POST(request) {
     if (!row?.id) throw new Error('Supabase did not return a send id');
     return NextResponse.json({ send: row });
   } catch (error) {
-    console.error('Create send error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error('Send tracking could not be saved');
+    return NextResponse.json({ error: 'Send tracking could not be saved. Try again later.' }, { status: 500 });
   }
 }
 
@@ -76,8 +76,8 @@ export async function GET(request) {
     );
     return NextResponse.json({ sends: rows || [] });
   } catch (error) {
-    console.error('List sends error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error('Send tracking could not be loaded');
+    return NextResponse.json({ error: 'Send tracking could not be loaded. Try again later.' }, { status: 500 });
   }
 }
 

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { compareCompetitors, scoreSite } from '../lib/audit/scoring.js';
+import { buildActionPlan } from '../lib/action-plan.js';
 
 function makeSignals(overrides = {}) {
   const base = {
@@ -132,10 +133,61 @@ describe('scoreSite', () => {
     const sorted = [...severities].sort((a, b) => weight[b] - weight[a]);
     expect(severities).toEqual(sorted);
   });
+
+  it('does not penalize a marketing site for optional review markup or prescribe self-serving ratings', () => {
+    const signals = makeSignals({
+      siteType: { ecommerce: { applicable: false } },
+      content: { educationalPages: [], faqPages: [] },
+      schema: { found: false, count: 0, types: [], hasLocalBusiness: false, hasService: false, hasProduct: false, hasFAQ: false, hasArticle: false, hasBreadcrumb: false, hasReview: false },
+    });
+    const scored = scoreSite(signals);
+    const labels = scored.categoryDetails.structuredData.checks.map((check) => check.label);
+    expect(labels).not.toContain('Review or rating schema exists');
+    expect(labels).not.toContain('Article or FAQ schema type found for eligible content');
+    const finding = scored.findings.find((item) => item.title === 'No JSON-LD observed on sampled pages');
+    expect(finding).toMatchObject({ severity: 'low' });
+    expect(finding.recommendation).not.toMatch(/Review|AggregateRating|FAQPage/);
+    const plan = buildActionPlan({ scores: { overall: 50 } }, { pages: [] }, { structuredData: scored.categoryDetails.structuredData }, []);
+    expect(plan.categoryTasks.map((task) => task.detail).join(' ')).not.toMatch(/FAQPage|AggregateRating|Review markup/);
+  });
+
+  it('withholds unvalidated overall and AI visibility grades while retaining sampled technical SEO', () => {
+    const { scoring } = makeScoredSite();
+    expect(scoring.scores).toMatchObject({ overall: null, aeoGeo: null, aiReadiness: null });
+    expect(scoring.scores.seo).toEqual(scoring.categoryDetails.technicalSeo.score);
+    expect(scoring.categoryDetails.answerReadiness.score).toBeNull();
+    expect(scoring.categoryDetails.answerReadiness.checks.every((check) => ['observed', 'not_observed'].includes(check.status))).toBe(true);
+    expect(scoring.methodology.version).toBe('evidence-v1');
+  });
+
+  it('does not grade ecommerce markup when no product page was sampled', () => {
+    const signals = makeSignals({
+      siteType: { value: 'ecommerce', ecommerce: { applicable: true } },
+      commerce: { likelyEcommerce: true, productPageCount: 0 },
+      content: { productPages: [] },
+    });
+    const scored = scoreSite(signals);
+    expect(scored.categoryDetails.verticalReadiness.checks.find((check) => check.label === 'Product schema exists on sampled pages').status).toBe('unknown');
+    expect(scored.findings.some((finding) => finding.title === 'Product schema was not found on sampled pages')).toBe(false);
+  });
+
+  it('withholds missing product markup and review claims on a fetched-only product page', () => {
+    const signals = makeSignals({
+      siteType: { value: 'ecommerce', ecommerce: { applicable: true } },
+      pages: [{ contentType: 'product', technical: { rendered: false, wordCount: 300 } }],
+      commerce: { likelyEcommerce: true, productPageCount: 1, hasProductSchema: false, hasOfferSchema: false, hasReviews: false },
+      content: { productPages: [{ url: 'https://example.com/products/widget' }] },
+    });
+    const scored = scoreSite(signals);
+    const checks = scored.categoryDetails.verticalReadiness.checks;
+    expect(checks.find((check) => check.label === 'Product schema exists on sampled pages').status).toBe('unknown');
+    expect(checks.find((check) => check.label === 'Reviews/ratings are visible on sampled product pages').status).toBe('unknown');
+    expect(scored.findings.some((finding) => finding.title === 'Product schema was not found on sampled pages')).toBe(false);
+  });
 });
 
 describe('compareCompetitors', () => {
-  it('computes score diff, gaps, and advantages for successful crawls', () => {
+  it('withholds unvalidated competitor rankings and raw-count advantage claims', () => {
     const primary = makeScoredSite({ schema: { count: 4 } });
     const competitorSite = makeScoredSite({ schema: { count: 12 }, entity: { trustPages: [] } });
     const competitor = { input: { url: 'https://rival.com', name: 'Rival' }, ...competitorSite };
@@ -144,9 +196,10 @@ describe('compareCompetitors', () => {
 
     expect(comparison.name).toBe('Rival');
     expect(comparison.error).toBeUndefined();
-    expect(comparison.scoreDiff).toBe(competitorSite.scoring.scores.aeoGeo - primary.scoring.scores.aeoGeo);
-    expect(comparison.gaps.some((gap) => gap.startsWith('Schema coverage'))).toBe(true);
-    expect(comparison.advantages.some((adv) => adv.startsWith('Trust pages'))).toBe(true);
+    expect(comparison.scoreDiff).toBeNull();
+    expect(comparison.comparisonStatus).toBe('inconclusive');
+    expect(comparison.gaps).toEqual([]);
+    expect(comparison.advantages).toEqual([]);
   });
 
   it('keeps failed competitor crawls in the comparison with their error', () => {

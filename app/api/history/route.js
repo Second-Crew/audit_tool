@@ -25,7 +25,7 @@ export async function GET() {
     );
     return NextResponse.json({ audits: rows || [] });
   } catch (error) {
-    console.error('History error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error('History could not be loaded');
+    return NextResponse.json({ error: 'History could not be loaded. Try again later.' }, { status: 500 });
   }
 }

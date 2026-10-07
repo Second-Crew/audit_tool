@@ -2,27 +2,39 @@
   "name": "secondcrew-report-generator",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "agent:worker": "node scripts/agent-worker.mjs",
+    "agent:smoke": "node scripts/agent-smoke.mjs"
   },
   "dependencies": {
-    "next": "14.0.4",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
     "@google/genai": "^1.16.0",
-    "cheerio": "1.0.0-rc.12"
+    "@typesafe-ai/sdk": "^0.6.0",
+    "cheerio": "1.0.0-rc.12",
+    "next": "^15.5.26",
+    "playwright-core": "1.62.1",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.16",
     "eslint": "^8.57.1",
-    "eslint-config-next": "14.0.4",
-    "postcss": "^8.4.32",
+    "eslint-config-next": "^15.5.26",
+    "postcss": "8.5.28",
     "tailwindcss": "^3.4.0",
-    "vitest": "^2.1.9"
+    "vite": "^8.3.1",
+    "vitest": "^5.0.2"
+  },
+  "overrides": {
+    "postcss": "$postcss",
+    "nanoid": "3.3.19"
   }
 }

@@ -1,0 +1,15 @@
+# Checklist Preview verification — October 6, 2026
+
+The real Second Crew audit passed save → fresh history → reopen → served HTML → actual downloaded HTML and Markdown on application revision `800aa8f5c732c0c3dcd0372068f5cdc09bcfc406`. Deployment `dpl_7ATnE1Mjn28vUs9mHEDuUNEq6vW5` was READY and the branch alias independently matched it. Report `9b7c6ff0-3b31-4703-a36f-e4088b889c93` completed in 132 seconds with 56 sampled pages and 55 rendered pages; the analyze request returned HTTP 200.
+
+AI Technical Readiness is **100/100, Provisional**, with **335 passed, 0 failed, 1 unknown** of 336 applicable checks. Exact coverage is 99.70%; the current whole-number display rounds coverage and the missing-evidence range to 100% and 100–100. The exact counts and Provisional label remain visible. One script-shell page had no extracted main text and remains unknown. No failed crawler/indexing/snippet checks were recorded. This is sampled technical evidence, not a prediction of citations or indexing.
+
+FAQ/answer content is Needs improvement for an empty/short adjacent answer. Schema and chatbot presence remain Could not verify because one page lacks complete content evidence; neither is scored as absent. llms.txt is Not observed (HTTP 404). All four descriptors, methodology, counts, range and safe recommendations match across the reopened workspace and exports. Downloads contain no raw panel, conversation links or invalid null/zero-denominator fractions. Technical SEO is 94, mobile 44 and desktop 63; these are new audit measurements.
+
+This acceptance run has no uploaded citation panel because extension file upload remained blocked and no browser controls were bypassed. GEO/AEO and overall are withheld. Earlier saved reports retain their dated observed 3/100 score. Combined checklist/panel parity is verified locally with mock storage; it is not claimed as a new hosted upload.
+
+A report from the previous `b4f3751` attempt (`16e7a271-eb2b-41c0-a223-2e603ba1a8dc`) subsequently appeared in fresh history with 89% displayed checklist coverage. The earlier statement that fresh history had no report described the observation at that time, not permanent save failure. That run crossed a Chrome restart and is not the completed browser acceptance result. Its logs showed provider 429s, motivating the bounded-abstention correction.
+
+The final 229-test suite across 34 files and optimized build pass. This hosted run did not encounter a logged rate-limit or work-budget exhaustion reason, so those corrected paths remain regression-tested; a controlled hosted renderer failure/rate-limit case remains an operational release gate. Evidence (screenshots, downloaded exports, restricted sanitized metadata) is saved outside Git in `audit-review/ai-checklist-2026-10-06/`.
+
+Production remains held. See [release gates](production-release.md) for access/outage checks, multi-instance and terminated-instance recovery, renderer capacity, retention and approved Production setup/smoke. No merge, Production change, prospect contact or deletion occurred.

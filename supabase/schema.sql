@@ -56,3 +56,21 @@ create index if not exists report_sends_domain_idx on public.report_sends (domai
 create index if not exists report_sends_email_idx on public.report_sends (prospect_email);
 
 alter table public.report_sends enable row level security;
+
+-- Explicit grants also cover projects with permissive default table grants.
+revoke all on public.clients, public.audits, public.report_sends from public, anon, authenticated;
+grant select, insert, update, delete on public.clients, public.audits, public.report_sends to service_role;
+
+-- Atomic tracked-link lookup/open increment, callable only by the server.
+-- Keep this definition in sync with report-tracking.sql for existing installs.
+create or replace function public.record_report_open(send_id uuid)
+returns uuid language sql security invoker set search_path = '' as $$
+  update public.report_sends
+  set open_count = open_count + 1,
+      first_opened_at = coalesce(first_opened_at, clock_timestamp()),
+      last_opened_at = clock_timestamp()
+  where id = send_id and audit_id is not null
+  returning audit_id;
+$$;
+revoke all on function public.record_report_open(uuid) from public, anon, authenticated;
+grant execute on function public.record_report_open(uuid) to service_role;

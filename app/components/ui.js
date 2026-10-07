@@ -1,5 +1,5 @@
-export function ScoreCard({ label, value, caption }) {
-  const tone = getScoreTone(value);
+export function ScoreCard({ label, value, caption, observed = false }) {
+  const tone = observed ? { text: 'text-cyan-800', bar: 'bg-cyan-600' } : getScoreTone(value);
 
   return (
     <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
@@ -13,11 +13,11 @@ export function ScoreCard({ label, value, caption }) {
   );
 }
 
-export function StatusPill({ score }) {
+export function StatusPill({ score, observed = false }) {
   const tone = getScoreTone(score);
-  const label = score >= 80 ? 'Strong' : score >= 60 ? 'Developing' : 'Needs Work';
+  const label = observed ? 'Observed panel' : score == null ? 'Not assessed' : score >= 80 ? 'Strong' : score >= 60 ? 'Developing' : 'Needs Work';
 
-  return <span className={`rounded-full px-3 py-1 text-xs font-semibold ${tone.pill}`}>{label}</span>;
+  return <span className={`rounded-full px-3 py-1 text-xs font-semibold ${observed ? 'bg-cyan-100 text-cyan-800' : tone.pill}`}>{label}</span>;
 }
 
 export function Metric({ label, value }) {
@@ -46,7 +46,7 @@ export function SignalPanel({ title, items }) {
         {items.map((item) => (
           <div key={item.label} className="flex items-center justify-between gap-3 border-b border-slate-100 pb-3 last:border-0 last:pb-0">
             <div className="text-sm text-slate-600">{item.label}</div>
-            <div className={`text-sm font-semibold ${item.ok ? 'text-emerald-700' : 'text-amber-700'}`}>{item.value}</div>
+            <div className={`text-sm font-semibold ${item.ok == null ? 'text-slate-700' : item.ok ? 'text-emerald-700' : 'text-amber-700'}`}>{item.value}</div>
           </div>
         ))}
       </div>

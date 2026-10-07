@@ -8,7 +8,7 @@ const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{
 // Rebuilds the client workspace payload for a stored audit so the dashboard
 // can reopen past reports in the full tabbed UI without re-crawling.
 export async function GET(request, { params }) {
-  const auditId = params.id;
+  const { id: auditId } = await params;
   if (!UUID_PATTERN.test(auditId)) {
     return NextResponse.json({ error: 'Invalid audit id' }, { status: 404 });
   }
@@ -29,7 +29,9 @@ export async function GET(request, { params }) {
 
     const report = row.report || {};
     const data = {
+      aiTechnicalReadiness: report.ai_technical_readiness || report.workspace?.aiTechnicalReadiness || null,
       scores: row.scores || {},
+      observedVisibility: report.observed_visibility || null,
       aiInsights: {
         executiveSummary: report.executive_summary,
         topIssues: report.top_issues || [],
@@ -42,6 +44,7 @@ export async function GET(request, { params }) {
       llm: report.llm || { status: 'skipped' },
       html: report.html || '',
       markdown: report.markdown || null,
+      pageSpeedDiagnostics: report.workspace?.pageSpeed?.diagnostics || {},
       audit: report.workspace || buildFallbackWorkspace(row),
       persistence: { enabled: true, status: 'saved', clientId: row.client_id, auditId: row.id },
       companyName: row.client?.company_name || row.domain,
@@ -49,8 +52,8 @@ export async function GET(request, { params }) {
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error('Load stored audit error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error('Stored audit could not be loaded');
+    return NextResponse.json({ error: 'The saved audit could not be loaded. Try again later.' }, { status: 500 });
   }
 }
 
@@ -62,6 +65,8 @@ function buildFallbackWorkspace(row) {
     createdAt: row.created_at,
     elapsedMs: null,
     input: { url: row.requested_url },
+    observedVisibility: row.report?.observed_visibility || null,
+    aiTechnicalReadiness: row.report?.ai_technical_readiness || null,
     primary: {
       domain: row.domain,
       startUrl: row.requested_url,

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getScoreTone } from './ui.js';
+import { hasLegacyOutcomeScores } from '../../lib/audit/legacy.js';
 
 // Home-screen list of past diagnostics with their send/open status, loaded
 // from Supabase via /api/history. Each row can reopen the stored report,
@@ -65,6 +66,7 @@ export default function HistoryPanel({ onOpenAudit }) {
         <p className="mt-1 text-sm text-slate-500">
           Every audit you have run. View or export a report, send a tracked link to the prospect, and watch opens come in.
         </p>
+        <p className="mt-1 text-xs text-slate-500">Legacy grades came from an earlier, uncalibrated method; rerun those audits before sharing.</p>
       </div>
 
       <div className="mt-4 grid grid-cols-3 gap-3">
@@ -82,6 +84,7 @@ export default function HistoryPanel({ onOpenAudit }) {
                 <th className="px-4 py-3 font-semibold">Prospect</th>
                 <th className="px-4 py-3 font-semibold">Overall</th>
                 <th className="px-4 py-3 font-semibold">GEO/AEO</th>
+                <th className="px-4 py-3 font-semibold">AI Technical Readiness</th>
                 <th className="px-4 py-3 font-semibold">Status</th>
                 <th className="px-4 py-3 font-semibold">Actions</th>
               </tr>
@@ -116,8 +119,12 @@ function HistoryRow({ audit, onOpenAudit }) {
           <div className="font-medium text-slate-900">{audit.client?.company_name || audit.domain}</div>
           <div className="break-all text-xs text-slate-500">{audit.domain}</div>
         </td>
-        <td className="px-4 py-3"><ScoreBadge value={audit.scores?.overall} /></td>
-        <td className="px-4 py-3"><ScoreBadge value={audit.scores?.aeoGeo} /></td>
+        <td className="px-4 py-3"><ScoreBadge value={audit.scores?.overall} legacy={hasLegacyOutcomeScores(audit.scores)} /></td>
+        <td className="px-4 py-3"><ScoreBadge value={audit.scores?.aeoGeo} legacy={hasLegacyOutcomeScores(audit.scores)} observed={audit.scores?.methodologyVersion === 'evidence-v1' && audit.scores?.aeoGeo != null} /></td>
+        <td className="px-4 py-3">
+          <ScoreBadge value={audit.scores?.aiReadiness} legacy={hasLegacyOutcomeScores(audit.scores)} />
+          {audit.scores?.aiReadinessVersion && <div className="mt-1 text-xs text-slate-500">{audit.scores.aiReadinessStatus} · {Math.round((audit.scores.aiReadinessCoverage || 0) * 100)}% coverage{audit.scores.aiReadinessRange ? ` · ${audit.scores.aiReadinessRange.min}–${audit.scores.aiReadinessRange.max} possible` : ''}</div>}
+        </td>
         <td className="px-4 py-3">
           {sends.length ? (
             <div className="space-y-1.5">
@@ -181,7 +188,7 @@ function HistoryRow({ audit, onOpenAudit }) {
       </tr>
       {sendOpen && (
         <tr className="border-t border-slate-100 bg-slate-50">
-          <td colSpan={6} className="px-4 py-4">
+          <td colSpan={7} className="px-4 py-4">
             <RowSendForm audit={audit} onCreated={(send) => setExtraSends((previous) => [...previous, send])} />
           </td>
         </tr>
@@ -294,9 +301,9 @@ function StatCard({ label, value }) {
   );
 }
 
-function ScoreBadge({ value }) {
+function ScoreBadge({ value, legacy = false, observed = false }) {
   if (value == null) return <span className="text-slate-400">—</span>;
-  return <span className={`text-base font-semibold ${getScoreTone(value).text}`}>{value}</span>;
+  return <span className={`text-base font-semibold ${legacy ? 'text-amber-800' : observed ? 'text-cyan-800' : getScoreTone(value).text}`} title={legacy ? 'Earlier uncalibrated grade; rerun before sharing' : observed ? 'Observed fixed-panel own-domain citation rate' : undefined}>{legacy ? `Legacy ${value}` : value}</span>;
 }
 
 function formatDate(value) {
